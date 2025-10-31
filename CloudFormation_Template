@@ -1,0 +1,2183 @@
+---
+Metadata:
+  AWSToolsMetrics:
+    IaC_Generator: "arn:aws:cloudformation:us-east-1:253881689673:generatedTemplate/9d4e4467-01be-46bd-8bb4-f7ff1cd78843"
+Parameters:
+  LambdaFunctionBedrockPromptHandlerCodeImageUriXb0yW:
+    NoEcho: "true"
+    Type: "String"
+    Description: "URI of a [container image](https://docs.aws.amazon.com/lambda/latest/dg/lambda-images.html)\
+      \ in the Amazon ECR registry."
+  LambdaFunctionBedrockPromptHandlerCodeSourceKMSKeyArn25rfO:
+    NoEcho: "true"
+    Type: "String"
+    Description: "The ARN of the KMSlong (KMS) customer managed key that's used to\
+      \ encrypt your function's .zip deployment package. If you don't provide a customer\
+      \ managed key, Lambda uses an [owned key](https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#aws-owned-cmk)."
+  LambdaFunctionSecurityDataTransferProcessorCodeS3ObjectVersionRjPii:
+    NoEcho: "true"
+    Type: "String"
+    Description: "For versioned objects, the version of the deployment package object\
+      \ to use."
+  LambdaFunctionBedrockPromptHandlerCodeS3BucketfpmSU:
+    NoEcho: "true"
+    Type: "String"
+    Description: "An Amazon S3 bucket in the same AWS-Region as your function. The\
+      \ bucket can be in a different AWS-account."
+  LambdaFunctionSecurityDataTransferProcessorCodeS3BucketlpTLQ:
+    NoEcho: "true"
+    Type: "String"
+    Description: "An Amazon S3 bucket in the same AWS-Region as your function. The\
+      \ bucket can be in a different AWS-account."
+  LambdaFunctionBedrockPromptHandlerCodeZipFile7S6nQ:
+    NoEcho: "true"
+    Type: "String"
+    Description: "(Node.js and Python) The source code of your Lambda function. If\
+      \ you include your function source inline with this parameter, CFN places it\
+      \ in a file named ``index`` and zips it to create a [deployment package](https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-package.html).\
+      \ This zip file cannot exceed 4MB. For the ``Handler`` property, the first part\
+      \ of the handler identifier must be ``index``. For example, ``index.handler``.\n\
+      \  When you specify source code inline for a Node.js function, the ``index``\
+      \ file that CFN creates uses the extension ``.js``. This means that LAM treats\
+      \ the file as a CommonJS module. ES modules aren't supported for inline functions.\n\
+      \   For JSON, you must escape quotes and special characters such as newline\
+      \ (``\\n``) with a backslash.\n If you specify a function that interacts with\
+      \ an AWS CloudFormation custom resource, you don't have to write your own functions\
+      \ to send responses to the custom resource that invoked the function. AWS CloudFormation\
+      \ provides a response module ([cfn-response](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-lambda-function-code-cfnresponsemodule.html))\
+      \ that simplifies sending responses. See [Using Lambda with CloudFormation](https://docs.aws.amazon.com/lambda/latest/dg/services-cloudformation.html)\
+      \ for details."
+  LambdaFunctionSecurityDataTransferProcessorCodeZipFileSz74A:
+    NoEcho: "true"
+    Type: "String"
+    Description: "(Node.js and Python) The source code of your Lambda function. If\
+      \ you include your function source inline with this parameter, CFN places it\
+      \ in a file named ``index`` and zips it to create a [deployment package](https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-package.html).\
+      \ This zip file cannot exceed 4MB. For the ``Handler`` property, the first part\
+      \ of the handler identifier must be ``index``. For example, ``index.handler``.\n\
+      \  When you specify source code inline for a Node.js function, the ``index``\
+      \ file that CFN creates uses the extension ``.js``. This means that LAM treats\
+      \ the file as a CommonJS module. ES modules aren't supported for inline functions.\n\
+      \   For JSON, you must escape quotes and special characters such as newline\
+      \ (``\\n``) with a backslash.\n If you specify a function that interacts with\
+      \ an AWS CloudFormation custom resource, you don't have to write your own functions\
+      \ to send responses to the custom resource that invoked the function. AWS CloudFormation\
+      \ provides a response module ([cfn-response](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-lambda-function-code-cfnresponsemodule.html))\
+      \ that simplifies sending responses. See [Using Lambda with CloudFormation](https://docs.aws.amazon.com/lambda/latest/dg/services-cloudformation.html)\
+      \ for details."
+  LambdaFunctionBedrockPromptHandlerCodeS3KeyxRh2u:
+    NoEcho: "true"
+    Type: "String"
+    Description: "The Amazon S3 key of the deployment package."
+  LambdaFunctionSecurityDataTransferProcessorCodeSourceKMSKeyArnDpVo8:
+    NoEcho: "true"
+    Type: "String"
+    Description: "The ARN of the KMSlong (KMS) customer managed key that's used to\
+      \ encrypt your function's .zip deployment package. If you don't provide a customer\
+      \ managed key, Lambda uses an [owned key](https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#aws-owned-cmk)."
+  LambdaFunctionSecurityDataTransferProcessorCodeImageUri5XzoP:
+    NoEcho: "true"
+    Type: "String"
+    Description: "URI of a [container image](https://docs.aws.amazon.com/lambda/latest/dg/lambda-images.html)\
+      \ in the Amazon ECR registry."
+  LambdaFunctionBedrockPromptHandlerCodeS3ObjectVersionhTrSJ:
+    NoEcho: "true"
+    Type: "String"
+    Description: "For versioned objects, the version of the deployment package object\
+      \ to use."
+  LambdaFunctionSecurityDataTransferProcessorCodeS3KeypxFWS:
+    NoEcho: "true"
+    Type: "String"
+    Description: "The Amazon S3 key of the deployment package."
+Resources:
+  S3BucketSecuritydatatransfers3results:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::S3::Bucket"
+    DeletionPolicy: "Retain"
+    Properties:
+      PublicAccessBlockConfiguration:
+        RestrictPublicBuckets: true
+        IgnorePublicAcls: true
+        BlockPublicPolicy: true
+        BlockPublicAcls: true
+      BucketName: "securitydatatransfers3results"
+      OwnershipControls:
+        Rules:
+        - ObjectOwnership: "BucketOwnerPreferred"
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+        - BucketKeyEnabled: true
+          ServerSideEncryptionByDefault:
+            SSEAlgorithm: "AES256"
+  IAMRoleGuestAppAccess:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::IAM::Role"
+    DeletionPolicy: "Retain"
+    Properties:
+      Path: "/service-role/"
+      ManagedPolicyArns:
+      - "arn:aws:iam::253881689673:policy/service-role/Cognito-unauthenticated-1744856826918"
+      MaxSessionDuration: 3600
+      RoleName: "GuestAppAccess"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Condition:
+            StringEquals:
+              cognito-identity.amazonaws.com:aud: "us-east-1:a006d479-129a-4e1a-a94e-97e497c450a0"
+            ForAnyValue:StringLike:
+              cognito-identity.amazonaws.com:amr: "unauthenticated"
+          Action: "sts:AssumeRoleWithWebIdentity"
+          Effect: "Allow"
+          Principal:
+            Federated: "cognito-identity.amazonaws.com"
+  ApiGatewayV2DeploymentD5:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::ApiGatewayV2::Deployment"
+    DeletionPolicy: "Retain"
+    Properties:
+      ApiId:
+        Ref: "ApiGatewayV2Api"
+      Description: "Created by AWS Lambda"
+  ApiGatewayV2DeploymentJy:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::ApiGatewayV2::Deployment"
+    DeletionPolicy: "Retain"
+    Properties:
+      ApiId:
+        Ref: "ApiGatewayV2Api"
+      Description: "Automatic deployment triggered by changes to the Api configuration"
+  IAMManagedPolicyPolicyserviceroleAWSLambdaBasicExecutionRoleb312c53492b648b28e0f79c3eac47aef:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::IAM::ManagedPolicy"
+    DeletionPolicy: "Retain"
+    Properties:
+      ManagedPolicyName: "AWSLambdaBasicExecutionRole-b312c534-92b6-48b2-8e0f-79c3eac47aef"
+      Path: "/service-role/"
+      Description: ""
+      Groups: []
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Resource: "arn:aws:logs:us-east-1:253881689673:*"
+          Action: "logs:CreateLogGroup"
+          Effect: "Allow"
+        - Resource:
+          - "arn:aws:logs:us-east-1:253881689673:log-group:/aws/lambda/BedrockPromptHandler:*"
+          Action:
+          - "logs:CreateLogStream"
+          - "logs:PutLogEvents"
+          Effect: "Allow"
+      Roles:
+      - Ref: "IAMRoleBedrockPromptHandlerroleatcm3iwp"
+      Users: []
+  ApiGatewayV2DeploymentBc:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::ApiGatewayV2::Deployment"
+    DeletionPolicy: "Retain"
+    Properties:
+      ApiId:
+        Ref: "ApiGatewayV2Api"
+      Description: "Automatic deployment triggered by changes to the Api configuration"
+  LambdaFunctionBedrockPromptHandler:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::Lambda::Function"
+    DeletionPolicy: "Retain"
+    Properties:
+      MemorySize: 128
+      Description: ""
+      TracingConfig:
+        Mode: "PassThrough"
+      Timeout: 120
+      RuntimeManagementConfig:
+        UpdateRuntimeOn: "Auto"
+      Handler: "lambda_function.lambda_handler"
+      Code:
+        SourceKMSKeyArn:
+          Ref: "LambdaFunctionBedrockPromptHandlerCodeSourceKMSKeyArn25rfO"
+        S3ObjectVersion:
+          Ref: "LambdaFunctionBedrockPromptHandlerCodeS3ObjectVersionhTrSJ"
+        S3Bucket:
+          Ref: "LambdaFunctionBedrockPromptHandlerCodeS3BucketfpmSU"
+        ZipFile:
+          Ref: "LambdaFunctionBedrockPromptHandlerCodeZipFile7S6nQ"
+        ImageUri:
+          Ref: "LambdaFunctionBedrockPromptHandlerCodeImageUriXb0yW"
+        S3Key:
+          Ref: "LambdaFunctionBedrockPromptHandlerCodeS3KeyxRh2u"
+      Role:
+        Fn::GetAtt:
+        - "IAMRoleBedrockPromptHandlerrole461wkeeg"
+        - "Arn"
+      FileSystemConfigs: []
+      FunctionName: "BedrockPromptHandler"
+      Runtime: "python3.12"
+      PackageType: "Zip"
+      LoggingConfig:
+        LogFormat: "Text"
+        LogGroup: "/aws/lambda/BedrockPromptHandler"
+      RecursiveLoop: "Terminate"
+      EphemeralStorage:
+        Size: 512
+      Architectures:
+      - "x86_64"
+  CloudFrontCachePolicyTk:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::CloudFront::CachePolicy"
+    DeletionPolicy: "Retain"
+    Properties:
+      CachePolicyConfig:
+        Comment: "Amplify cache policy for static content"
+        MinTTL: 0
+        MaxTTL: 3.1536E7
+        ParametersInCacheKeyAndForwardedToOrigin:
+          QueryStringsConfig:
+            QueryStrings:
+            - "dpl"
+            QueryStringBehavior: "whitelist"
+          EnableAcceptEncodingBrotli: true
+          HeadersConfig:
+            HeaderBehavior: "whitelist"
+            Headers:
+            - "Authorization"
+            - "RSC"
+            - "CloudFront-Viewer-Country"
+            - "X-Amplify-Dpl"
+            - "Host"
+          CookiesConfig:
+            Cookies:
+            - "__dpl"
+            CookieBehavior: "whitelist"
+          EnableAcceptEncodingGzip: true
+        DefaultTTL: 0
+        Name: "Managed-Amplify-StaticContent-V2"
+  IAMUserEccniftycloud:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::IAM::User"
+    DeletionPolicy: "Retain"
+    Properties:
+      Path: "/"
+      UserName: "ecc_nifty_cloud"
+      LoginProfile:
+        PasswordResetRequired: false
+      Groups:
+      - Ref: "IAMGroupAdminAccess"
+      Tags:
+      - Value: "Ernest"
+        Key: "FirstName"
+      - Value: "Cruz"
+        Key: "LastName"
+  ApiGatewayV2DeploymentM7:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::ApiGatewayV2::Deployment"
+    DeletionPolicy: "Retain"
+    Properties:
+      ApiId:
+        Ref: "ApiGatewayV2Api"
+      Description: "Automatic deployment triggered by changes to the Api configuration"
+  CloudFrontCachePolicyBo:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::CloudFront::CachePolicy"
+    DeletionPolicy: "Retain"
+    Properties:
+      CachePolicyConfig:
+        Comment: "Default Amplify cache policy"
+        MinTTL: 0
+        MaxTTL: 3.1536E7
+        ParametersInCacheKeyAndForwardedToOrigin:
+          QueryStringsConfig:
+            QueryStringBehavior: "all"
+          EnableAcceptEncodingBrotli: true
+          HeadersConfig:
+            HeaderBehavior: "whitelist"
+            Headers:
+            - "Authorization"
+            - "Accept"
+            - "CloudFront-Viewer-Country"
+            - "Host"
+          CookiesConfig:
+            CookieBehavior: "all"
+          EnableAcceptEncodingGzip: true
+        DefaultTTL: 0
+        Name: "Managed-Amplify-Default"
+  IAMRoleBedRockSecurityDataTransferRole:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::IAM::Role"
+    DeletionPolicy: "Retain"
+    Properties:
+      Path: "/"
+      ManagedPolicyArns:
+      - "arn:aws:iam::aws:policy/AmazonBedrockFullAccess"
+      - "arn:aws:iam::aws:policy/AmazonSNSFullAccess"
+      - "arn:aws:iam::aws:policy/AWSLambda_FullAccess"
+      - "arn:aws:iam::aws:policy/AWSLambdaExecute"
+      - "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+      - "arn:aws:iam::aws:policy/service-role/SageMakerStudioBedrockPromptUserRolePolicy"
+      - "arn:aws:iam::aws:policy/AWSKeyManagementServicePowerUser"
+      - "arn:aws:iam::aws:policy/AdministratorAccess"
+      - "arn:aws:iam::aws:policy/CloudWatchFullAccess"
+      MaxSessionDuration: 3600
+      RoleName: "BedRockSecurityDataTransferRole"
+      Description: "Allows Lambda functions to call AWS services on your behalf."
+      Policies:
+      - PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+          - Resource:
+            - "arn:aws:lambda:us-east-1:253881689673:function:SecurityDataTransferProcessor"
+            Action:
+            - "lambda:InvokeFunction"
+            Effect: "Allow"
+            Sid: "Statement1"
+        PolicyName: "BedrockAgent_LamndaAccess"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Action: "sts:AssumeRole"
+          Effect: "Allow"
+          Principal:
+            Service: "bedrock.amazonaws.com"
+  ApiGatewayV2DeploymentLO:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::ApiGatewayV2::Deployment"
+    DeletionPolicy: "Retain"
+    Properties:
+      ApiId:
+        Ref: "ApiGatewayV2Api"
+      Description: "Automatic deployment triggered by changes to the Api configuration"
+  CloudFrontOriginRequestPolicyYr:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::CloudFront::OriginRequestPolicy"
+    DeletionPolicy: "Retain"
+    Properties:
+      OriginRequestPolicyConfig:
+        QueryStringsConfig:
+          QueryStringBehavior: "none"
+        Comment: "Policy to forward user-agent and referer headers to origin"
+        HeadersConfig:
+          HeaderBehavior: "whitelist"
+          Headers:
+          - "referer"
+          - "user-agent"
+        CookiesConfig:
+          CookieBehavior: "none"
+        Name: "Managed-UserAgentRefererHeaders"
+  IAMRoleBedrockPromptHandlerroleatcm3iwp:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::IAM::Role"
+    DeletionPolicy: "Retain"
+    Properties:
+      Path: "/service-role/"
+      ManagedPolicyArns:
+      - "arn:aws:iam::253881689673:policy/service-role/AWSLambdaBasicExecutionRole-b312c534-92b6-48b2-8e0f-79c3eac47aef"
+      MaxSessionDuration: 3600
+      RoleName: "BedrockPromptHandler-role-atcm3iwp"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Action: "sts:AssumeRole"
+          Effect: "Allow"
+          Principal:
+            Service: "lambda.amazonaws.com"
+  LambdaPermissionFunctionBedrockPromptHandler:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::Lambda::Permission"
+    DeletionPolicy: "Retain"
+    Properties:
+      FunctionName:
+        Fn::GetAtt:
+        - "LambdaFunctionBedrockPromptHandler"
+        - "Arn"
+      Action: "lambda:InvokeFunction"
+      SourceArn: "arn:aws:execute-api:us-east-1:253881689673:9heajy0ej8/*/*/BedrockPromptHandler"
+      Principal: "apigateway.amazonaws.com"
+  ApiGatewayV2DeploymentBw:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::ApiGatewayV2::Deployment"
+    DeletionPolicy: "Retain"
+    Properties:
+      ApiId:
+        Ref: "ApiGatewayV2Api"
+      Description: "Automatic deployment triggered by changes to the Api configuration"
+  S3BucketBedrockfrontend:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::S3::Bucket"
+    DeletionPolicy: "Retain"
+    Properties:
+      PublicAccessBlockConfiguration:
+        RestrictPublicBuckets: true
+        IgnorePublicAcls: true
+        BlockPublicPolicy: true
+        BlockPublicAcls: true
+      BucketName: "bedrockfrontend"
+      CorsConfiguration:
+        CorsRules:
+        - MaxAge: 3000
+          ExposedHeaders:
+          - "ETag"
+          - "x-amz-server-side-encryption"
+          AllowedMethods:
+          - "GET"
+          - "HEAD"
+          - "PUT"
+          - "POST"
+          - "DELETE"
+          AllowedOrigins:
+          - "https://d11k4vck88gnf5.cloudfront.net"
+          AllowedHeaders:
+          - "*"
+      OwnershipControls:
+        Rules:
+        - ObjectOwnership: "BucketOwnerPreferred"
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+        - BucketKeyEnabled: true
+          ServerSideEncryptionByDefault:
+            SSEAlgorithm: "AES256"
+  CloudFrontCachePolicyVX:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::CloudFront::CachePolicy"
+    DeletionPolicy: "Retain"
+    Properties:
+      CachePolicyConfig:
+        Comment: "Default policy when compression is disabled"
+        MinTTL: 1
+        MaxTTL: 3.1536E7
+        ParametersInCacheKeyAndForwardedToOrigin:
+          QueryStringsConfig:
+            QueryStringBehavior: "none"
+          EnableAcceptEncodingBrotli: false
+          HeadersConfig:
+            HeaderBehavior: "none"
+          CookiesConfig:
+            CookieBehavior: "none"
+          EnableAcceptEncodingGzip: false
+        DefaultTTL: 86400
+        Name: "Managed-CachingOptimizedForUncompressedObjects"
+  IAMManagedPolicyPolicyserviceroleAWSLambdaBasicExecutionRole93f621f2c9104765a3c57e9025d898f6:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::IAM::ManagedPolicy"
+    DeletionPolicy: "Retain"
+    Properties:
+      ManagedPolicyName: "AWSLambdaBasicExecutionRole-93f621f2-c910-4765-a3c5-7e9025d898f6"
+      Path: "/service-role/"
+      Description: ""
+      Groups: []
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Resource: "arn:aws:logs:us-east-1:253881689673:*"
+          Action: "logs:CreateLogGroup"
+          Effect: "Allow"
+        - Resource:
+          - "arn:aws:logs:us-east-1:253881689673:log-group:/aws/lambda/Cognito_validator:*"
+          Action:
+          - "logs:CreateLogStream"
+          - "logs:PutLogEvents"
+          Effect: "Allow"
+      Roles:
+      - Ref: "IAMRoleCognitovalidatorrole6lewz83q"
+      Users: []
+  IAMRoleAWSServiceRoleForOrganizations:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::IAM::Role"
+    DeletionPolicy: "Retain"
+    Properties:
+      Path: "/aws-service-role/organizations.amazonaws.com/"
+      ManagedPolicyArns:
+      - "arn:aws:iam::aws:policy/aws-service-role/AWSOrganizationsServiceTrustPolicy"
+      MaxSessionDuration: 3600
+      RoleName: "AWSServiceRoleForOrganizations"
+      Description: "Service-linked role used by AWS Organizations to enable integration\
+        \ of other AWS services with Organizations."
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Action: "sts:AssumeRole"
+          Effect: "Allow"
+          Principal:
+            Service: "organizations.amazonaws.com"
+  ApiGatewayV2DeploymentMX:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::ApiGatewayV2::Deployment"
+    DeletionPolicy: "Retain"
+    Properties:
+      ApiId:
+        Ref: "ApiGatewayV2Api"
+      Description: "Automatic deployment triggered by changes to the Api configuration"
+  ApiGatewayV2DeploymentLx:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::ApiGatewayV2::Deployment"
+    DeletionPolicy: "Retain"
+    Properties:
+      ApiId:
+        Ref: "ApiGatewayV2Api"
+      Description: "Automatic deployment triggered by changes to the Api configuration"
+  IAMRoleAWSServiceRoleForResourceExplorer:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::IAM::Role"
+    DeletionPolicy: "Retain"
+    Properties:
+      Path: "/aws-service-role/resource-explorer-2.amazonaws.com/"
+      ManagedPolicyArns:
+      - "arn:aws:iam::aws:policy/aws-service-role/AWSResourceExplorerServiceRolePolicy"
+      MaxSessionDuration: 3600
+      RoleName: "AWSServiceRoleForResourceExplorer"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Action: "sts:AssumeRole"
+          Effect: "Allow"
+          Principal:
+            Service: "resource-explorer-2.amazonaws.com"
+  S3BucketPolicySecuritydatatransfers3source:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::S3::BucketPolicy"
+    DeletionPolicy: "Retain"
+    Properties:
+      Bucket:
+        Ref: "S3BucketSecuritydatatransfers3source"
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Resource: "arn:aws:s3:::securitydatatransfers3source/*"
+          Action: "s3:*"
+          Effect: "Allow"
+          Principal:
+            AWS: "arn:aws:iam::253881689673:role/service-role/SecurityDataTransferProcessor-role-ni1rwhqk"
+  IAMUserMatthewNico:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::IAM::User"
+    DeletionPolicy: "Retain"
+    Properties:
+      Path: "/"
+      ManagedPolicyArns:
+      - "arn:aws:iam::aws:policy/AWSCompromisedKeyQuarantineV3"
+      - "arn:aws:iam::aws:policy/IAMUserChangePassword"
+      - "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+      UserName: "Matthew_Nico"
+      LoginProfile:
+        PasswordResetRequired: false
+      Groups:
+      - Ref: "IAMGroupAdminAccess"
+      - Ref: "IAMGroupDevelopers"
+      Tags:
+      - Value: "Terraform_Dev"
+        Key: "AKIATWHEHEZE5Y5TVOE6"
+      - Value: "terra"
+        Key: "AKIATWHEHEZE73TZZARS"
+      - Value: "123456"
+        Key: "Employee_ID"
+      - Value: ""
+        Key: "Department"
+  CloudFrontOriginRequestPolicyOL:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::CloudFront::OriginRequestPolicy"
+    DeletionPolicy: "Retain"
+    Properties:
+      OriginRequestPolicyConfig:
+        QueryStringsConfig:
+          QueryStringBehavior: "none"
+        Comment: "Policy for S3 origin with CORS"
+        HeadersConfig:
+          HeaderBehavior: "whitelist"
+          Headers:
+          - "origin"
+          - "access-control-request-headers"
+          - "access-control-request-method"
+        CookiesConfig:
+          CookieBehavior: "none"
+        Name: "Managed-CORS-S3Origin"
+  CloudFrontCachePolicyWO:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::CloudFront::CachePolicy"
+    DeletionPolicy: "Retain"
+    Properties:
+      CachePolicyConfig:
+        Comment: "Policy with caching enabled. Supports Gzip and Brotli compression."
+        MinTTL: 1
+        MaxTTL: 3.1536E7
+        ParametersInCacheKeyAndForwardedToOrigin:
+          QueryStringsConfig:
+            QueryStringBehavior: "none"
+          EnableAcceptEncodingBrotli: true
+          HeadersConfig:
+            HeaderBehavior: "none"
+          CookiesConfig:
+            CookieBehavior: "none"
+          EnableAcceptEncodingGzip: true
+        DefaultTTL: 86400
+        Name: "Managed-CachingOptimized"
+  IAMRoleSecurityDataTransferProcessorroleni1rwhqk:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::IAM::Role"
+    DeletionPolicy: "Retain"
+    Properties:
+      Path: "/service-role/"
+      ManagedPolicyArns:
+      - "arn:aws:iam::aws:policy/AWSLambda_FullAccess"
+      - "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+      - "arn:aws:iam::aws:policy/ComprehendReadOnly"
+      MaxSessionDuration: 3600
+      RoleName: "SecurityDataTransferProcessor-role-ni1rwhqk"
+      Policies:
+      - PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+          - Resource: "arn:aws:logs:us-east-1:253881689673:log-group:/aws/lambda/SecurityDataTransferProcessor:*"
+            Action:
+            - "logs:CreateLogGroup"
+            - "logs:CreateLogStream"
+            - "logs:PutLogEvents"
+            Effect: "Allow"
+        PolicyName: "LambdaLogging"
+      - PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+          - Resource: "arn:aws:sns:us-east-1:253881689673:SecurityDataTransferAlerts"
+            Action: "sns:Publish"
+            Effect: "Allow"
+        PolicyName: "SNSSecurityAlertsPublish"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Action: "sts:AssumeRole"
+          Effect: "Allow"
+          Principal:
+            Service: "lambda.amazonaws.com"
+  ApiGatewayV2DeploymentMG:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::ApiGatewayV2::Deployment"
+    DeletionPolicy: "Retain"
+    Properties:
+      ApiId:
+        Ref: "ApiGatewayV2Api"
+      Description: "Automatic deployment triggered by changes to the Api configuration"
+  ApiGatewayV2Deployment:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::ApiGatewayV2::Deployment"
+    DeletionPolicy: "Retain"
+    Properties:
+      ApiId:
+        Ref: "ApiGatewayV2Api"
+      Description: "Automatic deployment triggered by changes to the Api configuration"
+  CloudFrontCachePolicyUZ:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::CloudFront::CachePolicy"
+    DeletionPolicy: "Retain"
+    Properties:
+      CachePolicyConfig:
+        Comment: "Amplify cache policy for static content"
+        MinTTL: 0
+        MaxTTL: 3.1536E7
+        ParametersInCacheKeyAndForwardedToOrigin:
+          QueryStringsConfig:
+            QueryStringBehavior: "none"
+          EnableAcceptEncodingBrotli: true
+          HeadersConfig:
+            HeaderBehavior: "whitelist"
+            Headers:
+            - "Authorization"
+            - "Host"
+          CookiesConfig:
+            CookieBehavior: "none"
+          EnableAcceptEncodingGzip: true
+        DefaultTTL: 0
+        Name: "Managed-Amplify-StaticContent"
+  CloudFrontCachePolicyEL:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::CloudFront::CachePolicy"
+    DeletionPolicy: "Retain"
+    Properties:
+      CachePolicyConfig:
+        Comment: "Policy for Amplify Origin"
+        MinTTL: 2
+        MaxTTL: 600
+        ParametersInCacheKeyAndForwardedToOrigin:
+          QueryStringsConfig:
+            QueryStringBehavior: "all"
+          EnableAcceptEncodingBrotli: true
+          HeadersConfig:
+            HeaderBehavior: "whitelist"
+            Headers:
+            - "Authorization"
+            - "CloudFront-Viewer-Country"
+            - "Host"
+          CookiesConfig:
+            CookieBehavior: "all"
+          EnableAcceptEncodingGzip: true
+        DefaultTTL: 2
+        Name: "Managed-Amplify"
+  ApiGatewayV2DeploymentWE:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::ApiGatewayV2::Deployment"
+    DeletionPolicy: "Retain"
+    Properties:
+      ApiId:
+        Ref: "ApiGatewayV2Api"
+      Description: "Automatic deployment triggered by changes to the Api configuration"
+  BedrockAgent:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::Bedrock::Agent"
+    DeletionPolicy: "Retain"
+    Properties:
+      AgentCollaborators: []
+      Description: "Validates transfers or hosted data on or between securitydatatransfers3source\
+        \ and securitydatatransfers3destination S3 buckets. Scans for FedRAMP compliance,\
+        \ PII/PHI, and sensitive regulatory data. "
+      PromptOverrideConfiguration:
+        PromptConfigurations: []
+      MemoryConfiguration:
+        SessionSummaryConfiguration:
+          MaxRecentSessions: 5
+        StorageDays: 5
+        EnabledMemoryTypes:
+        - "SESSION_SUMMARY"
+      AgentCollaboration: "DISABLED"
+      Instruction: "AGENT PURPOSE:\nMonitor and validate data transfers between S3\
+        \ buckets, ensuring FedRAMP compliance and protecting PII/PHI data according\
+        \ to data classification types.\nINSTRUCTIONS:\n1. Scan all files being transferred\
+        \ between S3 buckets securitydatatransfers3source and securitydatatransfers3destination\n\
+        2. Analyze content for security issues, focusing on:\n   - FedRAMP compliance\
+        \ violations\n   - PII (personally identifiable information)\n   - PHI (protected\
+        \ health information)\n   - Other sensitive regulatory data\n3. Classify and\
+        \ tag files according to sensitivity:\n   - Type 1: Non-sensitive data (safe\
+        \ to transfer)\n   - Type 2: Moderate sensitivity (requires caution)\n   -\
+        \ Type 3: Highly sensitive (transfer blocked)\n4. ACTIONS:\n   - Allow Type\
+        \ 1 and Type 2 data transfers with appropriate tagging\n   - BLOCK any Type\
+        \ 3 data transfers\n   - Generate notification for all identified security\
+        \ issues\n   - Provide detailed report for any blocked transfers including:\n\
+        \     * File name/identifier\n     * Detected sensitive elements (with locations)\n\
+        \     * Compliance standard violated\n     * Recommended remediation steps\n\
+        5. Use a professional, concise tone in notifications\n6. Include timestamp\
+        \ and unique incident ID with all alerts\nGUIDELINES:\n- Prioritize security\
+        \ over convenience\n- When uncertain about classification, default to higher\
+        \ sensitivity\n- Provide clear explanations for all decisions\n- Include sufficient\
+        \ context for review without exposing sensitive data"
+      TestAliasTags: {}
+      AgentResourceRoleArn:
+        Fn::GetAtt:
+        - "IAMRoleBedRockSecurityDataTransferRole"
+        - "Arn"
+      OrchestrationType: "DEFAULT"
+      FoundationModel: "anthropic.claude-3-haiku-20240307-v1:0"
+      IdleSessionTTLInSeconds: 600
+      AgentName: "SecurityDataTransferAgent"
+      KnowledgeBases: []
+      ActionGroups:
+      - ApiSchema:
+          Payload: "openapi: 3.0.0\r\ninfo:\r\n  title: Security Data Transfer API\r\
+            \n  version: 1.0.0\r\n  description: API for secure data transfer operations\
+            \ between S3 buckets using AWS Lambda\r\npaths:\r\n  /scan-file:\r\n \
+            \   post:\r\n      summary: Scan a file for security issues\r\n      description:\
+            \ Invokes AWS Lambda function 'SecurityDataTransferProcessor' to scan\
+            \ a file in S3 for PII, PHI, and FedRAMP compliance issues.\r\n      operationId:\
+            \ invokeSecurityScan\r\n      parameters:\r\n        - name: bucketName\r\
+            \n          in: query\r\n          description: Name of the S3 bucket\
+            \ containing the file to scan (Must be 'securitydatatransfers3source')\r\
+            \n          required: true\r\n          schema:\r\n            type: string\r\
+            \n            enum:\r\n              - securitydatatransfers3source\r\n\
+            \        - name: objectKey\r\n          in: query\r\n          description:\
+            \ Path and filename of the object in the S3 bucket to scan\r\n       \
+            \   required: true\r\n          schema:\r\n            type: string\r\n\
+            \            minLength: 1\r\n            maxLength: 1024\r\n      responses:\r\
+            \n        \"200\":\r\n          description: Scan results\r\n        \
+            \  content:\r\n            application/json:\r\n              schema:\r\
+            \n                $ref: \"#/components/schemas/ScanResult\"\r\n      \
+            \  \"400\":\r\n          description: Bad request - missing or invalid\
+            \ parameters\r\n          content:\r\n            application/json:\r\n\
+            \              schema:\r\n                $ref: \"#/components/schemas/ErrorResponse\"\
+            \r\n        \"403\":\r\n          description: Forbidden - insufficient\
+            \ permissions to access the resource\r\n          content:\r\n       \
+            \     application/json:\r\n              schema:\r\n                $ref:\
+            \ \"#/components/schemas/ErrorResponse\"\r\n        \"404\":\r\n     \
+            \     description: Not found - specified object or bucket does not exist\r\
+            \n          content:\r\n            application/json:\r\n            \
+            \  schema:\r\n                $ref: \"#/components/schemas/ErrorResponse\"\
+            \r\n        \"500\":\r\n          description: Internal server error\r\
+            \n          content:\r\n            application/json:\r\n            \
+            \  schema:\r\n                $ref: \"#/components/schemas/ErrorResponse\"\
+            \r\n\r\n  /transfer-file:\r\n    post:\r\n      summary: Transfer a file\
+            \ between S3 buckets with validation\r\n      description: Transfers a\
+            \ file from 'securitydatatransfers3source' to 'securitydatatransfers3destination'\
+            \ after security validation.\r\n      operationId: invokeFileTransfer\r\
+            \n      requestBody:\r\n        required: true\r\n        content:\r\n\
+            \          application/json:\r\n            schema:\r\n              type:\
+            \ object\r\n              required:\r\n                - sourceBucket\r\
+            \n                - sourceKey\r\n                - destinationBucket\r\
+            \n              properties:\r\n                sourceBucket:\r\n     \
+            \             type: string\r\n                  description: Source bucket\
+            \ for the file transfer\r\n                  enum:\r\n               \
+            \     - securitydatatransfers3source\r\n                sourceKey:\r\n\
+            \                  type: string\r\n                  description: Path\
+            \ and filename of the object in the source bucket\r\n                \
+            \  minLength: 1\r\n                  maxLength: 1024\r\n             \
+            \   destinationBucket:\r\n                  type: string\r\n         \
+            \         description: Destination bucket\r\n                  enum:\r\
+            \n                    - securitydatatransfers3destination\r\n        \
+            \        destinationKey:\r\n                  type: string\r\n       \
+            \           description: Path and filename in the destination bucket (optional)\r\
+            \n                  maxLength: 1024\r\n      responses:\r\n        \"\
+            200\":\r\n          description: Transfer results\r\n          content:\r\
+            \n            application/json:\r\n              schema:\r\n         \
+            \       $ref: \"#/components/schemas/TransferResult\"\r\n        \"400\"\
+            :\r\n          description: Bad request - missing or invalid parameters\r\
+            \n          content:\r\n            application/json:\r\n            \
+            \  schema:\r\n                $ref: \"#/components/schemas/ErrorResponse\"\
+            \r\n        \"403\":\r\n          description: Forbidden - insufficient\
+            \ permissions or validation failed\r\n          content:\r\n         \
+            \   application/json:\r\n              schema:\r\n                $ref:\
+            \ \"#/components/schemas/ErrorResponse\"\r\n        \"404\":\r\n     \
+            \     description: Not found - specified object or bucket does not exist\r\
+            \n          content:\r\n            application/json:\r\n            \
+            \  schema:\r\n                $ref: \"#/components/schemas/ErrorResponse\"\
+            \r\n        \"500\":\r\n          description: Internal server error\r\
+            \n          content:\r\n            application/json:\r\n            \
+            \  schema:\r\n                $ref: \"#/components/schemas/ErrorResponse\"\
+            \r\n\r\n  /classification-report:\r\n    get:\r\n      summary: Retrieve\
+            \ a classification report\r\n      description: Fetches a security classification\
+            \ report from 'securitydatatransfers3results'.\r\n      operationId: getClassificationReport\r\
+            \n      parameters:\r\n        - name: scanId\r\n          in: query\r\
+            \n          description: Unique identifier of a previous security scan\r\
+            \n          required: true\r\n          schema:\r\n            type: string\r\
+            \n            minLength: 1\r\n            pattern: ^[a-zA-Z0-9-]+$\r\n\
+            \      responses:\r\n        \"200\":\r\n          description: Classification\
+            \ report\r\n          content:\r\n            application/json:\r\n  \
+            \            schema:\r\n                $ref: \"#/components/schemas/ClassificationReport\"\
+            \r\n        \"400\":\r\n          description: Bad request - invalid scan\
+            \ ID format\r\n          content:\r\n            application/json:\r\n\
+            \              schema:\r\n                $ref: \"#/components/schemas/ErrorResponse\"\
+            \r\n        \"404\":\r\n          description: Not found - report with\
+            \ specified scan ID does not exist\r\n          content:\r\n         \
+            \   application/json:\r\n              schema:\r\n                $ref:\
+            \ \"#/components/schemas/ErrorResponse\"\r\n        \"500\":\r\n     \
+            \     description: Internal server error\r\n          content:\r\n   \
+            \         application/json:\r\n              schema:\r\n             \
+            \   $ref: \"#/components/schemas/ErrorResponse\"\r\n\r\n  /scan-bucket:\r\
+            \n    post:\r\n      summary: Scan all (or a subset of) files in an S3\
+            \ bucket\r\n      description: Lists objects in the bucket (optionally\
+            \ under a prefix) and scans each one for PII/PHI/FedRAMP issues. Returns\
+            \ a paginated page of per-object scan results plus a continuation token.\r\
+            \n      operationId: scanBucket\r\n      parameters:\r\n        - name:\
+            \ bucketName\r\n          in: query\r\n          description: Name of\
+            \ the S3 bucket to scan\r\n          required: true\r\n          schema:\r\
+            \n            type: string\r\n            enum:\r\n              - securitydatatransfers3source\r\
+            \n              - securitydatatransfers3destination\r\n        - name:\
+            \ prefix\r\n          in: query\r\n          description: Optional prefix\
+            \ to narrow the scan scope (e.g., folder/)\r\n          required: false\r\
+            \n          schema:\r\n            type: string\r\n            minLength:\
+            \ 0\r\n            maxLength: 1024\r\n        - name: pageSize\r\n   \
+            \       in: query\r\n          description: Maximum number of objects\
+            \ to scan in this request (server may cap)\r\n          required: false\r\
+            \n          schema:\r\n            type: integer\r\n            minimum:\
+            \ 1\r\n            maximum: 1000\r\n            default: 100\r\n     \
+            \   - name: continuationToken\r\n          in: query\r\n          description:\
+            \ Opaque token returned by a previous call to continue scanning\r\n  \
+            \        required: false\r\n          schema:\r\n            type: string\r\
+            \n      responses:\r\n        \"200\":\r\n          description: Page\
+            \ of per-object scan results\r\n          content:\r\n            application/json:\r\
+            \n              schema:\r\n                $ref: \"#/components/schemas/BucketScanPage\"\
+            \r\n        \"400\":\r\n          description: Bad request - invalid bucket\
+            \ or parameters\r\n          content:\r\n            application/json:\r\
+            \n              schema:\r\n                $ref: \"#/components/schemas/ErrorResponse\"\
+            \r\n        \"403\":\r\n          description: Forbidden - Lambda role/bucket\
+            \ policy blocked listing or reading objects\r\n          content:\r\n\
+            \            application/json:\r\n              schema:\r\n          \
+            \      $ref: \"#/components/schemas/ErrorResponse\"\r\n        \"500\"\
+            :\r\n          description: Internal error while listing or scanning objects\r\
+            \n          content:\r\n            application/json:\r\n            \
+            \  schema:\r\n                $ref: \"#/components/schemas/ErrorResponse\"\
+            \r\n\r\ncomponents:\r\n  schemas:\r\n    ScanResult:\r\n      type: object\r\
+            \n      required:\r\n        - scanId\r\n        - classificationType\r\
+            \n        - securityIssues\r\n        - transferAllowed\r\n      properties:\r\
+            \n        scanId:\r\n          type: string\r\n          description:\
+            \ Unique identifier for the scan\r\n        classificationType:\r\n  \
+            \        type: string\r\n          enum:\r\n            - Type1\r\n  \
+            \          - Type2\r\n            - Type3\r\n          description: Data\
+            \ classification based on sensitivity level\r\n        securityIssues:\r\
+            \n          type: array\r\n          description: List of security issues\
+            \ found in the scanned file\r\n          items:\r\n            $ref: \"\
+            #/components/schemas/SecurityIssue\"\r\n        transferAllowed:\r\n \
+            \         type: boolean\r\n          description: Indicates whether the\
+            \ file can be transferred based on security findings\r\n\r\n    TransferResult:\r\
+            \n      type: object\r\n      required:\r\n        - transferId\r\n  \
+            \      - success\r\n        - message\r\n      properties:\r\n       \
+            \ transferId:\r\n          type: string\r\n          description: Unique\
+            \ identifier for the transfer operation\r\n        success:\r\n      \
+            \    type: boolean\r\n          description: Indicates if the transfer\
+            \ was successful\r\n        message:\r\n          type: string\r\n   \
+            \       description: Descriptive message about the transfer result\r\n\
+            \        appliedTags:\r\n          type: object\r\n          description:\
+            \ Tags applied to the transferred object\r\n          additionalProperties:\r\
+            \n            type: string\r\n\r\n    SecurityIssue:\r\n      type: object\r\
+            \n      required:\r\n        - issueType\r\n        - severity\r\n   \
+            \     - description\r\n      properties:\r\n        issueType:\r\n   \
+            \       type: string\r\n          enum:\r\n            - FedRAMP\r\n \
+            \           - PII\r\n            - PHI\r\n            - Other\r\n    \
+            \      description: Category of the security issue\r\n        severity:\r\
+            \n          type: string\r\n          enum:\r\n            - Low\r\n \
+            \           - Medium\r\n            - High\r\n            - Critical\r\
+            \n          description: Severity level of the security issue\r\n    \
+            \    description:\r\n          type: string\r\n          description:\
+            \ Detailed description of the security issue\r\n        location:\r\n\
+            \          type: string\r\n          description: Location of the issue\
+            \ within the file\r\n\r\n    ClassificationReport:\r\n      type: object\r\
+            \n      required:\r\n        - scanId\r\n        - objectKey\r\n     \
+            \   - classificationType\r\n        - detailedFindings\r\n      properties:\r\
+            \n        scanId:\r\n          type: string\r\n          description:\
+            \ Unique identifier for the scan\r\n        objectKey:\r\n          type:\
+            \ string\r\n          description: Path and filename of the scanned object\r\
+            \n        classificationType:\r\n          type: string\r\n          description:\
+            \ Data classification based on sensitivity level\r\n        detailedFindings:\r\
+            \n          type: array\r\n          description: Comprehensive list of\
+            \ security findings\r\n          items:\r\n            $ref: \"#/components/schemas/SecurityIssue\"\
+            \r\n        remediationSteps:\r\n          type: array\r\n          description:\
+            \ Recommended steps to address security issues\r\n          items:\r\n\
+            \            type: string\r\n\r\n    # NEW: Per-object result for bucket\
+            \ scans\r\n    BucketScanItem:\r\n      type: object\r\n      required:\r\
+            \n        - objectKey\r\n        - status\r\n      properties:\r\n   \
+            \     objectKey:\r\n          type: string\r\n          description: The\
+            \ S3 key that was scanned (or attempted)\r\n        status:\r\n      \
+            \    type: string\r\n          description: Result status for this object\r\
+            \n          enum: [SCANNED, SKIPPED, ERROR]\r\n        scanId:\r\n   \
+            \       type: string\r\n          description: Present when status=SCANNED;\
+            \ the scan identifier\r\n        classificationType:\r\n          type:\
+            \ string\r\n          description: Classification when status=SCANNED\r\
+            \n          enum: [Type1, Type2, Type3]\r\n        message:\r\n      \
+            \    type: string\r\n          description: Optional human-readable detail\
+            \ (e.g., reason for SKIPPED/ERROR)\r\n        securityIssues:\r\n    \
+            \      type: array\r\n          description: Issues found when status=SCANNED\r\
+            \n          items:\r\n            $ref: \"#/components/schemas/SecurityIssue\"\
+            \r\n\r\n    # NEW: Page wrapper for bucket scans\r\n    BucketScanPage:\r\
+            \n      type: object\r\n      required:\r\n        - items\r\n      properties:\r\
+            \n        items:\r\n          type: array\r\n          description: Per-object\
+            \ results for this page\r\n          items:\r\n            $ref: \"#/components/schemas/BucketScanItem\"\
+            \r\n        nextContinuationToken:\r\n          type: string\r\n     \
+            \     description: Opaque token to request the next page; omitted when\
+            \ complete\r\n\r\n    # UPDATED: allow either \"message\" or \"error\"\
+            \ (the Lambda uses both forms)\r\n    ErrorResponse:\r\n      type: object\r\
+            \n      required:\r\n        - errorCode\r\n      properties:\r\n    \
+            \    errorCode:\r\n          type: string\r\n          description: Machine-readable\
+            \ error code (e.g., BUCKET_SCAN_ERROR, MISSING_PARAMETERS)\r\n       \
+            \ message:\r\n          type: string\r\n          description: Human-readable\
+            \ error message (present in many errors)\r\n        error:\r\n       \
+            \   type: string\r\n          description: Alternate error field used\
+            \ by some handlers\r\n        details:\r\n          type: object\r\n \
+            \         description: Additional error details\r\n          additionalProperties:\
+            \ true\r\n        requestId:\r\n          type: string\r\n          description:\
+            \ Unique identifier for the request, useful for troubleshooting\r\n"
+        ActionGroupExecutor:
+          Lambda:
+            Fn::GetAtt:
+            - "LambdaFunctionSecurityDataTransferProcessor"
+            - "Arn"
+        ActionGroupName: "SecurityDataTransferActions"
+        ActionGroupState: "ENABLED"
+      Tags: {}
+  CloudFrontOriginRequestPolicy:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::CloudFront::OriginRequestPolicy"
+    DeletionPolicy: "Retain"
+    Properties:
+      OriginRequestPolicyConfig:
+        QueryStringsConfig:
+          QueryStringBehavior: "all"
+        Comment: "Policy to forward all parameters in viewer requests"
+        HeadersConfig:
+          HeaderBehavior: "allViewer"
+        CookiesConfig:
+          CookieBehavior: "all"
+        Name: "Managed-AllViewer"
+  CloudFrontOriginRequestPolicyQD:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::CloudFront::OriginRequestPolicy"
+    DeletionPolicy: "Retain"
+    Properties:
+      OriginRequestPolicyConfig:
+        QueryStringsConfig:
+          QueryStringBehavior: "all"
+        Comment: "created cause greyed out Managed-AllViewer"
+        HeadersConfig:
+          HeaderBehavior: "allViewer"
+        CookiesConfig:
+          CookieBehavior: "all"
+        Name: "ALLViewer-Custom-10-19-25"
+  LambdaFunctionSecurityDataTransferProcessor:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::Lambda::Function"
+    DeletionPolicy: "Retain"
+    Properties:
+      MemorySize: 512
+      Description: ""
+      TracingConfig:
+        Mode: "PassThrough"
+      Timeout: 60
+      RuntimeManagementConfig:
+        UpdateRuntimeOn: "Auto"
+      Handler: "lambda_function.lambda_handler"
+      Code:
+        SourceKMSKeyArn:
+          Ref: "LambdaFunctionSecurityDataTransferProcessorCodeSourceKMSKeyArnDpVo8"
+        S3ObjectVersion:
+          Ref: "LambdaFunctionSecurityDataTransferProcessorCodeS3ObjectVersionRjPii"
+        S3Bucket:
+          Ref: "LambdaFunctionSecurityDataTransferProcessorCodeS3BucketlpTLQ"
+        ZipFile:
+          Ref: "LambdaFunctionSecurityDataTransferProcessorCodeZipFileSz74A"
+        ImageUri:
+          Ref: "LambdaFunctionSecurityDataTransferProcessorCodeImageUri5XzoP"
+        S3Key:
+          Ref: "LambdaFunctionSecurityDataTransferProcessorCodeS3KeypxFWS"
+      Role:
+        Fn::GetAtt:
+        - "IAMRoleSecurityDataTransferProcessorroleni1rwhqk"
+        - "Arn"
+      FileSystemConfigs: []
+      FunctionName: "SecurityDataTransferProcessor"
+      Runtime: "python3.11"
+      PackageType: "Zip"
+      LoggingConfig:
+        LogFormat: "Text"
+        LogGroup: "/aws/lambda/SecurityDataTransferProcessor"
+      RecursiveLoop: "Terminate"
+      EphemeralStorage:
+        Size: 512
+      Architectures:
+      - "x86_64"
+  IAMRoleBedrockLambdaRole:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::IAM::Role"
+    DeletionPolicy: "Retain"
+    Properties:
+      Path: "/"
+      ManagedPolicyArns:
+      - "arn:aws:iam::aws:policy/AmazonBedrockFullAccess"
+      MaxSessionDuration: 3600
+      RoleName: "BedrockLambdaRole"
+      Policies:
+      - PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+          - Resource: "*"
+            Action:
+            - "bedrock:InvokeModel"
+            - "bedrock:InvokeModelWithResponseStream"
+            Effect: "Allow"
+          - Resource: "*"
+            Action:
+            - "logs:CreateLogGroup"
+            - "logs:CreateLogStream"
+            - "logs:PutLogEvents"
+            Effect: "Allow"
+        PolicyName: "BedrockAccess"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Action: "sts:AssumeRole"
+          Effect: "Allow"
+          Principal:
+            Service: "lambda.amazonaws.com"
+  ApiGatewayV2DeploymentNR:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::ApiGatewayV2::Deployment"
+    DeletionPolicy: "Retain"
+    Properties:
+      ApiId:
+        Ref: "ApiGatewayV2Api"
+      Description: "Automatic deployment triggered by changes to the Api configuration"
+  CloudFrontOriginRequestPolicyPP:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::CloudFront::OriginRequestPolicy"
+    DeletionPolicy: "Retain"
+    Properties:
+      OriginRequestPolicyConfig:
+        QueryStringsConfig:
+          QueryStringBehavior: "all"
+        Comment: "Policy to forward all parameters in viewer requests except for the\
+          \ Host header"
+        HeadersConfig:
+          HeaderBehavior: "allExcept"
+          Headers:
+          - "host"
+        CookiesConfig:
+          CookieBehavior: "all"
+        Name: "Managed-AllViewerExceptHostHeader"
+  IAMRoleAWSServiceRoleForSSO:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::IAM::Role"
+    DeletionPolicy: "Retain"
+    Properties:
+      Path: "/aws-service-role/sso.amazonaws.com/"
+      ManagedPolicyArns:
+      - "arn:aws:iam::aws:policy/aws-service-role/AWSSSOServiceRolePolicy"
+      MaxSessionDuration: 3600
+      RoleName: "AWSServiceRoleForSSO"
+      Description: "Service-linked role used by AWS SSO to manage AWS resources, including\
+        \ IAM roles, policies and SAML IdP on your behalf."
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Action: "sts:AssumeRole"
+          Effect: "Allow"
+          Principal:
+            Service: "sso.amazonaws.com"
+  CloudFrontOriginAccessControl:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::CloudFront::OriginAccessControl"
+    DeletionPolicy: "Retain"
+    Properties:
+      OriginAccessControlConfig:
+        SigningBehavior: "always"
+        Description: ""
+        SigningProtocol: "sigv4"
+        OriginAccessControlOriginType: "s3"
+        Name: "bedrockfrontend.s3.us-east-1.amazonaws.com"
+  IAMRoleAWSServiceRoleForSMSVoice:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::IAM::Role"
+    DeletionPolicy: "Retain"
+    Properties:
+      Path: "/aws-service-role/sms-voice.amazonaws.com/"
+      ManagedPolicyArns:
+      - "arn:aws:iam::aws:policy/aws-service-role/SMSVoiceServiceRolePolicy"
+      MaxSessionDuration: 3600
+      RoleName: "AWSServiceRoleForSMSVoice"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Action: "sts:AssumeRole"
+          Effect: "Allow"
+          Principal:
+            Service: "sms-voice.amazonaws.com"
+  IAMRoleAWSServiceRoleForElasticLoadBalancing:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::IAM::Role"
+    DeletionPolicy: "Retain"
+    Properties:
+      Path: "/aws-service-role/elasticloadbalancing.amazonaws.com/"
+      ManagedPolicyArns:
+      - "arn:aws:iam::aws:policy/aws-service-role/AWSElasticLoadBalancingServiceRolePolicy"
+      MaxSessionDuration: 3600
+      RoleName: "AWSServiceRoleForElasticLoadBalancing"
+      Description: "Allows ELB to call AWS services on your behalf."
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Action: "sts:AssumeRole"
+          Effect: "Allow"
+          Principal:
+            Service: "elasticloadbalancing.amazonaws.com"
+  CloudFrontKeyGroup:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::CloudFront::KeyGroup"
+    DeletionPolicy: "Retain"
+    Properties:
+      KeyGroupConfig:
+        Items:
+        - Ref: "CloudFrontPublicKey"
+        Name: "CloudFront_distribution_S3Validator"
+  CloudFrontCachePolicyHO:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::CloudFront::CachePolicy"
+    DeletionPolicy: "Retain"
+    Properties:
+      CachePolicyConfig:
+        Comment: "Default Amplify cache policy without cookies"
+        MinTTL: 0
+        MaxTTL: 3.1536E7
+        ParametersInCacheKeyAndForwardedToOrigin:
+          QueryStringsConfig:
+            QueryStringBehavior: "all"
+          EnableAcceptEncodingBrotli: true
+          HeadersConfig:
+            HeaderBehavior: "whitelist"
+            Headers:
+            - "Authorization"
+            - "Accept"
+            - "CloudFront-Viewer-Country"
+            - "Host"
+          CookiesConfig:
+            CookieBehavior: "none"
+          EnableAcceptEncodingGzip: true
+        DefaultTTL: 0
+        Name: "Managed-Amplify-DefaultNoCookies"
+  IAMRoleTestAWSBedRockLambdarole3qcx3ks8:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::IAM::Role"
+    DeletionPolicy: "Retain"
+    Properties:
+      Path: "/service-role/"
+      MaxSessionDuration: 3600
+      RoleName: "Test_AWS_BedRock_Lambda-role-3qcx3ks8"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Action: "sts:AssumeRole"
+          Effect: "Allow"
+          Principal:
+            Service: "lambda.amazonaws.com"
+  IAMGroupAdminAccess:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::IAM::Group"
+    DeletionPolicy: "Retain"
+    Properties:
+      GroupName: "Admin-Access"
+      Path: "/"
+      ManagedPolicyArns:
+      - "arn:aws:iam::aws:policy/AdministratorAccess"
+  IAMManagedPolicyPolicyserviceroleAWSLambdaBasicExecutionRole3a46832e5ef14aa8a32fe397246d1f6f:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::IAM::ManagedPolicy"
+    DeletionPolicy: "Retain"
+    Properties:
+      ManagedPolicyName: "AWSLambdaBasicExecutionRole-3a46832e-5ef1-4aa8-a32f-e397246d1f6f"
+      Path: "/service-role/"
+      Description: ""
+      Groups: []
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Resource: "arn:aws:logs:us-east-1:253881689673:*"
+          Action: "logs:CreateLogGroup"
+          Effect: "Allow"
+        - Resource:
+          - "arn:aws:logs:us-east-1:253881689673:log-group:/aws/lambda/OptionsHandler:*"
+          Action:
+          - "logs:CreateLogStream"
+          - "logs:PutLogEvents"
+          Effect: "Allow"
+      Roles:
+      - Ref: "IAMRoleOptionsHandlerrole02o0bkcx"
+      Users: []
+  IAMRoleS3AmazonAccess:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::IAM::Role"
+    DeletionPolicy: "Retain"
+    Properties:
+      Path: "/"
+      ManagedPolicyArns:
+      - "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+      MaxSessionDuration: 3600
+      RoleName: "S3AmazonAccess"
+      Description: "Allows EC2 instances to call AWS services on your behalf."
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Action: "sts:AssumeRole"
+          Effect: "Allow"
+          Principal:
+            Service: "ec2.amazonaws.com"
+  IAMManagedPolicyPolicyserviceroleCognitounauthenticated1744856826918:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::IAM::ManagedPolicy"
+    DeletionPolicy: "Retain"
+    Properties:
+      ManagedPolicyName: "Cognito-unauthenticated-1744856826918"
+      Path: "/service-role/"
+      Description: ""
+      Groups: []
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Resource:
+          - "*"
+          Action:
+          - "cognito-identity:GetCredentialsForIdentity"
+          Effect: "Allow"
+      Roles:
+      - Ref: "IAMRoleGuestAppAccess"
+      Users: []
+  CloudFrontOriginRequestPolicyUR:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::CloudFront::OriginRequestPolicy"
+    DeletionPolicy: "Retain"
+    Properties:
+      OriginRequestPolicyConfig:
+        QueryStringsConfig:
+          QueryStringBehavior: "none"
+        Comment: "Policy for custom origin with CORS"
+        HeadersConfig:
+          HeaderBehavior: "whitelist"
+          Headers:
+          - "origin"
+        CookiesConfig:
+          CookieBehavior: "none"
+        Name: "Managed-CORS-CustomOrigin"
+  CloudFrontOriginRequestPolicyTq:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::CloudFront::OriginRequestPolicy"
+    DeletionPolicy: "Retain"
+    Properties:
+      OriginRequestPolicyConfig:
+        QueryStringsConfig:
+          QueryStringBehavior: "all"
+        Comment: "Policy to forward all parameters in viewer requests and all CloudFront\
+          \ headers as of June 2022"
+        HeadersConfig:
+          HeaderBehavior: "allViewerAndWhitelistCloudFront"
+          Headers:
+          - "CloudFront-Viewer-Time-Zone"
+          - "CloudFront-Viewer-Address"
+          - "CloudFront-Viewer-Country"
+          - "CloudFront-Is-IOS-Viewer"
+          - "CloudFront-Is-Tablet-Viewer"
+          - "CloudFront-Forwarded-Proto"
+          - "CloudFront-Viewer-Country-Name"
+          - "CloudFront-Is-Mobile-Viewer"
+          - "CloudFront-Is-SmartTV-Viewer"
+          - "CloudFront-Viewer-Country-Region"
+          - "CloudFront-Is-Android-Viewer"
+          - "CloudFront-Viewer-Country-Region-Name"
+          - "CloudFront-Viewer-City"
+          - "CloudFront-Viewer-Latitude"
+          - "CloudFront-Viewer-Longitude"
+          - "CloudFront-Viewer-Http-Version"
+          - "CloudFront-Viewer-Postal-Code"
+          - "CloudFront-Viewer-ASN"
+          - "CloudFront-Is-Desktop-Viewer"
+          - "CloudFront-Viewer-Metro-Code"
+          - "CloudFront-Viewer-TLS"
+        CookiesConfig:
+          CookieBehavior: "all"
+        Name: "Managed-AllViewerAndCloudFrontHeaders-2022-06"
+  ApiGatewayV2DeploymentP0:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::ApiGatewayV2::Deployment"
+    DeletionPolicy: "Retain"
+    Properties:
+      ApiId:
+        Ref: "ApiGatewayV2Api"
+      Description: "Automatic deployment triggered by changes to the Api configuration"
+  CloudFrontOriginRequestPolicyDd:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::CloudFront::OriginRequestPolicy"
+    DeletionPolicy: "Retain"
+    Properties:
+      OriginRequestPolicyConfig:
+        QueryStringsConfig:
+          QueryStringBehavior: "all"
+        Comment: "Policy for Elemental MediaTailor Origin"
+        HeadersConfig:
+          HeaderBehavior: "whitelist"
+          Headers:
+          - "origin"
+          - "access-control-request-headers"
+          - "x-forwarded-for"
+          - "access-control-request-method"
+          - "user-agent"
+        CookiesConfig:
+          CookieBehavior: "none"
+        Name: "Managed-Elemental-MediaTailor-PersonalizedManifests"
+  ApiGatewayV2DeploymentVt:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::ApiGatewayV2::Deployment"
+    DeletionPolicy: "Retain"
+    Properties:
+      ApiId:
+        Ref: "ApiGatewayV2Api"
+      Description: "Automatic deployment triggered by changes to the Api configuration"
+  S3BucketSecuritydatatransfers3source:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::S3::Bucket"
+    DeletionPolicy: "Retain"
+    Properties:
+      PublicAccessBlockConfiguration:
+        RestrictPublicBuckets: true
+        IgnorePublicAcls: true
+        BlockPublicPolicy: true
+        BlockPublicAcls: true
+      BucketName: "securitydatatransfers3source"
+      OwnershipControls:
+        Rules:
+        - ObjectOwnership: "BucketOwnerEnforced"
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+        - BucketKeyEnabled: true
+          ServerSideEncryptionByDefault:
+            SSEAlgorithm: "AES256"
+  ApiGatewayV2DeploymentNj:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::ApiGatewayV2::Deployment"
+    DeletionPolicy: "Retain"
+    Properties:
+      ApiId:
+        Ref: "ApiGatewayV2Api"
+  ApiGatewayV2DeploymentOI:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::ApiGatewayV2::Deployment"
+    DeletionPolicy: "Retain"
+    Properties:
+      ApiId:
+        Ref: "ApiGatewayV2Api"
+      Description: "Automatic deployment triggered by changes to the Api configuration"
+  CloudFrontCachePolicyQM:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::CloudFront::CachePolicy"
+    DeletionPolicy: "Retain"
+    Properties:
+      CachePolicyConfig:
+        Comment: "Amplify cache policy for image optimization"
+        MinTTL: 0
+        MaxTTL: 3.1536E7
+        ParametersInCacheKeyAndForwardedToOrigin:
+          QueryStringsConfig:
+            QueryStringBehavior: "all"
+          EnableAcceptEncodingBrotli: true
+          HeadersConfig:
+            HeaderBehavior: "whitelist"
+            Headers:
+            - "Authorization"
+            - "RSC"
+            - "Accept"
+            - "CloudFront-Viewer-Country"
+            - "X-Amplify-Dpl"
+            - "Host"
+          CookiesConfig:
+            Cookies:
+            - "__dpl"
+            CookieBehavior: "whitelist"
+          EnableAcceptEncodingGzip: true
+        DefaultTTL: 0
+        Name: "Managed-Amplify-ImageOptimization-V2"
+  LambdaPermissionFunctionBedrockPromptHandlerQ0:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::Lambda::Permission"
+    DeletionPolicy: "Retain"
+    Properties:
+      FunctionName:
+        Fn::GetAtt:
+        - "LambdaFunctionBedrockPromptHandler"
+        - "Arn"
+      Action: "lambda:InvokeFunction"
+      SourceArn: "arn:aws:execute-api:us-east-1:253881689673:9heajy0ej8/*/POST/BedrockPromptHandler"
+      Principal: "apigateway.amazonaws.com"
+  BedrockAgentAliasQj:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::Bedrock::AgentAlias"
+    DeletionPolicy: "Retain"
+    Properties:
+      AgentAliasName: "AgentTestAlias"
+      Description: "Test Alias for Agent"
+      AgentId:
+        Ref: "BedrockAgent"
+      RoutingConfiguration:
+      - AgentVersion: "DRAFT"
+      Tags: {}
+  CloudFrontCachePolicyP2:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::CloudFront::CachePolicy"
+    DeletionPolicy: "Retain"
+    Properties:
+      CachePolicyConfig:
+        Comment: "Default Amplify cache policy"
+        MinTTL: 0
+        MaxTTL: 3.1536E7
+        ParametersInCacheKeyAndForwardedToOrigin:
+          QueryStringsConfig:
+            QueryStringBehavior: "all"
+          EnableAcceptEncodingBrotli: true
+          HeadersConfig:
+            HeaderBehavior: "whitelist"
+            Headers:
+            - "Authorization"
+            - "RSC"
+            - "Accept"
+            - "CloudFront-Viewer-Country"
+            - "X-Amplify-Dpl"
+            - "Host"
+          CookiesConfig:
+            CookieBehavior: "all"
+          EnableAcceptEncodingGzip: true
+        DefaultTTL: 0
+        Name: "Managed-Amplify-Default-V2"
+  BedrockAgentAlias:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::Bedrock::AgentAlias"
+    DeletionPolicy: "Retain"
+    Properties:
+      AgentAliasName: "testdatascanner"
+      AgentId:
+        Ref: "BedrockAgent"
+      RoutingConfiguration:
+      - AgentVersion: "1"
+      Tags: {}
+  IAMRoleAWSServiceRoleForAPIGateway:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::IAM::Role"
+    DeletionPolicy: "Retain"
+    Properties:
+      Path: "/aws-service-role/ops.apigateway.amazonaws.com/"
+      ManagedPolicyArns:
+      - "arn:aws:iam::aws:policy/aws-service-role/APIGatewayServiceRolePolicy"
+      MaxSessionDuration: 3600
+      RoleName: "AWSServiceRoleForAPIGateway"
+      Description: "The Service Linked Role is used by Amazon API Gateway."
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Action: "sts:AssumeRole"
+          Effect: "Allow"
+          Principal:
+            Service: "ops.apigateway.amazonaws.com"
+  IAMManagedPolicyPolicyserviceroleAWSLambdaBasicExecutionRolef2e18604a9fc499d943f2ed83da44a2a:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::IAM::ManagedPolicy"
+    DeletionPolicy: "Retain"
+    Properties:
+      ManagedPolicyName: "AWSLambdaBasicExecutionRole-f2e18604-a9fc-499d-943f-2ed83da44a2a"
+      Path: "/service-role/"
+      Description: ""
+      Groups: []
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Resource: "arn:aws:logs:us-east-1:253881689673:*"
+          Action: "logs:CreateLogGroup"
+          Effect: "Allow"
+        - Resource:
+          - "arn:aws:logs:us-east-1:253881689673:log-group:/aws/lambda/BedrockPromptHandler:*"
+          Action:
+          - "logs:CreateLogStream"
+          - "logs:PutLogEvents"
+          Effect: "Allow"
+      Roles:
+      - Ref: "IAMRoleBedrockPromptHandlerrole461wkeeg"
+      Users: []
+  CloudFrontCachePolicyP4:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::CloudFront::CachePolicy"
+    DeletionPolicy: "Retain"
+    Properties:
+      CachePolicyConfig:
+        Comment: "Amplify cache policy for image optimization"
+        MinTTL: 0
+        MaxTTL: 3.1536E7
+        ParametersInCacheKeyAndForwardedToOrigin:
+          QueryStringsConfig:
+            QueryStringBehavior: "all"
+          EnableAcceptEncodingBrotli: true
+          HeadersConfig:
+            HeaderBehavior: "whitelist"
+            Headers:
+            - "Authorization"
+            - "Accept"
+            - "Host"
+          CookiesConfig:
+            CookieBehavior: "none"
+          EnableAcceptEncodingGzip: true
+        DefaultTTL: 0
+        Name: "Managed-Amplify-ImageOptimization"
+  LambdaPermissionFunctionBedrockPromptHandlerXE:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::Lambda::Permission"
+    DeletionPolicy: "Retain"
+    Properties:
+      FunctionName:
+        Fn::GetAtt:
+        - "LambdaFunctionBedrockPromptHandler"
+        - "Arn"
+      Action: "lambda:InvokeFunction"
+      SourceArn: "arn:aws:bedrock:us-east-1:253881689673:agent/*"
+      Principal: "bedrock.amazonaws.com"
+      SourceAccount: "253881689673"
+  IAMRoleAWSServiceRoleForTrustedAdvisor:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::IAM::Role"
+    DeletionPolicy: "Retain"
+    Properties:
+      Path: "/aws-service-role/trustedadvisor.amazonaws.com/"
+      ManagedPolicyArns:
+      - "arn:aws:iam::aws:policy/aws-service-role/AWSTrustedAdvisorServiceRolePolicy"
+      MaxSessionDuration: 3600
+      RoleName: "AWSServiceRoleForTrustedAdvisor"
+      Description: "Access for the AWS Trusted Advisor Service to help reduce cost,\
+        \ increase performance, and improve security of your AWS environment."
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Action: "sts:AssumeRole"
+          Effect: "Allow"
+          Principal:
+            Service: "trustedadvisor.amazonaws.com"
+  CloudFrontCachePolicyOZ:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::CloudFront::CachePolicy"
+    DeletionPolicy: "Retain"
+    Properties:
+      CachePolicyConfig:
+        Comment: "Default Amplify cache policy without cookies"
+        MinTTL: 0
+        MaxTTL: 3.1536E7
+        ParametersInCacheKeyAndForwardedToOrigin:
+          QueryStringsConfig:
+            QueryStringBehavior: "all"
+          EnableAcceptEncodingBrotli: true
+          HeadersConfig:
+            HeaderBehavior: "whitelist"
+            Headers:
+            - "Authorization"
+            - "RSC"
+            - "Accept"
+            - "CloudFront-Viewer-Country"
+            - "X-Amplify-Dpl"
+            - "Host"
+          CookiesConfig:
+            Cookies:
+            - "__dpl"
+            CookieBehavior: "whitelist"
+          EnableAcceptEncodingGzip: true
+        DefaultTTL: 0
+        Name: "Managed-Amplify-DefaultNoCookies-V2"
+  CloudFrontCachePolicy:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::CloudFront::CachePolicy"
+    DeletionPolicy: "Retain"
+    Properties:
+      CachePolicyConfig:
+        Comment: "Policy for Elemental MediaPackage Origin"
+        MinTTL: 0
+        MaxTTL: 3.1536E7
+        ParametersInCacheKeyAndForwardedToOrigin:
+          QueryStringsConfig:
+            QueryStrings:
+            - "aws.manifestfilter"
+            - "start"
+            - "end"
+            - "m"
+            QueryStringBehavior: "whitelist"
+          EnableAcceptEncodingBrotli: false
+          HeadersConfig:
+            HeaderBehavior: "whitelist"
+            Headers:
+            - "origin"
+          CookiesConfig:
+            CookieBehavior: "none"
+          EnableAcceptEncodingGzip: true
+        DefaultTTL: 86400
+        Name: "Managed-Elemental-MediaPackage"
+  S3BucketPolicyBedrockfrontend:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::S3::BucketPolicy"
+    DeletionPolicy: "Retain"
+    Properties:
+      Bucket:
+        Ref: "S3BucketBedrockfrontend"
+      PolicyDocument:
+        Version: "2008-10-17"
+        Statement:
+        - Condition:
+            StringEquals:
+              aws:SourceArn: "arn:aws:cloudfront::253881689673:distribution/EOK4YOONDZGMT"
+          Resource: "arn:aws:s3:::bedrockfrontend/*"
+          Action: "s3:GetObject"
+          Effect: "Allow"
+          Principal:
+            Service: "cloudfront.amazonaws.com"
+          Sid: "AllowCloudFrontServicePrincipal"
+        Id: "PolicyForCloudFrontPrivateContent"
+  ApiGatewayV2DeploymentPI:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::ApiGatewayV2::Deployment"
+    DeletionPolicy: "Retain"
+    Properties:
+      ApiId:
+        Ref: "ApiGatewayV2Api"
+      Description: "Automatic deployment triggered by changes to the Api configuration"
+  ApiGatewayV2DeploymentYc:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::ApiGatewayV2::Deployment"
+    DeletionPolicy: "Retain"
+    Properties:
+      ApiId:
+        Ref: "ApiGatewayV2Api"
+      Description: "Automatic deployment triggered by changes to the Api configuration"
+  LambdaPermissionFunctionBedrockPromptHandlerBQ:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::Lambda::Permission"
+    DeletionPolicy: "Retain"
+    Properties:
+      FunctionName:
+        Fn::GetAtt:
+        - "LambdaFunctionBedrockPromptHandler"
+        - "Arn"
+      Action: "lambda:InvokeFunction"
+      SourceArn: "arn:aws:execute-api:us-east-1:253881689673:9heajy0ej8/*/*/BedrockPromptHandler"
+      Principal: "apigateway.amazonaws.com"
+  IAMRoleBedrockPromptHandlerrole461wkeeg:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::IAM::Role"
+    DeletionPolicy: "Retain"
+    Properties:
+      Path: "/service-role/"
+      ManagedPolicyArns:
+      - "arn:aws:iam::aws:policy/AmazonBedrockFullAccess"
+      - "arn:aws:iam::253881689673:policy/service-role/AWSLambdaBasicExecutionRole-f2e18604-a9fc-499d-943f-2ed83da44a2a"
+      MaxSessionDuration: 3600
+      RoleName: "BedrockPromptHandler-role-461wkeeg"
+      Policies:
+      - PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+          - Resource: "*"
+            Action:
+            - "bedrock:InvokeModel"
+            - "bedrock:InvokeModelWithResponseStream"
+            Effect: "Allow"
+            Sid: "VisualEditor0"
+          - Resource:
+            - "*"
+            Action:
+            - "s3:GetObject"
+            - "s3:GetObjectTagging"
+            - "s3:PutObject"
+            Effect: "Allow"
+            Sid: "Statement1"
+        PolicyName: "BedRock-S3-Custom-10-19-25"
+      - PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+          - Resource:
+            - "arn:aws:ssm:us-east-1:253881689673:parameter/private_key.pem"
+            Action:
+            - "ssm:GetParameter"
+            Effect: "Allow"
+            Sid: "Statement1"
+        PolicyName: "GetParamsPriKey"
+      - PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+          - Resource:
+            - "*"
+            Action:
+            - "kms:*"
+            - "ssm:*"
+            Effect: "Allow"
+            Sid: "Statement1"
+        PolicyName: "kms_all_lambda"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Action: "sts:AssumeRole"
+          Effect: "Allow"
+          Principal:
+            Service: "lambda.amazonaws.com"
+  ApiGatewayV2Api:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::ApiGatewayV2::Api"
+    DeletionPolicy: "Retain"
+    Properties:
+      IpAddressType: "ipv4"
+      RouteSelectionExpression: "$request.method $request.path"
+      CorsConfiguration:
+        MaxAge: 3600
+        AllowOrigins:
+        - "https://d11k4vck88gnf5.cloudfront.net"
+        AllowCredentials: false
+        ExposeHeaders: []
+        AllowMethods:
+        - "OPTIONS"
+        - "POST"
+        AllowHeaders:
+        - "authorization"
+        - "content-type"
+      ProtocolType: "HTTP"
+      DisableExecuteApiEndpoint: false
+      Tags: {}
+      Name: "BedrockAPI"
+  IAMGroupDevelopers:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::IAM::Group"
+    DeletionPolicy: "Retain"
+    Properties:
+      GroupName: "Developers"
+      Path: "/"
+      ManagedPolicyArns:
+      - "arn:aws:iam::253881689673:policy/online-book-store-IAM-policy"
+  CloudFrontOriginRequestPolicySR:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::CloudFront::OriginRequestPolicy"
+    DeletionPolicy: "Retain"
+    Properties:
+      OriginRequestPolicyConfig:
+        QueryStringsConfig:
+          QueryStringBehavior: "none"
+        Comment: "Policy for an origin to forward the Host header only"
+        HeadersConfig:
+          HeaderBehavior: "whitelist"
+          Headers:
+          - "host"
+        CookiesConfig:
+          CookieBehavior: "none"
+        Name: "Managed-HostHeaderOnly"
+  ApiGatewayV2DeploymentIG:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::ApiGatewayV2::Deployment"
+    DeletionPolicy: "Retain"
+    Properties:
+      ApiId:
+        Ref: "ApiGatewayV2Api"
+      Description: "Automatic deployment triggered by changes to the Api configuration"
+  ApiGatewayV2DeploymentYS:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::ApiGatewayV2::Deployment"
+    DeletionPolicy: "Retain"
+    Properties:
+      ApiId:
+        Ref: "ApiGatewayV2Api"
+      Description: "Automatic deployment triggered by changes to the Api configuration"
+  S3BucketSecuritydatatransfers3destination:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::S3::Bucket"
+    DeletionPolicy: "Retain"
+    Properties:
+      PublicAccessBlockConfiguration:
+        RestrictPublicBuckets: true
+        IgnorePublicAcls: true
+        BlockPublicPolicy: true
+        BlockPublicAcls: true
+      BucketName: "securitydatatransfers3destination"
+      OwnershipControls:
+        Rules:
+        - ObjectOwnership: "BucketOwnerEnforced"
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+        - BucketKeyEnabled: true
+          ServerSideEncryptionByDefault:
+            SSEAlgorithm: "AES256"
+  IAMRoleOptionsHandlerrole02o0bkcx:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::IAM::Role"
+    DeletionPolicy: "Retain"
+    Properties:
+      Path: "/service-role/"
+      ManagedPolicyArns:
+      - "arn:aws:iam::253881689673:policy/service-role/AWSLambdaBasicExecutionRole-3a46832e-5ef1-4aa8-a32f-e397246d1f6f"
+      MaxSessionDuration: 3600
+      RoleName: "OptionsHandler-role-02o0bkcx"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Action: "sts:AssumeRole"
+          Effect: "Allow"
+          Principal:
+            Service: "lambda.amazonaws.com"
+  LambdaPermissionFunctionSecurityDataTransferProcessor:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::Lambda::Permission"
+    DeletionPolicy: "Retain"
+    Properties:
+      FunctionName:
+        Fn::GetAtt:
+        - "LambdaFunctionSecurityDataTransferProcessor"
+        - "Arn"
+      Action: "lambda:InvokeFunction"
+      SourceArn: "arn:aws:bedrock:us-east-1:253881689673:agent/*"
+      Principal: "bedrock.amazonaws.com"
+      SourceAccount: "253881689673"
+  ApiGatewayV2DeploymentSF:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::ApiGatewayV2::Deployment"
+    DeletionPolicy: "Retain"
+    Properties:
+      ApiId:
+        Ref: "ApiGatewayV2Api"
+      Description: "Automatic deployment triggered by changes to the Api configuration"
+  CloudFrontDistribution:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::CloudFront::Distribution"
+    DeletionPolicy: "Retain"
+    Properties:
+      DistributionConfig:
+        Logging:
+          IncludeCookies: false
+          Bucket: ""
+          Prefix: ""
+        Comment: "index.html"
+        DefaultRootObject: "index.html"
+        Origins:
+        - ConnectionTimeout: 10
+          OriginAccessControlId:
+            Ref: "CloudFrontOriginAccessControl"
+          ConnectionAttempts: 3
+          OriginCustomHeaders: []
+          DomainName:
+            Fn::GetAtt:
+            - "S3BucketBedrockfrontend"
+            - "RegionalDomainName"
+          OriginShield:
+            Enabled: false
+          S3OriginConfig:
+            OriginReadTimeout: 30
+            OriginAccessIdentity: ""
+          OriginPath: ""
+          Id: "bedrockfrontend.s3.us-east-1.amazonaws.com"
+        ViewerCertificate:
+          MinimumProtocolVersion: "TLSv1"
+          SslSupportMethod: "vip"
+          CloudFrontDefaultCertificate: true
+        PriceClass: "PriceClass_All"
+        DefaultCacheBehavior:
+          Compress: true
+          FunctionAssociations: []
+          LambdaFunctionAssociations: []
+          TargetOriginId: "bedrockfrontend.s3.us-east-1.amazonaws.com"
+          ViewerProtocolPolicy: "redirect-to-https"
+          ResponseHeadersPolicyId: "60669652-455b-4ae9-85a4-c4c02393f86c"
+          GrpcConfig:
+            Enabled: false
+          TrustedSigners: []
+          FieldLevelEncryptionId: ""
+          TrustedKeyGroups: []
+          AllowedMethods:
+          - "HEAD"
+          - "DELETE"
+          - "POST"
+          - "GET"
+          - "OPTIONS"
+          - "PUT"
+          - "PATCH"
+          CachedMethods:
+          - "HEAD"
+          - "GET"
+          - "OPTIONS"
+          SmoothStreaming: false
+          OriginRequestPolicyId:
+            Ref: "CloudFrontOriginRequestPolicyPP"
+          CachePolicyId:
+            Ref: "CloudFrontCachePolicyQY"
+        Staging: false
+        CustomErrorResponses:
+        - ErrorCachingMinTTL: 10
+          ErrorCode: 503
+        ContinuousDeploymentPolicyId: ""
+        OriginGroups:
+          Quantity: 0
+          Items: []
+        Enabled: true
+        Aliases: []
+        IPV6Enabled: true
+        WebACLId: ""
+        HttpVersion: "http2"
+        Restrictions:
+          GeoRestriction:
+            Locations: []
+            RestrictionType: "none"
+        CacheBehaviors: []
+  IAMRoleAWSServiceRoleForGlobalAccelerator:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::IAM::Role"
+    DeletionPolicy: "Retain"
+    Properties:
+      Path: "/aws-service-role/globalaccelerator.amazonaws.com/"
+      ManagedPolicyArns:
+      - "arn:aws:iam::aws:policy/aws-service-role/AWSGlobalAcceleratorSLRPolicy"
+      MaxSessionDuration: 3600
+      RoleName: "AWSServiceRoleForGlobalAccelerator"
+      Description: "Allows Global Accelerator to call AWS services on customer's behalf"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Action: "sts:AssumeRole"
+          Effect: "Allow"
+          Principal:
+            Service: "globalaccelerator.amazonaws.com"
+  CloudFrontCachePolicyHm:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::CloudFront::CachePolicy"
+    DeletionPolicy: "Retain"
+    Properties:
+      CachePolicyConfig:
+        Comment: "Policy for origins that return Cache-Control headers and serve different\
+          \ content based on values present in the query string."
+        MinTTL: 0
+        MaxTTL: 3.1536E7
+        ParametersInCacheKeyAndForwardedToOrigin:
+          QueryStringsConfig:
+            QueryStringBehavior: "all"
+          EnableAcceptEncodingBrotli: true
+          HeadersConfig:
+            HeaderBehavior: "whitelist"
+            Headers:
+            - "x-method-override"
+            - "origin"
+            - "host"
+            - "x-http-method"
+            - "x-http-method-override"
+          CookiesConfig:
+            CookieBehavior: "all"
+          EnableAcceptEncodingGzip: true
+        DefaultTTL: 0
+        Name: "UseOriginCacheControlHeaders-QueryStrings"
+  IAMInstanceProfileS3AmazonAccess:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::IAM::InstanceProfile"
+    DeletionPolicy: "Retain"
+    Properties:
+      Path: "/"
+      Roles:
+      - Ref: "IAMRoleS3AmazonAccess"
+      InstanceProfileName:
+        Ref: "IAMRoleS3AmazonAccess"
+  CloudFrontCachePolicyIN:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::CloudFront::CachePolicy"
+    DeletionPolicy: "Retain"
+    Properties:
+      CachePolicyConfig:
+        Comment: "Policy for origins that return Cache-Control headers. Query strings\
+          \ are not included in the cache key."
+        MinTTL: 0
+        MaxTTL: 3.1536E7
+        ParametersInCacheKeyAndForwardedToOrigin:
+          QueryStringsConfig:
+            QueryStringBehavior: "none"
+          EnableAcceptEncodingBrotli: true
+          HeadersConfig:
+            HeaderBehavior: "whitelist"
+            Headers:
+            - "x-method-override"
+            - "origin"
+            - "host"
+            - "x-http-method"
+            - "x-http-method-override"
+          CookiesConfig:
+            CookieBehavior: "all"
+          EnableAcceptEncodingGzip: true
+        DefaultTTL: 0
+        Name: "UseOriginCacheControlHeaders"
+  IAMRoleCognitovalidatorrole6lewz83q:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::IAM::Role"
+    DeletionPolicy: "Retain"
+    Properties:
+      Path: "/service-role/"
+      ManagedPolicyArns:
+      - "arn:aws:iam::253881689673:policy/service-role/AWSLambdaBasicExecutionRole-93f621f2-c910-4765-a3c5-7e9025d898f6"
+      MaxSessionDuration: 3600
+      RoleName: "Cognito_validator-role-6lewz83q"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Action: "sts:AssumeRole"
+          Effect: "Allow"
+          Principal:
+            Service: "lambda.amazonaws.com"
+  CloudFrontPublicKey:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::CloudFront::PublicKey"
+    DeletionPolicy: "Retain"
+    Properties:
+      PublicKeyConfig:
+        Comment: "created locally from openssl on Git Bash Desktop02"
+        CallerReference: "e428ed48-a7d0-43dd-add4-c841b9e5b9d8"
+        EncodedKey: "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3COEARuNYiDTuVLQ/b+N\n\
+          UYY4GRHBoes25aYNzhMaL0y8FTCFHsTXCceLfSczHGDKIy3qyvHzM8VcTDYtzvsU\nk6I6e70p/H6S27ywmOHPXB2cpntBRd1OUjfxCZSRIjM8BN2BKflhjzTddWYV+Ieu\n\
+          MwWZGSx7kJPA4+yFXuRg7EMki1XpFctf16Z/DWH72VN1LFetNZOB/p4DeVUBs6By\nhJh+6iBh8GqTzMikPnh9wz74QXq4aeL28jSV5DjThbOQkdYekrJ8TlQf9iU5ng3z\n\
+          fh5FvVv4Gq2aOUcRI46z9hPk6GI/UAZ5jb1qHSYBDIOqfA1o/JXx7JGsATF7hL/q\nDwIDAQAB\n\
+          -----END PUBLIC KEY-----\n"
+        Name: "public_key2"
+  CloudFrontCachePolicyQY:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::CloudFront::CachePolicy"
+    DeletionPolicy: "Retain"
+    Properties:
+      CachePolicyConfig:
+        Comment: "Policy with caching disabled"
+        MinTTL: 0
+        MaxTTL: 0
+        ParametersInCacheKeyAndForwardedToOrigin:
+          QueryStringsConfig:
+            QueryStringBehavior: "none"
+          EnableAcceptEncodingBrotli: false
+          HeadersConfig:
+            HeaderBehavior: "none"
+          CookiesConfig:
+            CookieBehavior: "none"
+          EnableAcceptEncodingGzip: false
+        DefaultTTL: 0
+        Name: "Managed-CachingDisabled"
+  IAMUserJstyer:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::IAM::User"
+    DeletionPolicy: "Retain"
+    Properties:
+      Path: "/"
+      UserName: "j.styer"
+      LoginProfile:
+        PasswordResetRequired: false
+      Groups:
+      - Ref: "IAMGroupAdminAccess"
+  ApiGatewayV2DeploymentK0:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::ApiGatewayV2::Deployment"
+    DeletionPolicy: "Retain"
+    Properties:
+      ApiId:
+        Ref: "ApiGatewayV2Api"
+      Description: "Automatic deployment triggered by changes to the Api configuration"
+  ApiGatewayV2DeploymentJP:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::ApiGatewayV2::Deployment"
+    DeletionPolicy: "Retain"
+    Properties:
+      ApiId:
+        Ref: "ApiGatewayV2Api"
+      Description: "Automatic deployment triggered by changes to the Api configuration"
+  ApiGatewayV2DeploymentS6:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::ApiGatewayV2::Deployment"
+    DeletionPolicy: "Retain"
+    Properties:
+      ApiId:
+        Ref: "ApiGatewayV2Api"
+      Description: "Automatic deployment triggered by changes to the Api configuration"
+  IAMManagedPolicyPolicyonlinebookstoreIAMpolicy:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::IAM::ManagedPolicy"
+    DeletionPolicy: "Retain"
+    Properties:
+      ManagedPolicyName: "online-book-store-IAM-policy"
+      Path: "/"
+      Description: ""
+      Groups:
+      - Ref: "IAMGroupDevelopers"
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Resource: "*"
+          Action:
+          - "s3:*"
+          - "apigateway:*"
+          - "lambda:*"
+          - "dynamodb:*"
+          Effect: "Allow"
+          Sid: "VisualEditor0"
+      Roles: []
+      Users: []
+  ApiGatewayV2DeploymentYq:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::ApiGatewayV2::Deployment"
+    DeletionPolicy: "Retain"
+    Properties:
+      ApiId:
+        Ref: "ApiGatewayV2Api"
+      Description: "Automatic deployment triggered by changes to the Api configuration"
+  IAMRoleAWSServiceRoleForSupport:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::IAM::Role"
+    DeletionPolicy: "Retain"
+    Properties:
+      Path: "/aws-service-role/support.amazonaws.com/"
+      ManagedPolicyArns:
+      - "arn:aws:iam::aws:policy/aws-service-role/AWSSupportServiceRolePolicy"
+      MaxSessionDuration: 3600
+      RoleName: "AWSServiceRoleForSupport"
+      Description: "Enables resource access for AWS to provide billing, administrative\
+        \ and support services"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Action: "sts:AssumeRole"
+          Effect: "Allow"
+          Principal:
+            Service: "support.amazonaws.com"

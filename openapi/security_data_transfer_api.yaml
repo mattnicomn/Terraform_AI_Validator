@@ -1,0 +1,407 @@
+openapi: 3.0.0
+info:
+  title: Security Data Transfer API
+  version: 1.0.0
+  description: API for secure data transfer operations between S3 buckets using AWS Lambda
+paths:
+  /scan-file:
+    post:
+      summary: Scan a file for security issues
+      description: Invokes AWS Lambda function 'SecurityDataTransferProcessor' to scan a file in S3 for PII, PHI, and FedRAMP compliance issues.
+      operationId: invokeSecurityScan
+      parameters:
+        - name: bucketName
+          in: query
+          description: Name of the S3 bucket containing the file to scan (Must be 'securitydatatransfers3source')
+          required: true
+          schema:
+            type: string
+            enum:
+              - securitydatatransfers3source
+        - name: objectKey
+          in: query
+          description: Path and filename of the object in the S3 bucket to scan
+          required: true
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 1024
+      responses:
+        "200":
+          description: Scan results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ScanResult"
+        "400":
+          description: Bad request - missing or invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Forbidden - insufficient permissions to access the resource
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not found - specified object or bucket does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /transfer-file:
+    post:
+      summary: Transfer a file between S3 buckets with validation
+      description: Transfers a file from 'securitydatatransfers3source' to 'securitydatatransfers3destination' after security validation.
+      operationId: invokeFileTransfer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - sourceBucket
+                - sourceKey
+                - destinationBucket
+              properties:
+                sourceBucket:
+                  type: string
+                  description: Source bucket for the file transfer
+                  enum:
+                    - securitydatatransfers3source
+                sourceKey:
+                  type: string
+                  description: Path and filename of the object in the source bucket
+                  minLength: 1
+                  maxLength: 1024
+                destinationBucket:
+                  type: string
+                  description: Destination bucket
+                  enum:
+                    - securitydatatransfers3destination
+                destinationKey:
+                  type: string
+                  description: Path and filename in the destination bucket (optional)
+                  maxLength: 1024
+      responses:
+        "200":
+          description: Transfer results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TransferResult"
+        "400":
+          description: Bad request - missing or invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Forbidden - insufficient permissions or validation failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not found - specified object or bucket does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /classification-report:
+    get:
+      summary: Retrieve a classification report
+      description: Fetches a security classification report from 'securitydatatransfers3results'.
+      operationId: getClassificationReport
+      parameters:
+        - name: scanId
+          in: query
+          description: Unique identifier of a previous security scan
+          required: true
+          schema:
+            type: string
+            minLength: 1
+            pattern: ^[a-zA-Z0-9-]+$
+      responses:
+        "200":
+          description: Classification report
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClassificationReport"
+        "400":
+          description: Bad request - invalid scan ID format
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not found - report with specified scan ID does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /scan-bucket:
+    post:
+      summary: Scan all (or a subset of) files in an S3 bucket
+      description: Lists objects in the bucket (optionally under a prefix) and scans each one for PII/PHI/FedRAMP issues. Returns a paginated page of per-object scan results plus a continuation token.
+      operationId: scanBucket
+      parameters:
+        - name: bucketName
+          in: query
+          description: Name of the S3 bucket to scan
+          required: true
+          schema:
+            type: string
+            enum:
+              - securitydatatransfers3source
+              - securitydatatransfers3destination
+        - name: prefix
+          in: query
+          description: Optional prefix to narrow the scan scope (e.g., folder/)
+          required: false
+          schema:
+            type: string
+            minLength: 0
+            maxLength: 1024
+        - name: pageSize
+          in: query
+          description: Maximum number of objects to scan in this request (server may cap)
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 1000
+            default: 100
+        - name: continuationToken
+          in: query
+          description: Opaque token returned by a previous call to continue scanning
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Page of per-object scan results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BucketScanPage"
+        "400":
+          description: Bad request - invalid bucket or parameters
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Forbidden - Lambda role/bucket policy blocked listing or reading objects
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal error while listing or scanning objects
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+components:
+  schemas:
+    ScanResult:
+      type: object
+      required:
+        - scanId
+        - classificationType
+        - securityIssues
+        - transferAllowed
+      properties:
+        scanId:
+          type: string
+          description: Unique identifier for the scan
+        classificationType:
+          type: string
+          enum:
+            - Type1
+            - Type2
+            - Type3
+          description: Data classification based on sensitivity level
+        securityIssues:
+          type: array
+          description: List of security issues found in the scanned file
+          items:
+            $ref: "#/components/schemas/SecurityIssue"
+        transferAllowed:
+          type: boolean
+          description: Indicates whether the file can be transferred based on security findings
+
+    TransferResult:
+      type: object
+      required:
+        - transferId
+        - success
+        - message
+      properties:
+        transferId:
+          type: string
+          description: Unique identifier for the transfer operation
+        success:
+          type: boolean
+          description: Indicates if the transfer was successful
+        message:
+          type: string
+          description: Descriptive message about the transfer result
+        appliedTags:
+          type: object
+          description: Tags applied to the transferred object
+          additionalProperties:
+            type: string
+
+    SecurityIssue:
+      type: object
+      required:
+        - issueType
+        - severity
+        - description
+      properties:
+        issueType:
+          type: string
+          enum:
+            - FedRAMP
+            - PII
+            - PHI
+            - Other
+          description: Category of the security issue
+        severity:
+          type: string
+          enum:
+            - Low
+            - Medium
+            - High
+            - Critical
+          description: Severity level of the security issue
+        description:
+          type: string
+          description: Detailed description of the security issue
+        location:
+          type: string
+          description: Location of the issue within the file
+
+    ClassificationReport:
+      type: object
+      required:
+        - scanId
+        - objectKey
+        - classificationType
+        - detailedFindings
+      properties:
+        scanId:
+          type: string
+          description: Unique identifier for the scan
+        objectKey:
+          type: string
+          description: Path and filename of the scanned object
+        classificationType:
+          type: string
+          description: Data classification based on sensitivity level
+        detailedFindings:
+          type: array
+          description: Comprehensive list of security findings
+          items:
+            $ref: "#/components/schemas/SecurityIssue"
+        remediationSteps:
+          type: array
+          description: Recommended steps to address security issues
+          items:
+            type: string
+
+    # NEW: Per-object result for bucket scans
+    BucketScanItem:
+      type: object
+      required:
+        - objectKey
+        - status
+      properties:
+        objectKey:
+          type: string
+          description: The S3 key that was scanned (or attempted)
+        status:
+          type: string
+          description: Result status for this object
+          enum: [SCANNED, SKIPPED, ERROR]
+        scanId:
+          type: string
+          description: Present when status=SCANNED; the scan identifier
+        classificationType:
+          type: string
+          description: Classification when status=SCANNED
+          enum: [Type1, Type2, Type3]
+        message:
+          type: string
+          description: Optional human-readable detail (e.g., reason for SKIPPED/ERROR)
+        securityIssues:
+          type: array
+          description: Issues found when status=SCANNED
+          items:
+            $ref: "#/components/schemas/SecurityIssue"
+
+    # NEW: Page wrapper for bucket scans
+    BucketScanPage:
+      type: object
+      required:
+        - items
+      properties:
+        items:
+          type: array
+          description: Per-object results for this page
+          items:
+            $ref: "#/components/schemas/BucketScanItem"
+        nextContinuationToken:
+          type: string
+          description: Opaque token to request the next page; omitted when complete
+
+    # UPDATED: allow either "message" or "error" (the Lambda uses both forms)
+    ErrorResponse:
+      type: object
+      required:
+        - errorCode
+      properties:
+        errorCode:
+          type: string
+          description: Machine-readable error code (e.g., BUCKET_SCAN_ERROR, MISSING_PARAMETERS)
+        message:
+          type: string
+          description: Human-readable error message (present in many errors)
+        error:
+          type: string
+          description: Alternate error field used by some handlers
+        details:
+          type: object
+          description: Additional error details
+          additionalProperties: true
+        requestId:
+          type: string
+          description: Unique identifier for the request, useful for troubleshooting
