@@ -236,15 +236,23 @@ module "bedrock" {
   tags = local.common_tags
 }
 
-# 1) Cognito (identity, reusable elsewhere)
 module "cognito" {
-  source        = "./modules/cognito"
-  name_prefix   = "${local.project}-${local.env}"
-  region        = var.region
-  callback_urls = ["https://${module.cloudfront.domain_name}"]
-  logout_urls   = ["https://${module.cloudfront.domain_name}"]
-  tags          = local.common_tags
+  source = "./modules/cognito"
+
+  region                 = var.aws_region
+  user_pool_name         = "User pool - mo45tn"          # from console
+  app_client_name        = "BedrockUserPool"             # from console
+  domain_prefix          = "us-east-1qst1onmxw"          # use the prefix only
+  callback_urls          = ["https://d11k4vck88gnf5.cloudfront.net/index.html"]
+  logout_urls            = []                            # none set in console
+  s3_access_iam_role_arn = "arn:aws:iam::253881689673:role/S3AmazonAccess"
+  user_email             = "mattnicomn10@yahoo.com"      # optional; remove if you don’t want TF to manage users
 }
+
+# Your API Gateway module can continue to reference these:
+#   module.cognito.issuer_url
+#   module.cognito.user_pool_client_id
+
 
 ####################
 # API Gateway (HTTP API) + routes to Lambdas
