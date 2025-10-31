@@ -5,11 +5,14 @@
 .terraform/
 .terraform.lock.hcl
 
-##############################
-# CloudFormation Templates (local only)
-##############################
+# Do not commit local terraform binaries
+terraform.exe
+**/terraform.exe
+
+# CloudFormation templates kept local only
 Cloudformation_Template.yml
 Cloudformation_TemplateClean.yml
+
 
 # State files
 *.tfstate
