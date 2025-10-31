@@ -5,6 +5,9 @@
 .terraform/
 .terraform.lock.hcl
 
+#Cloudformation Template files
+Cloudformation_Templates*.yaml
+
 # State files
 *.tfstate
 *.tfstate.*
