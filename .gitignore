@@ -5,7 +5,9 @@
 .terraform/
 .terraform.lock.hcl
 
-#Cloudformation Template files
+##############################
+# CloudFormation Templates (local only)
+##############################
 Cloudformation_Template.yml
 Cloudformation_TemplateClean.yml
 
