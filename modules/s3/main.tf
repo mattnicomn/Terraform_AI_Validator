@@ -165,3 +165,14 @@ resource "aws_s3_bucket_policy" "results_write" {
   bucket = aws_s3_bucket.this[var.results_key].id
   policy = each.value.json
 }
+
+module "s3_quarantine" {
+  source                 = "./modules/s3"
+  bucket_name            = "securitydatatransfers3quarantine"
+  bucket_owner_enforced  = true
+  block_public_access    = true
+  sse_sse_algorithm      = "AES256"
+  cors_rules             = []
+  tags                   = local.common_tags
+}
+
