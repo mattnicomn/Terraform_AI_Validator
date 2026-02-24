@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bedrock Frontend • Debug Mode</title>
+  <meta name="color-scheme" content="light dark" />
+  <link rel="icon" href="/assets/favicon.ico" />
+  <style>
+    :root {
+      --bg: #0b0c10;
+      --panel: #111217;
+      --muted: #a0a8b4;
+      --text: #e6eaf0;
+      --brand: #4caf50;
+      --brand-600: #3e9b43;
+      --border: #1f2430;
+      --card: #141821;
+      --focus: #89b4fa;
+      --danger: #ef4444;
+      --link: #8ab4ff;
+    }
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f7f8fa;
+        --panel: #ffffff;
+        --muted: #5b6573;
+        --text: #1a1f29;
+        --brand: #2e7d32;
+        --brand-600: #256628;
+        --border: #e6e8ec;
+        --card: #ffffff;
+        --focus: #1e88e5;
+        --link: #1e88e5;
+      }
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      color: var(--text);
+      background: radial-gradient(1000px 600px at 10% -10%, rgba(76, 175, 80, 0.15), transparent 40%),
+                  radial-gradient(1000px 600px at 90% -10%, rgba(30, 136, 229, 0.12), transparent 40%),
+                  var(--bg);
+    }
+    a { color: var(--link); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 24px; }
+
+    header.site-header { position: sticky; top: 0; z-index: 20; backdrop-filter: saturate(1.2) blur(6px); background: color-mix(in oklab, var(--bg) 85%, transparent); border-bottom: 1px solid var(--border); }
+    .topbar { display:flex; align-items:center; justify-content:space-between; gap:16px; padding: 8px 0; }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand img.logo { width: 40px; height: 40px; border-radius: 10px; object-fit: contain; background: #ffffff10; padding: 6px; border: 1px solid var(--border); }
+    .brand .title { font-weight: 700; letter-spacing: .2px; font-size: 1.05rem; }
+    .subtle { color: var(--muted); font-weight: 500; }
+
+    .tabs { display:flex; gap: 6px; align-items:center; flex-wrap: wrap; }
+    .tab { appearance: none; border: 1px solid var(--border); background: var(--panel); color: var(--text); padding: 8px 12px; border-radius: 999px; font-weight: 700; letter-spacing: .2px; cursor: pointer; }
+    .tab[aria-selected="true"] { background: var(--brand); border-color: var(--brand-600); color: white; }
+
+    .grid { display: grid; gap: 16px; }
+    @media (min-width: 1000px){ .grid-2 { grid-template-columns: 1.2fr .8fr; } }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 18px; box-shadow: 0 10px 30px rgba(0,0,0,.15); }
+    .card h2, .card h3 { margin: 0 0 10px; }
+
+    label { display: inline-block; margin-bottom: 8px; font-weight: 600; }
+    input[type="text"], input[type="file"], textarea { width: 100%; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--border); background: var(--panel); color: var(--text); outline: none; }
+    input::placeholder, textarea::placeholder { color: var(--muted); }
+    input:focus, textarea:focus { border-color: var(--focus); box-shadow: 0 0 0 3px color-mix(in lab, var(--focus) 30%, transparent); }
+
+    .btn { appearance: none; border: none; cursor: pointer; user-select: none; padding: 10px 14px; border-radius: 10px; font-weight: 700; letter-spacing: .2px; background: linear-gradient(180deg, color-mix(in oklab, var(--brand) 95%, white 5%), var(--brand-600)); color: white; box-shadow: 0 6px 16px rgba(76,175,80,.25); transition: transform .05s ease, box-shadow .2s ease; }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 10px 20px rgba(76,175,80,.30); }
+    .btn.secondary { background: #2b2f36; box-shadow: none; border: 1px solid var(--border); color: var(--text); }
+    .btn.ghost { background: transparent; border: 1px dashed var(--border); color: var(--muted); }
+    .btn.danger { background: linear-gradient(180deg, #f87171, #ef4444); box-shadow: 0 6px 16px rgba(239,68,68,.25); }
+    .btn:disabled { opacity: .6; cursor: not-allowed; }
+
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+    .response-area { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 14px; min-height: 120px; }
+    #responseContent { white-space: pre-wrap; word-break: break-word; }
+
+    details.debug { border: 1px solid var(--border); border-radius: 12px; background: var(--panel); }
+    details.debug > summary { list-style: none; cursor: pointer; padding: 14px 16px; border-radius: 12px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    details.debug[open] > summary { border-bottom: 1px solid var(--border); border-end-end-radius: 0; border-end-start-radius: 0; }
+    .debug-body { padding: 14px 16px; }
+    .kv { display: grid; grid-template-columns: 180px 1fr; gap: 8px; align-items: center; padding: 8px 0; }
+    .kv .key { color: var(--muted); font-weight: 600; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; word-break: break-all; }
+
+    .hidden { display: none !important; }
+    .stack { display: grid; gap: 12px; }
+
+    .product-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+    .product { border: 1px dashed var(--border); border-radius: 12px; padding: 14px; background: var(--panel); }
+    .product h4 { margin: 0 0 6px; }
+
+    footer { color: var(--muted); font-size: .9rem; padding: 16px 0 40px; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container topbar">
+      <div class="brand" aria-label="Site Brand">
+        <img class="logo" src="https://d11k4vck88gnf5.cloudfront.net/assets/logo.png" alt="Bedrock Frontend company logo" width="40" height="40" />
+        <div>
+          <div class="title">Bedrock Frontend</div>
+          <div class="subtle">Debug Mode</div>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn" id="loginBtn" onclick="login()">Login</button>
+        <button class="btn secondary hidden" id="logoutBtn" onclick="logout()">Logout</button>
+      </div>
+    </div>
+    <div class="container" style="padding-top:0; padding-bottom:12px;">
+      <nav class="tabs" role="tablist" aria-label="Primary">
+        <button class="tab" role="tab" id="tab-home" aria-selected="true" aria-controls="panel-home" onclick="routeTo('home')">Home</button>
+        <button class="tab" role="tab" id="tab-solutions" aria-selected="false" aria-controls="panel-solutions" onclick="routeTo('solutions')">Solutions</button>
+        <button class="tab" role="tab" id="tab-about" aria-selected="false" aria-controls="panel-about" onclick="routeTo('about')">About Me</button>
+        <button class="tab" role="tab" id="tab-updates" aria-selected="false" aria-controls="panel-updates" onclick="routeTo('updates')">Updates</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" id="appRoot">
+    <section id="panel-home" role="tabpanel" aria-labelledby="tab-home">
+      <div class="grid grid-2">
+        <section class="card stack" id="authCard">
+          <h2>Get Started</h2>
+          <p class="subtle" id="authHint">Please login to continue.</p>
+
+          <div id="userInfo" class="hidden stack" aria-live="polite">
+            <div class="stack">
+              <label for="promptInput">Enter your prompt</label>
+              <textarea id="promptInput" rows="3" placeholder="Ask the Bedrock Agent… e.g., ‘Tell me something interesting!’">Tell me something interesting!</textarea>
+            </div>
+            <div class="actions">
+              <button class="btn" id="callBtn" onclick="callBedrock()">Call Bedrock Agent</button>
+              <button class="btn ghost" onclick="clearResponse()">Clear</button>
+            </div>
+
+            <div class="response-area">
+              <h3>Bedrock Response</h3>
+              <div id="responseContent" aria-live="polite">Response will appear here…</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <details class="debug" id="debugPanel">
+            <summary>🛠️ Debug Information</summary>
+            <div class="debug-body stack">
+              <div class="actions">
+                <button class="btn secondary" onclick="checkTokenAndDisplay()">Check Authentication Token</button>
+                <button class="btn secondary" onclick="testApiDirect()">Test API (Direct)</button>
+                <button class="btn secondary" onclick="testApiNoAuth()">Test API (No Auth)</button>
+                <button class="btn danger" onclick="purgeTokens()">Purge Local Tokens</button>
+              </div>
+              <div class="kv"><div class="key">Token Status</div><div class="mono" id="token-status">Not checked yet</div></div>
+              <div class="kv"><div class="key">Token Preview</div><div class="mono" id="token-preview">Not available</div></div>
+              <div class="kv"><div class="key">URL Parameters</div><div class="mono" id="url-params">No parameters</div></div>
+              <div class="kv"><div class="key">URL Hash</div><div class="mono" id="url-hash">No hash</div></div>
+              <div class="kv"><div class="key">API Test Result</div><div class="mono" id="api-test-result">Not tested yet</div></div>
+            </div>
+          </details>
+        </section>
+      </div>
+
+      <section class="card" aria-label="Usage Tips" style="margin-top:16px">
+        <h3>Tips</h3>
+        <ul>
+          <li>Serve assets (logo, resume) from the same CloudFront origin for best caching.</li>
+          <li>Use the Debug panel to quickly validate tokens and API connectivity.</li>
+        </ul>
+      </section>
+    </section>
+
+    <section id="panel-solutions" class="hidden" role="tabpanel" aria-labelledby="tab-solutions">
+      <section class="card">
+        <h2>Solutions & Products</h2>
+        <p class="subtle">Add tiles for each project—link to docs, demos, and APIs.</p>
+        <div class="product-grid" id="solutionsGrid">
+          <article class="product">
+            <h4>Security Data Transfer API</h4>
+            <p class="subtle">Lambda + API Gateway for S3 PII/PHI scanning (Bedrock-assisted).</p>
+            <div class="actions">
+              <a class="btn secondary" href="#" onclick="toast('Coming soon'); return false;">Open</a>
+              <a class="btn ghost" href="#" onclick="toast('Docs coming soon'); return false;">Docs</a>
+            </div>
+          </article>
+          <article class="product">
+            <h4>Agentic Prompt Tester</h4>
+            <p class="subtle">Frontend to experiment with model prompts and guardrails.</p>
+            <div class="actions">
+              <a class="btn secondary" href="#" onclick="toast('Coming soon'); return false;">Open</a>
+              <a class="btn ghost" href="#" onclick="toast('Docs coming soon'); return false;">Docs</a>
+            </div>
+          </article>
+        </div>
+      </section>
+    </section>
+
+<!-- Drop-in replacement for your current #panel-about section. Uses your existing CSS tokens/classes. -->
+<section id="panel-about" class="hidden" role="tabpanel" aria-labelledby="tab-about">
+  <section class="card stack" aria-label="About Matthew Nico">
+    <!-- HERO -->
+    <header class="grid" style="grid-template-columns: auto 1fr; gap: 16px; align-items: center;">
+      <img src="/assets/profile.png" alt="Portrait of Matthew Nico" width="84" height="84" style="border-radius: 16px; border: 1px solid var(--border); background: #ffffff10; object-fit: cover;" onerror="this.src='https://d11k4vck88gnf5.cloudfront.net/assets/logo.png'"/>
+      <div>
+        <h2 style="margin:0">Matthew Nico</h2>
+        <p class="subtle" style="margin:6px 0 0">Cloud Strategy & Operations • AWS | Azure | SCCA/SACA • AI/ML</p>
+      </div>
+    </header>
+
+    <!-- CTA ROW -->
+    <div class="actions" role="group" aria-label="Quick actions">
+      <a id="about-resume-btn" class="btn secondary" target="_blank" rel="noopener" href="#">Download Resume (PDF)</a>
+      <a class="btn secondary" href="mailto:mattnicomn10@gmail.com">Email</a>
+      <a class="btn secondary" href="https://www.linkedin.com/in/matthew-nico-038b0546/" target="_blank" rel="noopener">LinkedIn</a>
+      <a class="btn secondary" href="https://github.com/mattnicomn" target="_blank" rel="noopener">GitHub</a>
+    </div>
+
+    <!-- SUMMARY -->
+    <article class="card" style="padding:16px">
+      <h3 style="margin-top:0">Summary</h3>
+      <p>
+        Systems & Cloud Architect with 12+ years across network engineering, DoD/DHS-secure cloud,
+        and AI-driven automation. I lead multi-cloud (AWS & Azure) strategy and operations, design
+        SCCA/SACA-aligned architectures, and build DevSecOps pipelines (Terraform, GitLab, Ansible)
+        that accelerate compliant delivery. Recently led AI agentic solutions on AWS (Bedrock,
+        Lambda, Comprehend) and Azure integrations to enable secure automation and measurable outcomes.
+      </p>
+    </article>
+
+    <!-- QUICK FACTS -->
+    <section class="grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px;">
+      <div class="card" aria-label="Years of experience">
+        <div class="subtle">Experience</div>
+        <div style="font-weight:700; font-size:1.1rem;">12+ years</div>
+        <div class="subtle">Cloud, Networks, Security</div>
+      </div>
+      <div class="card" aria-label="Primary domains">
+        <div class="subtle">Domains</div>
+        <div style="font-weight:700; font-size:1.1rem;">AWS, Azure, DoD/DHS</div>
+        <div class="subtle">SCCA/SACA, RMF, STIG</div>
+      </div>
+      <div class="card" aria-label="Tooling focus">
+        <div class="subtle">Tooling</div>
+        <div style="font-weight:700; font-size:1.1rem;">Terraform • GitLab CI • Ansible</div>
+        <div class="subtle">Python • KQL • AWS/Azure CLI</div>
+      </div>
+    </section>
+
+    <!-- SKILLS / CAPABILITIES -->
+    <section class="card" aria-label="Skills">
+      <h3 style="margin-top:0">Core Skills</h3>
+      <div id="skills-chips" class="actions" style="flex-wrap: wrap;"></div>
+    </section>
+
+    <!-- HIGHLIGHTS -->
+    <section class="card stack" aria-label="Highlights">
+      <h3 style="margin-top:0">Selected Highlights</h3>
+      <ul>
+        <li>Lead Cloud Strategy & Operations for a federal CSP: multi-tenant AWS/Azure onboarding, IDAM, logging/monitoring, and image pipeline (Gold AMIs for Windows/RHEL).</li>
+        <li>Designed & deployed agentic AI services on AWS (Bedrock, Lambda, Comprehend) for PII/PHI detection and compliance automation; created reusable patterns for secure teams.</li>
+        <li>Built SCCA/SACA-aligned architectures with Terraform Enterprise + GitLab CI and Ansible AAP to enforce guardrails, policy-as-code, and repeatable deployments.</li>
+        <li>Prior Booz Allen senior consultant: delivered cloud solutions for ISR programs, Atlassian automation, and secure RHEL/Windows AMIs with STIG hardening.</li>
+      </ul>
+    </section>
+
+    <!-- CERTIFICATIONS / EDUCATION -->
+    <section class="grid" style="grid-template-columns: 1.2fr .8fr; gap: 12px;">
+      <div class="card">
+        <h3 style="margin-top:0">Certifications & Training</h3>
+        <ul>
+          <li>AZ-900 Microsoft Certified Fundamentals (2024)</li>
+          <li>Python PCEP – Entry-level Programmer (2023)</li>
+          <li>Security+ (IAT Level II) – Active</li>
+          <li>AWS Advanced Networking Specialty – Training (2024)</li>
+          <li>CCNA – In progress</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0">Education</h3>
+        <ul>
+          <li>A.A. Information Systems (2021)</li>
+          <li>B.S. Business Administration & IT (2015)</li>
+          <li>Ongoing MSIT coursework – Cloud & Enterprise (Capella)</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- FEATURED PROJECTS -->
+    <section class="card" aria-label="Featured Projects">
+      <h3 style="margin-top:0">Featured Projects</h3>
+      <div class="product-grid">
+        <article class="product">
+          <h4>Security Data Transfer API</h4>
+          <p class="subtle">S3 file scanning with PII/PHI/Compliance via Bedrock + Comprehend.</p>
+          <div class="actions">
+            <a class="btn secondary" href="#/solutions" onclick="routeTo('solutions'); return false;">View</a>
+            <a class="btn ghost" href="https://github.com/mattnicomn" target="_blank" rel="noopener">Code</a>
+          </div>
+        </article>
+        <article class="product">
+          <h4>Agentic Prompt Tester</h4>
+          <p class="subtle">Reusable front-end for prompt experiments and guardrails.</p>
+          <div class="actions">
+            <a class="btn secondary" href="#/solutions" onclick="routeTo('solutions'); return false;">View</a>
+            <a class="btn ghost" href="https://github.com/mattnicomn" target="_blank" rel="noopener">Code</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- STRUCTURED DATA for SEO -->
+    <script type="application/ld+json" id="about-jsonld">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Matthew Nico",
+      "email": "mailto:mattnicomn10@gmail.com",
+      "jobTitle": "Cloud Strategy & Operations Manager",
+      "url": "https://d11k4vck88gnf5.cloudfront.net/",
+      "sameAs": [
+        "https://www.linkedin.com/in/matthew-nico-038b0546/",
+        "https://github.com/mattnicomn"
+      ],
+      "knowsAbout": [
+        "AWS GovCloud", "Azure Government", "SCCA", "SACA", "Terraform", "GitLab CI",
+        "Ansible", "AI/ML", "AWS Bedrock", "Comprehend", "RMF", "NIST 800-53"
+      ]
+    }
+    </script>
+
+    <!-- Page wiring for resume + skills chips -->
+    <script>
+      (function initAbout(){
+        // Wire the Resume button to the latest uploaded resume if available; fallback to a default path
+        try {
+          var resumeBtn = document.getElementById('about-resume-btn');
+          var uploaded = (document.getElementById('resumeLink') || {}).href;
+          var fallback = '/assets/resume.pdf'; // place a copy in S3 for public access
+          resumeBtn.href = uploaded && uploaded !== '#' ? uploaded : fallback;
+        } catch(e) { /* no-op */ }
+
+        // Render skills as chips using existing styles
+        var skills = [
+          'AWS (IAM, S3, API GW, Lambda, Bedrock)',
+          'Azure (Entra ID, Sentinel, AVD)',
+          'SCCA/SACA, RMF/NIST 800-53',
+          'Terraform Enterprise, GitLab CI, Ansible AAP',
+          'Networking (VPC/TGW, Palo Alto/F5, DNS/Infoblox)',
+          'Python, Bash, KQL, CLI tooling',
+          'Observability & Logging (M-21-31)'
+        ];
+        var chipsHost = document.getElementById('skills-chips');
+        if (chipsHost) {
+          skills.forEach(function(s){
+            var b = document.createElement('button');
+            b.className = 'btn ghost';
+            b.type = 'button';
+            b.setAttribute('aria-label', s);
+            b.textContent = s;
+            chipsHost.appendChild(b);
+          });
+        }
+      })();
+    </script>
+
+    <!-- PATCH: Helper script to add token skew, feature gating, and safer resume wiring -->
+    <script>
+      (function aboutPatches(){
+        // 1) Token skew (+/- 60s)
+        var _origExp = (typeof window.isTokenExpired === 'function') ? window.isTokenExpired : null;
+        window.isTokenExpired = function(token){
+          if(!token) return true;
+          try{
+            var p = JSON.parse(atob(token.split('.')[1]||''));
+            var now = Math.floor(Date.now()/1000);
+            var skew = 60; // seconds
+            if(!p.exp) return true;
+            return (p.exp < (now - skew));
+          }catch(e){ return true; }
+        };
+
+        // 2) Feature gating: disable buttons if API endpoints are not configured/responding
+        function disableIfMissing(id, cond, title){
+          var el = document.getElementById(id);
+          if(!el) return;
+          if(cond){ el.disabled = true; el.title = title || 'Temporarily disabled'; el.classList.add('ghost'); }
+        }
+        try{
+          var presign = (typeof window.API_PRESIGN_URL !== 'undefined') && !!window.API_PRESIGN_URL;
+          var logs    = (typeof window.API_LOGS_URL   !== 'undefined') && !!window.API_LOGS_URL;
+          disableIfMissing('resumeFile', !presign, 'Upload requires API_PRESIGN_URL');
+          disableIfMissing('about-resume-btn', false); // never disable; uses public fallback
+          disableIfMissing('callBtn', false);
+          disableIfMissing('generateUpdateBtn', !logs, 'Generate requires API_LOGS_URL');
+        }catch(e){ /* no-op */ }
+
+        // 3) Harden resume link again on hash changes (single-page nav)
+        window.addEventListener('hashchange', function(){
+          try {
+            var resumeBtn = document.getElementById('about-resume-btn');
+            var uploaded = (document.getElementById('resumeLink') || {}).href;
+            var fallback = '/assets/resume.pdf';
+            if(resumeBtn){ resumeBtn.href = (uploaded && uploaded !== '#') ? uploaded : fallback; }
+          } catch(e){}
+        });
+      })();
+    </script>
+  </section>
+</section>
+
+
+
+    <section id="panel-updates" class="hidden" role="tabpanel" aria-labelledby="tab-updates">
+      <section class="card stack">
+        <h2>Automated Updates & Release Notes</h2>
+        <p class="subtle">This feed summarizes changes to your site & solutions. Generated by Bedrock and stored in S3 via your API.</p>
+        <div class="actions">
+          <button class="btn" onclick="refreshUpdates()">Refresh</button>
+          <button class="btn ghost" onclick="generateUpdate()">Generate Summary Now</button>
+        </div>
+        <div id="updatesList" class="stack"></div>
+        <small class="subtle">Backed by <code>API_LOGS_URL</code> endpoints. See configuration below.</small>
+      </section>
+    </section>
+  </main>
+
+  <footer class="container">
+    <div>© <span id="year"></span> NetworkNico LLC • <span class="subtle">v1.1</span></div>
+  </footer>
+
+  <script>
+    const COGNITO_DOMAIN = "https://us-east-1qst1onmxw.auth.us-east-1.amazoncognito.com";
+    const REDIRECT_URI   = "https://d11k4vck88gnf5.cloudfront.net/index.html";
+    const API_GATEWAY_URL = "https://9heajy0ej8.execute-api.us-east-1.amazonaws.com/BedrockPromptHandler";
+
+    // Implement two additional endpoints in API Gateway + Lambda:
+    // POST API_PRESIGN_URL -> { key, contentType } => { uploadUrl, publicUrl }
+    // GET/POST API_LOGS_URL -> list/append updates in S3 (e.g., logs.jsonl)
+    const API_PRESIGN_URL = "https://d11k4vck88gnf5.cloudfront.net/api/presign-upload"; // TODO replace
+    const API_LOGS_URL    = "https://d11k4vck88gnf5.cloudfront.net/api/logs";            // TODO replace
+
+    const CLIENT_ID = "7ccfli4ti56r33as43qp6imat2";
+    const urlPattern = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,})([\/\w .-]*)*\/?$/i;
+
+    const $ = (id) => document.getElementById(id);
+    function show(id) { $(id)?.classList.remove('hidden'); }
+    function hide(id) { $(id)?.classList.add('hidden'); }
+
+    function selectTab(name){
+      const tabs = ['home','solutions','about','updates'];
+      tabs.forEach(t => {
+        const selected = t === name;
+        document.getElementById(`tab-${t}`).setAttribute('aria-selected', String(selected));
+        const panel = document.getElementById(`panel-${t}`);
+        if (selected) panel.classList.remove('hidden'); else panel.classList.add('hidden');
+      });
+    }
+    function routeTo(name){ window.location.hash = `#/${name}`; selectTab(name); }
+
+    function isTokenExpired(token) { if (!token) return true; try { const p = JSON.parse(atob(token.split('.')[1])); const now = Math.floor(Date.now()/1000); return !!(p.exp && p.exp < now); } catch { return true; } }
+    function setBusy(el, busy=true){ if(!el) return; el.disabled = busy; el.setAttribute('aria-busy', String(busy)); }
+    function toast(msg){ const t=document.createElement('div'); t.textContent=msg; t.style.cssText='position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#111217;color:white;padding:10px 14px;border-radius:10px;border:1px solid var(--border);box-shadow:0 8px 20px rgba(0,0,0,.3);z-index:50;'; document.body.appendChild(t); setTimeout(()=>t.remove(),2200); }
+    function debugUrlParams(){ const url=new URL(window.location.href); const params=Object.fromEntries(url.searchParams.entries()); const up=$('url-params'); if(up) up.textContent=Object.keys(params).length?JSON.stringify(params):'No parameters'; const uh=$('url-hash'); if(uh) uh.textContent=url.hash||'No hash'; }
+    function persistTokens(t){ if(t?.id_token) localStorage.setItem('id_token', t.id_token); if(t?.access_token) localStorage.setItem('access_token', t.access_token); if(t?.refresh_token) localStorage.setItem('refresh_token', t.refresh_token); }
+    function purgeTokens(){ localStorage.removeItem('id_token'); localStorage.removeItem('access_token'); localStorage.removeItem('refresh_token'); const ts=$('token-status'); if(ts) ts.textContent='Purged'; const tp=$('token-preview'); if(tp) tp.textContent='Not available'; hide('userInfo'); show('loginBtn'); hide('logoutBtn'); const ah=$('authHint'); if(ah) ah.textContent='Please login to continue.'; toast('Local tokens removed'); }
+    function logout(){ purgeTokens(); }
+
+    function login(){ const u=`${COGNITO_DOMAIN}/login?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}`; window.location.href=u; }
+    async function handleCodeCallback(code){ if(!code){ alert('Invalid authorization code.'); return; } try{ const r=await fetch(`${COGNITO_DOMAIN}/oauth2/token`,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({grant_type:'authorization_code',client_id:CLIENT_ID,redirect_uri:REDIRECT_URI,code})}); if(!r.ok) throw new Error(`${r.status} ${r.statusText}`); const tokens=await r.json(); if(tokens.error) throw new Error(tokens.error_description||tokens.error); persistTokens(tokens); onAuthed(); }catch(e){ alert('Authentication failed: '+e.message); }}
+    function getTokenFromHash(){ const hash=window.location.hash?.slice(1); const p=new URLSearchParams(hash); return { id_token:p.get('id_token'), access_token:p.get('access_token') }; }
+    function checkTokenAndDisplay(){ const id=localStorage.getItem('id_token'); const ts=$('token-status'); const tp=$('token-preview'); if(id){ const expired=isTokenExpired(id); if(ts) ts.textContent=expired?'ID token expired':'ID token found in localStorage'; if(tp) tp.textContent=id.slice(0,30)+'…'+id.slice(-10); if(expired) purgeTokens(); else onAuthed(); } else { if(ts) ts.textContent='No ID token found'; if(tp) tp.textContent='Not available'; } }
+    function onAuthed(){ hide('loginBtn'); show('logoutBtn'); show('userInfo'); const ah=$('authHint'); if(ah) ah.textContent='Logged in successfully!'; }
+
+    async function callBedrock(){
+      const btn=$('callBtn'); const jwt=localStorage.getItem('id_token'); if(!jwt||isTokenExpired(jwt)){ alert('Your session has expired. Please login again.'); purgeTokens(); return; }
+      const promptText=$('promptInput').value.trim(); if(!promptText){ toast('Please enter a prompt.'); return; }
+      setBusy(btn,true); $('responseContent').textContent='Loading…';
+      try{
+        if(!API_GATEWAY_URL||typeof API_GATEWAY_URL!=="string"||!urlPattern.test(API_GATEWAY_URL)) throw new Error('Invalid or undefined API_GATEWAY_URL');
+        const res=await fetch(API_GATEWAY_URL,{method:'POST',headers:{'Authorization':`Bearer ${jwt}`,'Content-Type':'application/json'},body:JSON.stringify({prompt:promptText})});
+        const data=await res.json().catch(()=>({raw:'<non-json>'}));
+        if(!res.ok) throw new Error(`${res.status} ${res.statusText}: ${JSON.stringify(data).slice(0,180)}`);
+        $('responseContent').textContent=data.response||JSON.stringify(data,null,2);
+      }catch(e){ $('responseContent').textContent='Error: '+e.message; }finally{ setBusy(btn,false); }
+    }
+
+    async function testApiDirect(){ const el=$('api-test-result'); if(el) el.textContent='Testing…'; const jwt=localStorage.getItem('id_token'); if(!jwt||isTokenExpired(jwt)){ if(el) el.textContent='Token expired or not available! Login first.'; purgeTokens(); return; } try{ const r=await fetch(API_GATEWAY_URL,{method:'POST',headers:{'Authorization':`Bearer ${jwt}`,'Content-Type':'application/json'},body:JSON.stringify({prompt:'Test message from debug panel'})}); const d=await r.json().catch(()=>({raw:'<non-json>'})); if(el) el.textContent=`Status: ${r.status}, Response: ${JSON.stringify(d).slice(0,140)}…`; }catch(e){ if(el) el.textContent='Error: '+e.message; }}
+    async function testApiNoAuth(){ const el=$('api-test-result'); if(el) el.textContent='Testing without auth…'; try{ const r=await fetch(API_GATEWAY_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:'Test message without auth'})}); const d=await r.json().catch(()=>({raw:'<non-json>'})); if(el) el.textContent=`Status: ${r.status}, Response: ${JSON.stringify(d).slice(0,140)}…`; }catch(e){ if(el) el.textContent='Error: '+e.message; }}
+    function clearResponse(){ $('responseContent').textContent='Response will appear here…'; }
+
+    async function uploadResume(){ const file=$('resumeFile').files[0]; if(!file){ toast('Select a PDF to upload.'); return; } if(file.type!=='application/pdf'){ toast('Please upload a PDF.'); return; } const jwt=localStorage.getItem('id_token'); try{ const pres=await fetch(API_PRESIGN_URL,{method:'POST',headers:{'Content-Type':'application/json',...(jwt?{'Authorization':`Bearer ${jwt}`}:{})},body:JSON.stringify({key:`assets/resume-${Date.now()}.pdf`,contentType:'application/pdf'})}); const {uploadUrl,publicUrl,error}=await pres.json(); if(!pres.ok||!uploadUrl) throw new Error(error||'Failed to get presigned URL'); const put=await fetch(uploadUrl,{method:'PUT',headers:{'Content-Type':'application/pdf','Cache-Control':'public, max-age=31536000, immutable'},body:file}); if(!put.ok) throw new Error('Upload failed'); const link=$('resumeLink'); link.href=publicUrl; link.classList.remove('hidden'); link.textContent='View Resume'; toast('Resume uploaded'); }catch(e){ toast('Upload error: '+e.message); }}
+
+    async function refreshUpdates(){ const list=$('updatesList'); if(!list) return; list.innerHTML='<div class="subtle">Loading…</div>'; try{ const jwt=localStorage.getItem('id_token'); const r=await fetch(API_LOGS_URL,{headers:{...(jwt?{'Authorization':`Bearer ${jwt}`}:{})}}); const data=await r.json(); const entries=Array.isArray(data)?data:(data.items||[]); if(!entries.length){ list.innerHTML='<div class="subtle">No updates yet.</div>'; return; } list.innerHTML=entries.map(renderUpdate).join(''); }catch(e){ list.innerHTML=`<div class="subtle">Failed to load updates: ${e.message}</div>`; }}
+    function renderUpdate(e){ const ts=e.timestamp?new Date(e.timestamp).toLocaleString():''; const text=(e.summary||e.message||''); return `<article class="card"><div class="subtle">${ts}</div><div style="margin-top:6px; white-space:pre-wrap;">${escapeHtml(text)}</div></article>`; }
+    function escapeHtml(s){ return String(s).replace(/[&<>\"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\\':'\\'}[c])); }
+
+    async function generateUpdate(){ const jwt=localStorage.getItem('id_token'); if(!jwt||isTokenExpired(jwt)){ toast('Login required'); return; } try{ const summaryRes=await fetch(API_GATEWAY_URL,{method:'POST',headers:{'Authorization':`Bearer ${jwt}`,'Content-Type':'application/json'},body:JSON.stringify({prompt:"Summarize today's changes to my website and AWS solutions. Focus on deployments, config updates, and errors fixed. Output 3-5 bullets."})}); const sumJson=await summaryRes.json(); const summary=sumJson.response||JSON.stringify(sumJson); const append=await fetch(API_LOGS_URL,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${jwt}`},body:JSON.stringify({summary})}); if(!append.ok) throw new Error('Failed to write to log'); toast('Update generated'); refreshUpdates(); }catch(e){ toast('Generate failed: '+e.message); }}
+
+    window.addEventListener('load', () => {
+      document.getElementById('year').textContent = new Date().getFullYear();
+      const hash = window.location.hash.replace('#/','');
+      selectTab(['home','solutions','about','updates'].includes(hash) ? hash : 'home');
+
+      const code = new URLSearchParams(window.location.search).get('code');
+      if (code) {
+        handleCodeCallback(code).finally(() => { const url = new URL(window.location); url.searchParams.delete('code'); history.replaceState(null, '', url.pathname + url.search + window.location.hash); });
+      } else {
+        const legacy = getTokenFromHash();
+        if (legacy.id_token) { persistTokens(legacy); history.replaceState(null, '', window.location.pathname + window.location.hash); onAuthed(); }
+        else { const stored = localStorage.getItem('id_token'); if (stored && !isTokenExpired(stored)) onAuthed(); }
+      }
+
+      debugUrlParams();
+      checkTokenAndDisplay();
+      refreshUpdates();
+    });
+
+    window.addEventListener('hashchange', () => { const hash = window.location.hash.replace('#/',''); selectTab(['home','solutions','about','updates'].includes(hash) ? hash : 'home'); });
+  </script>
+</body>
+</html>

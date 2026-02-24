@@ -70,8 +70,6 @@ module "iam" {
   tags = local.common_tags
 }
 
-data "aws_caller_identity" "current" {}
-
 ####################
 # Lambda functions
 ####################
