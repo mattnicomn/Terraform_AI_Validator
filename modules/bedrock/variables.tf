@@ -16,7 +16,10 @@ variable "aliases" {
   default = []
 }
 
-variable "tags" { type = map(string) default = {} }
+variable "tags" { 
+  type    = map(string)
+  default = {}
+}
 
 variable "guardrail_identifier" {
   type        = string

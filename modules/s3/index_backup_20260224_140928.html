@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>US Mission Hero • Government & Commercial Cloud Solutions</title>
+  <meta name="description" content="US Mission Hero provides secure cloud solutions for government and commercial sectors, specializing in AWS, Azure, and AI/ML services." />
+  <meta name="color-scheme" content="light dark" />
+  <link rel="icon" href="/assets/favicon.ico" />
+  <style>
+    /* ===== Brand Colors from US Mission Hero Logo ===== */
+    :root {
+      --bg: #0a0e1a;
+      --panel: #0f1419;
+      --muted: #9ca3af;
+      --text: #e5e7eb;
+      --brand-primary: #3b82f6;
+      --brand-secondary: #10b981;
+      --brand-gold: #f59e0b;
+      --border: #1f2937;
+      --card: #111827;
+      --focus: #60a5fa;
+      --danger: #ef4444;
+      --gov-accent: #3b82f6;
+      --commercial-accent: #10b981;
+    }
+    
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f9fafb;
+        --panel: #ffffff;
+        --muted: #6b7280;
+        --text: #111827;
+        --brand-primary: #2563eb;
+        --brand-secondary: #059669;
+        --border: #e5e7eb;
+        --card: #ffffff;
+        --gov-accent: #2563eb;
+        --commercial-accent: #059669;
+      }
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      color: var(--text);
+      background: linear-gradient(135deg, #0a0e1a 0%, #1a1f2e 100%);
+      background-image: 
+        linear-gradient(135deg, #0a0e1a 0%, #1a1f2e 100%),
+        url('https://d11k4vck88gnf5.cloudfront.net/assets/US-Mission-Hero.png');
+      background-repeat: no-repeat, repeat;
+      background-position: center center, center center;
+      background-size: cover, 400px;
+      background-attachment: fixed;
+      position: relative;
+      line-height: 1.6;
+    }
+    
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(10, 14, 26, 0.92) 0%, rgba(26, 31, 46, 0.95) 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    
+    body > * {
+      position: relative;
+      z-index: 1;
+    }
+    
+    a { color: var(--brand-primary); text-decoration: none; transition: color 0.2s; }
+    a:hover { color: var(--focus); }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+    
+    /* ===== Header ===== */
+    header.site-header {
+      position: sticky; top: 0; z-index: 100;
+      backdrop-filter: blur(12px);
+      background: rgba(10, 14, 26, 0.9);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    
+    .header-content {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 0; gap: 24px; flex-wrap: wrap;
+    }
+    
+    .brand { display: flex; align-items: center; gap: 16px; }
+    .brand img.logo { height: 70px; width: auto; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
+    .brand-text .title {
+      font-size: 1.5rem; font-weight: 700;
+      background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .brand-text .tagline { font-size: 0.875rem; color: var(--muted); margin-top: 2px; }
+    
+    /* ===== Navigation ===== */
+    .nav-tabs {
+      display: flex; gap: 8px; padding: 12px 0; flex-wrap: wrap;
+    }
+    
+    .tab {
+      appearance: none; border: 1px solid var(--border);
+      background: var(--panel); color: var(--text);
+      padding: 10px 20px; border-radius: 8px;
+      font-weight: 600; cursor: pointer; transition: all 0.2s;
+      font-size: 0.9rem; letter-spacing: 0.3px;
+    }
+    
+    .tab:hover { background: var(--card); border-color: var(--brand-primary); }
+    .tab[aria-selected="true"] {
+      background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
+      border-color: transparent; color: white;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+    
+    /* ===== Buttons ===== */
+    .btn {
+      appearance: none; border: none; cursor: pointer;
+      padding: 12px 24px; border-radius: 8px;
+      font-weight: 600; transition: all 0.2s;
+      font-size: 0.9rem; letter-spacing: 0.3px;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, var(--brand-primary), #2563eb);
+      color: white; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+    }
+    
+    .btn-secondary {
+      background: var(--card); color: var(--text);
+      border: 1px solid var(--border);
+    }
+    
+    .btn-secondary:hover {
+      background: var(--panel); border-color: var(--brand-primary);
+    }
+    
+    .btn-ghost {
+      background: transparent; color: var(--muted);
+      border: 1px dashed var(--border);
+    }
+    
+    .btn-danger {
+      background: linear-gradient(135deg, #f87171, var(--danger));
+      color: white; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    }
+    
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    
+    /* ===== Cards ===== */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    .card h2, .card h3 { margin: 0 0 16px; }
+    
+    /* ===== Grid Layouts ===== */
+    .grid { display: grid; gap: 24px; }
+    .grid-2 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+    
+    /* ===== Solution Cards ===== */
+    .solution-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .solution-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--brand-primary), var(--brand-secondary));
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .solution-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+    }
+    
+    .solution-card:hover::before { opacity: 1; }
+    
+    .solution-card.gov::before {
+      background: var(--gov-accent);
+    }
+    
+    .solution-card.commercial::before {
+      background: var(--commercial-accent);
+    }
+    
+    .solution-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 12px;
+    }
+    
+    .solution-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin: 0;
+    }
+    
+    .badge {
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .badge-active {
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--brand-secondary);
+      border: 1px solid var(--brand-secondary);
+    }
+    
+    .badge-beta {
+      background: rgba(59, 130, 246, 0.2);
+      color: var(--brand-primary);
+      border: 1px solid var(--brand-primary);
+    }
+    
+    .badge-soon {
+      background: rgba(156, 163, 175, 0.2);
+      color: var(--muted);
+      border: 1px solid var(--muted);
+    }
+    
+    .solution-desc {
+      color: var(--muted);
+      margin: 12px 0;
+      line-height: 1.6;
+    }
+    
+    .solution-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+    
+    /* ===== Forms ===== */
+    label { display: block; margin-bottom: 8px; font-weight: 600; }
+    input[type="text"], input[type="file"], textarea {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--panel);
+      color: var(--text);
+      font-family: inherit;
+    }
+    
+    input::placeholder, textarea::placeholder { color: var(--muted); }
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--focus);
+      box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
+    }
+    
+    /* ===== Hero Section ===== */
+    .hero {
+      text-align: center;
+      padding: 60px 24px;
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(16, 185, 129, 0.1));
+      border-radius: 16px;
+      margin: 24px 0;
+    }
+    
+    .hero-logo {
+      height: 140px;
+      width: auto;
+      margin: 0 auto 24px;
+      display: block;
+      filter: drop-shadow(0 4px 12px rgba(59, 130, 246, 0.3));
+      animation: fadeInScale 0.6s ease-out;
+    }
+    
+    @keyframes fadeInScale {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+    
+    .hero h1 {
+      font-size: 2.5rem;
+      margin: 0 0 16px;
+      background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .hero p {
+      font-size: 1.25rem;
+      color: var(--muted);
+      max-width: 700px;
+      margin: 0 auto 32px;
+    }
+    
+    /* ===== Sector Headers ===== */
+    .sector-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--border);
+    }
+    
+    .sector-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+    
+    .sector-icon.gov {
+      background: rgba(59, 130, 246, 0.2);
+      border: 2px solid var(--gov-accent);
+    }
+    
+    .sector-icon.commercial {
+      background: rgba(16, 185, 129, 0.2);
+      border: 2px solid var(--commercial-accent);
+    }
+    
+    .sector-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin: 0;
+    }
+    
+    /* ===== Response Area ===== */
+    .response-area {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      min-height: 120px;
+    }
+    
+    #responseContent {
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+    }
+    
+    /* ===== Debug Panel ===== */
+    details.debug {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+    
+    details.debug > summary {
+      padding: 16px;
+      cursor: pointer;
+      font-weight: 600;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    details.debug[open] > summary {
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .debug-body { padding: 16px; }
+    .kv {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 12px;
+      padding: 8px 0;
+      align-items: start;
+    }
+    .kv .key { color: var(--muted); font-weight: 600; }
+    .mono { font-family: 'Courier New', monospace; word-break: break-all; font-size: 0.85rem; }
+    
+    /* ===== Utilities ===== */
+    .hidden { display: none !important; }
+    .stack { display: flex; flex-direction: column; gap: 16px; }
+    .actions { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+    
+    /* ===== Footer ===== */
+    footer {
+      color: var(--muted);
+      padding: 40px 0;
+      text-align: center;
+      border-top: 1px solid var(--border);
+      margin-top: 60px;
+    }
+    
+    /* ===== Responsive ===== */
+    @media (max-width: 768px) {
+      .hero-logo { height: 100px; }
+      .hero h1 { font-size: 2rem; }
+      .hero p { font-size: 1rem; }
+      .brand img.logo { height: 50px; }
+      .header-content { flex-direction: column; align-items: stretch; }
+      .nav-tabs { justify-content: center; }
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .kv { grid-template-columns: 1fr; }
+      .solution-header { flex-direction: column; align-items: start; gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- ===== Header ===== -->
+  <header class="site-header">
+    <div class="container header-content">
+      <div class="brand">
+        <img class="logo" src="https://d11k4vck88gnf5.cloudfront.net/assets/US-Mission-Hero.png" alt="US Mission Hero Logo" />
+        <div class="brand-text">
+          <div class="title">US Mission Hero</div>
+          <div class="tagline">Secure Cloud Solutions for Government & Commercial</div>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn btn-primary" id="loginBtn" onclick="login()">Login</button>
+        <button class="btn btn-secondary hidden" id="logoutBtn" onclick="logout()">Logout</button>
+      </div>
+    </div>
+    <div class="container">
+      <nav class="nav-tabs" role="tablist">
+        <button class="tab" role="tab" id="tab-home" aria-selected="true" onclick="routeTo('home')">Home</button>
+        <button class="tab" role="tab" id="tab-government" aria-selected="false" onclick="routeTo('government')">Government Solutions</button>
+        <button class="tab" role="tab" id="tab-commercial" aria-selected="false" onclick="routeTo('commercial')">Commercial Solutions</button>
+        <button class="tab" role="tab" id="tab-about" aria-selected="false" onclick="routeTo('about')">About</button>
+        <button class="tab" role="tab" id="tab-updates" aria-selected="false" onclick="routeTo('updates')">Updates</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ===== Main Content ===== -->
+  <main class="container" id="appRoot" style="padding-top: 24px; padding-bottom: 24px;">
+    <!-- ===== HOME PAGE ===== -->
+    <section id="panel-home" role="tabpanel">
+      <div class="hero">
+        <img class="hero-logo" src="https://d11k4vck88gnf5.cloudfront.net/assets/US-Mission-Hero.png" alt="US Mission Hero" />
+        <h1>Welcome to US Mission Hero</h1>
+        <p>Delivering secure, compliant cloud solutions for government agencies and commercial enterprises. Specializing in AWS, Azure, AI/ML, and DevSecOps.</p>
+        <div class="actions" style="justify-content: center;">
+          <button class="btn btn-primary" onclick="routeTo('government')">🏛️ Government Solutions</button>
+          <button class="btn btn-primary" onclick="routeTo('commercial')">🏢 Commercial Solutions</button>
+        </div>
+      </div>
+
+      <div class="grid grid-2">
+        <!-- Quick Access: Government -->
+        <div class="card">
+          <div class="sector-header">
+            <div class="sector-icon gov">🏛️</div>
+            <h2 class="sector-title">Government</h2>
+          </div>
+          <p class="solution-desc">
+            FedRAMP, FISMA, and DoD-compliant cloud solutions. SCCA/SACA architectures, RMF automation, and secure data transfer services.
+          </p>
+          <div class="actions">
+            <button class="btn btn-secondary" onclick="routeTo('government')">View Solutions</button>
+          </div>
+        </div>
+
+        <!-- Quick Access: Commercial -->
+        <div class="card">
+          <div class="sector-header">
+            <div class="sector-icon commercial">🏢</div>
+            <h2 class="sector-title">Commercial</h2>
+          </div>
+          <p class="solution-desc">
+            Cloud migration, AI/ML integration, DevOps pipelines, and multi-cloud management. Scalable solutions for modern enterprises.
+          </p>
+          <div class="actions">
+            <button class="btn btn-secondary" onclick="routeTo('commercial')">View Solutions</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bedrock Integration (for authenticated users) -->
+      <div id="userInfo" class="hidden" style="margin-top: 24px;">
+        <div class="card stack">
+          <h3>AI Assistant (Bedrock)</h3>
+          <div class="stack">
+            <label for="promptInput">Ask the AI Assistant</label>
+            <textarea id="promptInput" rows="3" placeholder="Ask about our solutions, capabilities, or technical questions...">Tell me about your government cloud solutions.</textarea>
+          </div>
+          <div class="actions">
+            <button class="btn btn-primary" id="callBtn" onclick="callBedrock()">Ask AI</button>
+            <button class="btn btn-ghost" onclick="clearResponse()">Clear</button>
+          </div>
+          <div class="response-area">
+            <h4>Response</h4>
+            <div id="responseContent">Response will appear here...</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- ===== GOVERNMENT SOLUTIONS PAGE ===== -->
+    <section id="panel-government" class="hidden" role="tabpanel">
+      <div class="sector-header">
+        <div class="sector-icon gov">🏛️</div>
+        <h1 class="sector-title">Government Solutions</h1>
+      </div>
+      <p style="color: var(--muted); margin-bottom: 32px;">
+        Secure, compliant cloud solutions designed for federal, state, and local government agencies. 
+        All solutions meet FedRAMP, FISMA, and DoD security requirements.
+      </p>
+
+      <div class="grid grid-3">
+        <!-- Security Data Transfer API - ACTIVE SOLUTION -->
+        <div class="solution-card gov">
+          <div class="solution-header">
+            <h3 class="solution-title">Security Data Transfer API</h3>
+            <span class="badge badge-active">Active</span>
+          </div>
+          <p class="solution-desc">
+            AWS Lambda + API Gateway solution for S3 file scanning with PII/PHI detection using Amazon Bedrock and Comprehend. 
+            Automated compliance validation for sensitive data transfers.
+          </p>
+          <div class="solution-actions">
+            <button class="btn btn-primary" onclick="showSecurityTransferDemo()">Try Demo</button>
+            <button class="btn btn-secondary" onclick="alert('Documentation coming soon')">Docs</button>
+          </div>
+        </div>
+
+        <!-- FedRAMP/FISMA Compliance -->
+        <div class="solution-card gov">
+          <div class="solution-header">
+            <h3 class="solution-title">FedRAMP/FISMA Compliance Tools</h3>
+            <span class="badge badge-beta">Beta</span>
+          </div>
+          <p class="solution-desc">
+            Automated compliance scanning and reporting for FedRAMP and FISMA requirements. 
+            Continuous monitoring, evidence collection, and audit trail generation.
+          </p>
+          <div class="solution-actions">
+            <button class="btn btn-secondary" onclick="alert('Beta access - contact us')">Request Access</button>
+          </div>
+        </div>
+
+        <!-- SCCA/SACA Architecture -->
+        <div class="solution-card gov">
+          <div class="solution-header">
+            <h3 class="solution-title">SCCA/SACA Architecture</h3>
+            <span class="badge badge-active">Active</span>
+          </div>
+          <p class="solution-desc">
+            Secure Cloud Computing Architecture (SCCA) and Secure Azure Computing Architecture (SACA) design and implementation. 
+            Multi-tenant isolation, boundary protection, and secure connectivity.
+          </p>
+          <div class="solution-actions">
+            <button class="btn btn-secondary" onclick="alert('Contact us for consultation')">Learn More</button>
+          </div>
+        </div>
+
+        <!-- DoD/DHS Cloud Solutions -->
+        <div class="solution-card gov">
+          <div class="solution-header">
+            <h3 class="solution-title">DoD/DHS Cloud Solutions</h3>
+            <span class="badge badge-active">Active</span>
+          </div>
+          <p class="solution-desc">
+            Specialized cloud solutions for Department of Defense and Department of Homeland Security. 
+            IL4/IL5 environments, STIG hardening, and mission-critical workload support.
+          </p>
+          <div class="solution-actions">
+            <button class="btn btn-secondary" onclick="alert('Requires clearance verification')">Contact</button>
+          </div>
+        </div>
+
+        <!-- RMF/NIST Automation -->
+        <div class="solution-card gov">
+          <div class="solution-header">
+            <h3 class="solution-title">RMF/NIST 800-53 Automation</h3>
+            <span class="badge badge-soon">Coming Soon</span>
+          </div>
+          <p class="solution-desc">
+            Automated Risk Management Framework (RMF) workflows and NIST 800-53 control implementation. 
+            Policy-as-code, continuous ATO, and compliance dashboards.
+          </p>
+          <div class="solution-actions">
+            <button class="btn btn-ghost" disabled>In Development</button>
+          </div>
+        </div>
+
+        <!-- Gold AMI Pipeline -->
+        <div class="solution-card gov">
+          <div class="solution-header">
+            <h3 class="solution-title">Gold AMI Pipeline</h3>
+            <span class="badge badge-active">Active</span>
+          </div>
+          <p class="solution-desc">
+            Automated hardened image pipeline for Windows and RHEL. STIG compliance, vulnerability scanning, 
+            and centralized image distribution across AWS regions.
+          </p>
+          <div class="solution-actions">
+            <button class="btn btn-secondary" onclick="alert('Contact us for details')">Learn More</button>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- ===== COMMERCIAL SOLUTIONS PAGE ===== -->
+    <section id="panel-commercial" class="hidden" role="tabpanel">
+      <div class="sector-header">
+        <div class="sector-icon commercial">🏢</div>
+        <h1 class="sector-title">Commercial Solutions</h1>
+      </div>
+      <p style="color: var(--muted); margin-bottom: 32px;">
+        Enterprise-grade cloud solutions for commercial organizations. Scalable, cost-effective, 
+        and designed for rapid deployment and innovation.
+      </p>
+
+      <div class="grid grid-3">
+        <!-- Cloud Migration Services -->
+        <div class="solution-card commercial">
+          <div class="solution-header">
+            <h3 class="solution-title">Cloud Migration Services</h3>
+            <span class="badge badge-active">Active</span>
+          </div>
+          <p class="solution-desc">
+            End-to-end cloud migration from on-premises to AWS/Azure. Assessment, planning, execution, 
+            and optimization. Minimize downtime and risk.
+          </p>
+          <div class="solution-actions">
+            <button class="btn btn-primary" onclick="alert('Schedule a consultation')">Get Started</button>
+            <button class="btn btn-secondary" onclick="alert('View case studies')">Case Studies</button>
+          </div>
+        </div>
+
+        <!-- AI/ML Integration -->
+        <div class="solution-card commercial">
+          <div class="solution-header">
+            <h3 class="solution-title">AI/ML Integration</h3>
+            <span class="badge badge-beta">Beta</span>
+          </div>
+          <p class="solution-desc">
+            Integrate AI and machine learning into your applications. Amazon Bedrock, Azure OpenAI, 
+            custom models, and agentic workflows for automation.
+          </p>
+          <div class="solution-actions">
+            <button class="btn btn-primary" onclick="alert('Request demo')">Demo</button>
+          </div>
+        </div>
+
+        <!-- DevOps/CI-CD Pipelines -->
+        <div class="solution-card commercial">
+          <div class="solution-header">
+            <h3 class="solution-title">DevOps/CI-CD Pipelines</h3>
+            <span class="badge badge-active">Active</span>
+          </div>
+          <p class="solution-desc">
+            Automated build, test, and deployment pipelines. GitLab CI, GitHub Actions, Terraform, 
+            and Ansible. Infrastructure-as-code and policy enforcement.
+          </p>
+          <div class="solution-actions">
+            <button class="btn btn-secondary" onclick="alert('Learn more')">Learn More</button>
+          </div>
+        </div>
+
+        <!-- Multi-Cloud Management -->
+        <div class="solution-card commercial">
+          <div class="solution-header">
+            <h3 class="solution-title">Multi-Cloud Management</h3>
+            <span class="badge badge-active">Active</span>
+          </div>
+          <p class="solution-desc">
+            Unified management across AWS and Azure. Centralized identity, logging, monitoring, 
+            and cost optimization. Single pane of glass for all cloud resources.
+          </p>
+          <div class="solution-actions">
+            <button class="btn btn-secondary" onclick="alert('Contact us')">Contact</button>
+          </div>
+        </div>
+
+        <!-- Cost Optimization -->
+        <div class="solution-card commercial">
+          <div class="solution-header">
+            <h3 class="solution-title">Cost Optimization</h3>
+            <span class="badge badge-soon">Coming Soon</span>
+          </div>
+          <p class="solution-desc">
+            Automated cost analysis and optimization recommendations. Right-sizing, reserved instances, 
+            spot instances, and waste elimination. Reduce cloud spend by 30-50%.
+          </p>
+          <div class="solution-actions">
+            <button class="btn btn-ghost" disabled>In Development</button>
+          </div>
+        </div>
+
+        <!-- Observability & Monitoring -->
+        <div class="solution-card commercial">
+          <div class="solution-header">
+            <h3 class="solution-title">Observability & Monitoring</h3>
+            <span class="badge badge-beta">Beta</span>
+          </div>
+          <p class="solution-desc">
+            Comprehensive logging, monitoring, and alerting. CloudWatch, Azure Monitor, Sentinel, 
+            and custom dashboards. M-21-31 compliant logging for federal contractors.
+          </p>
+          <div class="solution-actions">
+            <button class="btn btn-secondary" onclick="alert('Request access')">Request Access</button>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- ===== ABOUT PAGE ===== -->
+    <section id="panel-about" class="hidden" role="tabpanel">
+      <!-- AWS Founders Program Badge -->
+      <div class="card" style="background: linear-gradient(135deg, rgba(255,153,0,0.1), rgba(59,130,246,0.1)); border-color: var(--brand-gold); text-align: center; padding: 16px;">
+        <div style="font-size: 1.5rem; margin-bottom: 8px;">🚀</div>
+        <div style="font-weight: 700; font-size: 1.1rem; color: var(--brand-gold);">AWS Founders Program Applicant</div>
+        <div style="color: var(--muted); font-size: 0.9rem;">Building AI-powered cloud security solutions on AWS</div>
+      </div>
+
+      <!-- Company Mission -->
+      <div class="card">
+        <h2 style="margin-top: 0;">US Mission Hero</h2>
+        <p style="font-size: 1.1rem; color: var(--muted); margin: 16px 0;">
+          Delivering secure, compliant cloud solutions that combine government-grade security with commercial agility and AI-driven innovation.
+        </p>
+        <p>
+          Founded by two cloud architects with deep government and commercial experience, US Mission Hero bridges the gap between compliance requirements and modern cloud innovation. We specialize in FedRAMP-ready architectures, DoD/DHS cloud environments, and AI/ML automation that meets the highest security standards.
+        </p>
+      </div>
+
+      <!-- Co-Founders Section -->
+      <div class="card">
+        <h2 style="margin-top: 0; margin-bottom: 24px;">Co-Founders</h2>
+        
+        <div class="grid grid-2" style="gap: 32px;">
+          <!-- Matthew Nico -->
+          <div>
+            <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px;">
+              <img src="/assets/profile.png" alt="Matthew Nico" width="80" height="80" 
+                   style="border-radius: 12px; border: 2px solid var(--gov-accent); object-fit: cover;"
+                   onerror="this.src='https://d11k4vck88gnf5.cloudfront.net/assets/US-Mission-Hero.png'"/>
+              <div>
+                <h3 style="margin: 0;">Matthew Nico</h3>
+                <div style="color: var(--gov-accent); font-weight: 600; margin-top: 4px;">Co-Founder & Chief Cloud Architect</div>
+                <div style="color: var(--muted); font-size: 0.9rem;">12+ years experience</div>
+              </div>
+            </div>
+            
+            <p style="color: var(--muted); margin-bottom: 16px;">
+              Cloud Strategy & Operations leader specializing in multi-cloud architecture, SCCA/SACA design, and FedRAMP/FISMA compliance. Expert in Infrastructure-as-Code and DevSecOps automation.
+            </p>
+            
+            <div style="margin-bottom: 12px;">
+              <div style="font-weight: 600; margin-bottom: 8px;">Expertise:</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                <span class="badge badge-beta">AWS GovCloud</span>
+                <span class="badge badge-beta">Azure Government</span>
+                <span class="badge badge-beta">SCCA/SACA</span>
+                <span class="badge badge-beta">Terraform</span>
+                <span class="badge badge-beta">RMF/NIST 800-53</span>
+              </div>
+            </div>
+            
+            <div style="margin-bottom: 12px;">
+              <div style="font-weight: 600; margin-bottom: 8px;">Certifications:</div>
+              <div style="color: var(--muted); font-size: 0.9rem;">
+                • AZ-900 Microsoft Certified<br/>
+                • Security+ (IAT Level II)<br/>
+                • Python PCEP<br/>
+                • AWS Advanced Networking (in progress)
+              </div>
+            </div>
+            
+            <div class="actions" style="margin-top: 16px;">
+              <a class="btn btn-secondary" style="font-size: 0.85rem; padding: 8px 16px;" href="/assets/Resume - Matthew Nico.pdf" target="_blank">Resume</a>
+              <a class="btn btn-secondary" style="font-size: 0.85rem; padding: 8px 16px;" href="mailto:mattnicomn10@gmail.com">Email</a>
+              <a class="btn btn-secondary" style="font-size: 0.85rem; padding: 8px 16px;" href="https://www.linkedin.com/in/matthew-nico-038b0546/" target="_blank">LinkedIn</a>
+            </div>
+          </div>
+
+          <!-- Ernest Candanedo Cruz -->
+          <div>
+            <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px;">
+              <img src="/assets/profile-ernest.png" alt="Ernest Candanedo Cruz" width="80" height="80" 
+                   style="border-radius: 12px; border: 2px solid var(--commercial-accent); object-fit: cover;"
+                   onerror="this.src='https://d11k4vck88gnf5.cloudfront.net/assets/US-Mission-Hero.png'"/>
+              <div>
+                <h3 style="margin: 0;">Ernest Candanedo Cruz</h3>
+                <div style="color: var(--commercial-accent); font-weight: 600; margin-top: 4px;">Co-Founder & Chief AI/ML Architect</div>
+                <div style="color: var(--muted); font-size: 0.9rem;">13+ years experience</div>
+              </div>
+            </div>
+            
+            <p style="color: var(--muted); margin-bottom: 16px;">
+              Lead Software Engineer and AI Solutions Architect specializing in AWS Bedrock, SageMaker, and multi-cloud application modernization. Expert in agentic AI and ERP systems integration.
+            </p>
+            
+            <div style="margin-bottom: 12px;">
+              <div style="font-weight: 600; margin-bottom: 8px;">Expertise:</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                <span class="badge badge-active">AWS Bedrock</span>
+                <span class="badge badge-active">SageMaker</span>
+                <span class="badge badge-active">TensorFlow</span>
+                <span class="badge badge-active">React/Next.js</span>
+                <span class="badge badge-active">DevSecOps</span>
+              </div>
+            </div>
+            
+            <div style="margin-bottom: 12px;">
+              <div style="font-weight: 600; margin-bottom: 8px;">Certifications:</div>
+              <div style="color: var(--muted); font-size: 0.9rem;">
+                • AWS Solutions Architect Professional<br/>
+                • AWS ML Engineer Associate<br/>
+                • Azure Administrator Associate<br/>
+                • Terraform Certified Associate
+              </div>
+            </div>
+            
+            <div class="actions" style="margin-top: 16px;">
+              <a class="btn btn-secondary" style="font-size: 0.85rem; padding: 8px 16px;" href="/assets/Resume - Ernest.pdf" target="_blank">Resume</a>
+              <a class="btn btn-secondary" style="font-size: 0.85rem; padding: 8px 16px;" href="mailto:ecc@myniftycloud.com">Email</a>
+              <a class="btn btn-secondary" style="font-size: 0.85rem; padding: 8px 16px;" href="#" target="_blank">LinkedIn</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Combined Expertise -->
+      <div class="card">
+        <h3 style="margin-top: 0;">Combined Expertise</h3>
+        <div class="grid grid-3">
+          <div class="card" style="background: rgba(59, 130, 246, 0.05);">
+            <div style="color: var(--muted); font-size: 0.9rem;">Total Experience</div>
+            <div style="font-weight: 700; font-size: 1.5rem; color: var(--brand-primary);">25+ years</div>
+            <div style="color: var(--muted); font-size: 0.9rem;">Cloud, AI/ML, Security</div>
+          </div>
+          <div class="card" style="background: rgba(16, 185, 129, 0.05);">
+            <div style="color: var(--muted); font-size: 0.9rem;">Certifications</div>
+            <div style="font-weight: 700; font-size: 1.5rem; color: var(--brand-secondary);">10+</div>
+            <div style="color: var(--muted); font-size: 0.9rem;">AWS, Azure, Security</div>
+          </div>
+          <div class="card" style="background: rgba(245, 158, 11, 0.05);">
+            <div style="color: var(--muted); font-size: 0.9rem;">DoD Projects</div>
+            <div style="font-weight: 700; font-size: 1.5rem; color: var(--brand-gold);">Multiple</div>
+            <div style="color: var(--muted); font-size: 0.9rem;">FedRAMP, FISMA, STIG</div>
+          </div>
+        </div>
+        
+        <p style="margin-top: 24px; color: var(--muted);">
+          <strong style="color: var(--text);">What We Bring Together:</strong> Matthew's infrastructure and compliance expertise combined with Ernest's AI/ML and software engineering capabilities creates a full-stack cloud solution provider. We deliver everything from secure SCCA/SACA architectures to intelligent, AI-powered applications—all built on AWS with government-grade security.
+        </p>
+      </div>
+
+      <!-- AWS Founders Program Section -->
+      <div class="card" style="border: 2px solid var(--brand-gold);">
+        <h3 style="margin-top: 0; display: flex; align-items: center; gap: 12px;">
+          <span style="font-size: 1.5rem;">🚀</span>
+          AWS Founders Program
+        </h3>
+        
+        <p style="font-size: 1.05rem; margin-bottom: 24px;">
+          We're applying for the AWS Founders Program to accelerate development of AI-powered cloud security and compliance solutions.
+        </p>
+        
+        <div style="background: var(--panel); padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+          <h4 style="margin-top: 0; color: var(--brand-primary);">Our AWS Experience</h4>
+          <div class="grid grid-2" style="gap: 16px;">
+            <div>
+              <strong>Infrastructure & Security:</strong>
+              <div style="color: var(--muted); font-size: 0.9rem; margin-top: 4px;">
+                Lambda, API Gateway, S3, CloudFront, Bedrock, Comprehend, IAM, Security Hub, GuardDuty
+              </div>
+            </div>
+            <div>
+              <strong>AI/ML & Development:</strong>
+              <div style="color: var(--muted); font-size: 0.9rem; margin-top: 4px;">
+                Bedrock, SageMaker, EKS, ECS, Step Functions, EventBridge, CloudFormation, Terraform
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <h4 style="margin-top: 24px;">Use of Credits ($12,000-$15,000)</h4>
+        <div class="stack" style="gap: 16px;">
+          <div style="border-left: 3px solid var(--gov-accent); padding-left: 16px;">
+            <strong>1. Security Data Transfer API Enhancement</strong> ($5,000)
+            <div style="color: var(--muted); font-size: 0.9rem; margin-top: 4px;">
+              Expand our live solution with real-time threat detection (GuardDuty, Security Hub), automated remediation (Step Functions), and enterprise scaling (ECS, RDS, ElastiCache).
+            </div>
+          </div>
+          
+          <div style="border-left: 3px solid var(--commercial-accent); padding-left: 16px;">
+            <strong>2. AI-Powered Compliance Automation</strong> ($4,000)
+            <div style="color: var(--muted); font-size: 0.9rem; margin-top: 4px;">
+              Automated FedRAMP/FISMA control monitoring with intelligent evidence collection using Config, Systems Manager, Bedrock, and Athena.
+            </div>
+          </div>
+          
+          <div style="border-left: 3px solid var(--brand-gold); padding-left: 16px;">
+            <strong>3. ERP Audit Intelligence</strong> ($3,000)
+            <div style="color: var(--muted); font-size: 0.9rem; margin-top: 4px;">
+              AI-driven anomaly detection for financial systems with automated reconciliation using SageMaker, Lambda, and DynamoDB.
+            </div>
+          </div>
+        </div>
+        
+        <div style="margin-top: 24px; padding: 16px; background: rgba(59, 130, 246, 0.1); border-radius: 8px;">
+          <strong style="color: var(--brand-primary);">Market Opportunity:</strong>
+          <div style="color: var(--muted); margin-top: 8px;">
+            $30B+ federal cloud market • Growing AI/ML adoption in government • Compliance automation demand • ERP modernization needs
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Section -->
+      <div class="card">
+        <h3 style="margin-top: 0;">Let's Work Together</h3>
+        <p style="color: var(--muted);">
+          Whether you're a government agency looking for FedRAMP-ready solutions or a commercial enterprise seeking secure cloud migration with AI/ML capabilities, we'd love to hear from you.
+        </p>
+        
+        <div class="grid grid-2" style="gap: 16px; margin-top: 24px;">
+          <div>
+            <h4 style="margin-top: 0; font-size: 1rem;">Government Clients</h4>
+            <ul style="color: var(--muted); font-size: 0.9rem; margin: 8px 0; padding-left: 20px;">
+              <li>FedRAMP/FISMA Compliance</li>
+              <li>SCCA/SACA Architecture</li>
+              <li>RMF Automation</li>
+              <li>DoD/DHS Cloud Solutions</li>
+            </ul>
+          </div>
+          <div>
+            <h4 style="margin-top: 0; font-size: 1rem;">Commercial Clients</h4>
+            <ul style="color: var(--muted); font-size: 0.9rem; margin: 8px 0; padding-left: 20px;">
+              <li>Cloud Migration & Modernization</li>
+              <li>AI/ML Integration</li>
+              <li>DevSecOps Automation</li>
+              <li>Multi-Cloud Management</li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="actions" style="margin-top: 24px; justify-content: center;">
+          <button class="btn btn-primary" onclick="window.location.href='mailto:matthew.nico@usmissionhero.com,ecc@myniftycloud.com?subject=Demo Request - US Mission Hero&body=Hello,%0D%0A%0D%0AI would like to schedule a demo of your solutions.%0D%0A%0D%0AName:%0D%0AOrganization:%0D%0APhone:%0D%0APreferred Date/Time:%0D%0A%0D%0AThank you!'">Schedule a Demo</button>
+          <button class="btn btn-secondary" onclick="window.location.href='mailto:matthew.nico@usmissionhero.com,ecc@myniftycloud.com?subject=Capabilities Brief Request&body=Hello,%0D%0A%0D%0APlease send me your capabilities brief.%0D%0A%0D%0AName:%0D%0AOrganization:%0D%0AEmail:%0D%0A%0D%0AThank you!'">Download Capabilities Brief</button>
+        </div>
+      </div>
+    </section>
+    <!-- ===== UPDATES PAGE ===== -->
+    <section id="panel-updates" class="hidden" role="tabpanel">
+      <div class="card stack">
+        <h2>Automated Updates & Release Notes</h2>
+        <p style="color: var(--muted)">
+          This feed summarizes changes to solutions and deployments. Generated by Bedrock and stored via API.
+        </p>
+        <div class="actions">
+          <button class="btn btn-primary" onclick="refreshUpdates()">Refresh</button>
+          <button class="btn btn-secondary" onclick="generateUpdate()">Generate Summary</button>
+        </div>
+        <div id="updatesList" class="stack"></div>
+      </div>
+
+      <!-- Debug Panel -->
+      <div class="card" style="margin-top: 24px;">
+        <details class="debug">
+          <summary>🛠️ Debug Information</summary>
+          <div class="debug-body stack">
+            <div class="actions">
+              <button class="btn btn-secondary" onclick="checkTokenAndDisplay()">Check Token</button>
+              <button class="btn btn-secondary" onclick="testApiDirect()">Test API (Auth)</button>
+              <button class="btn btn-secondary" onclick="testApiNoAuth()">Test API (No Auth)</button>
+              <button class="btn btn-danger" onclick="purgeTokens()">Purge Tokens</button>
+            </div>
+            <div class="kv"><div class="key">Token Status</div><div class="mono" id="token-status">Not checked</div></div>
+            <div class="kv"><div class="key">Token Preview</div><div class="mono" id="token-preview">Not available</div></div>
+            <div class="kv"><div class="key">URL Parameters</div><div class="mono" id="url-params">No parameters</div></div>
+            <div class="kv"><div class="key">API Test Result</div><div class="mono" id="api-test-result">Not tested</div></div>
+          </div>
+        </details>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== Footer ===== -->
+  <footer class="container">
+    <div>© <span id="year"></span> NetworkNico LLC • US Mission Hero • <span style="color: var(--muted)">v2.0</span></div>
+  </footer>
+  <!-- ===== JavaScript ===== -->
+  <script>
+    // ===== Configuration =====
+    const COGNITO_DOMAIN = "https://us-east-1qst1onmxw.auth.us-east-1.amazoncognito.com";
+    const REDIRECT_URI = "https://d11k4vck88gnf5.cloudfront.net/index.html";
+    const API_GATEWAY_URL = "https://9heajy0ej8.execute-api.us-east-1.amazonaws.com/BedrockPromptHandler";
+    const CLIENT_ID = "7ccfli4ti56r33as43qp6imat2";
+    const API_PRESIGN_URL = "https://d11k4vck88gnf5.cloudfront.net/api/presign-upload";
+    const API_LOGS_URL = "https://d11k4vck88gnf5.cloudfront.net/api/logs";
+
+    const urlPattern = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,})([\/\w .-]*)*\/?$/i;
+
+    // ===== Utilities =====
+    const $ = (id) => document.getElementById(id);
+    function show(id) { $(id)?.classList.remove('hidden'); }
+    function hide(id) { $(id)?.classList.add('hidden'); }
+
+    function selectTab(name) {
+      const tabs = ['home', 'government', 'commercial', 'about', 'updates'];
+      tabs.forEach(t => {
+        const selected = t === name;
+        const tabEl = $(`tab-${t}`);
+        const panelEl = $(`panel-${t}`);
+        if (tabEl) tabEl.setAttribute('aria-selected', String(selected));
+        if (panelEl) {
+          if (selected) panelEl.classList.remove('hidden');
+          else panelEl.classList.add('hidden');
+        }
+      });
+    }
+
+    function routeTo(name) {
+      window.location.hash = `#/${name}`;
+      selectTab(name);
+    }
+
+    function isTokenExpired(token) {
+      if (!token) return true;
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const now = Math.floor(Date.now() / 1000);
+        return !!(payload.exp && payload.exp < now);
+      } catch { return true; }
+    }
+
+    function setBusy(el, busy = true) {
+      if (!el) return;
+      el.disabled = busy;
+      el.setAttribute('aria-busy', String(busy));
+    }
+
+    function toast(msg) {
+      const t = document.createElement('div');
+      t.textContent = msg;
+      t.style.cssText = 'position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--card);color:var(--text);padding:12px 24px;border-radius:8px;border:1px solid var(--border);box-shadow:0 8px 20px rgba(0,0,0,.3);z-index:999;';
+      document.body.appendChild(t);
+      setTimeout(() => t.remove(), 2500);
+    }
+
+    function debugUrlParams() {
+      const url = new URL(window.location.href);
+      const params = Object.fromEntries(url.searchParams.entries());
+      const up = $('url-params');
+      if (up) up.textContent = Object.keys(params).length ? JSON.stringify(params) : 'No parameters';
+    }
+
+    function persistTokens(tokens) {
+      if (tokens?.id_token) localStorage.setItem('id_token', tokens.id_token);
+      if (tokens?.access_token) localStorage.setItem('access_token', tokens.access_token);
+      if (tokens?.refresh_token) localStorage.setItem('refresh_token', tokens.refresh_token);
+    }
+
+    function purgeTokens() {
+      localStorage.removeItem('id_token');
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('refresh_token');
+      const ts = $('token-status');
+      if (ts) ts.textContent = 'Purged';
+      const tp = $('token-preview');
+      if (tp) tp.textContent = 'Not available';
+      hide('userInfo');
+      show('loginBtn');
+      hide('logoutBtn');
+      toast('Tokens removed');
+    }
+
+    function logout() {
+      purgeTokens();
+    }
+
+    // ===== Authentication =====
+    function login() {
+      const loginUrl = `${COGNITO_DOMAIN}/login?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}`;
+      window.location.href = loginUrl;
+    }
+
+    async function handleCodeCallback(code) {
+      if (!code) { alert('Invalid authorization code.'); return; }
+      try {
+        const res = await fetch(`${COGNITO_DOMAIN}/oauth2/token`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams({
+            grant_type: 'authorization_code',
+            client_id: CLIENT_ID,
+            redirect_uri: REDIRECT_URI,
+            code
+          })
+        });
+        if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+        const tokens = await res.json();
+        if (tokens.error) throw new Error(tokens.error_description || tokens.error);
+        persistTokens(tokens);
+        onAuthed();
+      } catch (e) {
+        alert('Authentication failed: ' + e.message);
+      }
+    }
+
+    function getTokenFromHash() {
+      const hash = window.location.hash?.slice(1);
+      const p = new URLSearchParams(hash);
+      return { id_token: p.get('id_token'), access_token: p.get('access_token') };
+    }
+
+    function checkTokenAndDisplay() {
+      const idToken = localStorage.getItem('id_token');
+      const ts = $('token-status');
+      const tp = $('token-preview');
+      if (idToken) {
+        const expired = isTokenExpired(idToken);
+        if (ts) ts.textContent = expired ? 'ID token expired' : 'ID token valid';
+        if (tp) tp.textContent = idToken.slice(0, 30) + '…' + idToken.slice(-10);
+        if (expired) purgeTokens();
+        else onAuthed();
+      } else {
+        if (ts) ts.textContent = 'No ID token found';
+        if (tp) tp.textContent = 'Not available';
+      }
+    }
+
+    function onAuthed() {
+      hide('loginBtn');
+      show('logoutBtn');
+      show('userInfo');
+      toast('Logged in successfully');
+    }
+
+    // ===== API Calls =====
+    async function callBedrock() {
+      const btn = $('callBtn');
+      const jwt = localStorage.getItem('id_token');
+      if (!jwt || isTokenExpired(jwt)) {
+        alert('Your session has expired. Please login again.');
+        purgeTokens();
+        return;
+      }
+
+      const promptText = $('promptInput').value.trim();
+      if (!promptText) {
+        toast('Please enter a prompt.');
+        return;
+      }
+
+      setBusy(btn, true);
+      $('responseContent').textContent = 'Loading...';
+
+      try {
+        if (!API_GATEWAY_URL || typeof API_GATEWAY_URL !== 'string' || !urlPattern.test(API_GATEWAY_URL)) {
+          throw new Error('Invalid or undefined API_GATEWAY_URL');
+        }
+        const res = await fetch(API_GATEWAY_URL, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${jwt}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ prompt: promptText })
+        });
+        const data = await res.json().catch(() => ({ raw: '<non-json>' }));
+        if (!res.ok) throw new Error(`${res.status} ${res.statusText}: ${JSON.stringify(data).slice(0, 180)}`);
+        $('responseContent').textContent = data.response || JSON.stringify(data, null, 2);
+      } catch (e) {
+        $('responseContent').textContent = 'Error: ' + e.message;
+      } finally {
+        setBusy(btn, false);
+      }
+    }
+
+    async function testApiDirect() {
+      const el = $('api-test-result');
+      if (el) el.textContent = 'Testing...';
+      const jwt = localStorage.getItem('id_token');
+      if (!jwt || isTokenExpired(jwt)) {
+        if (el) el.textContent = 'Token expired or not available! Login first.';
+        purgeTokens();
+        return;
+      }
+      try {
+        const res = await fetch(API_GATEWAY_URL, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${jwt}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ prompt: 'Test message from debug panel' })
+        });
+        const data = await res.json().catch(() => ({ raw: '<non-json>' }));
+        if (el) el.textContent = `Status: ${res.status}, Response: ${JSON.stringify(data).slice(0, 140)}...`;
+      } catch (e) {
+        if (el) el.textContent = 'Error: ' + e.message;
+      }
+    }
+
+    async function testApiNoAuth() {
+      const el = $('api-test-result');
+      if (el) el.textContent = 'Testing without auth...';
+      try {
+        const res = await fetch(API_GATEWAY_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt: 'Test message without auth' })
+        });
+        const data = await res.json().catch(() => ({ raw: '<non-json>' }));
+        if (el) el.textContent = `Status: ${res.status}, Response: ${JSON.stringify(data).slice(0, 140)}...`;
+      } catch (e) {
+        if (el) el.textContent = 'Error: ' + e.message;
+      }
+    }
+
+    function clearResponse() {
+      $('responseContent').textContent = 'Response will appear here...';
+    }
+
+    // ===== Updates Functions =====
+    async function refreshUpdates() {
+      const list = $('updatesList');
+      if (!list) return;
+      list.innerHTML = '<div style="color: var(--muted)">Loading...</div>';
+      try {
+        const jwt = localStorage.getItem('id_token');
+        const headers = {};
+        if (jwt) headers['Authorization'] = `Bearer ${jwt}`;
+        const res = await fetch(API_LOGS_URL, { headers });
+        
+        // Check if response is actually JSON
+        const contentType = res.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          list.innerHTML = '<div style="color: var(--muted)">No updates available yet. This feature requires backend API setup.</div>';
+          return;
+        }
+        
+        const data = await res.json();
+        const entries = Array.isArray(data) ? data : (data.items || []);
+        if (!entries.length) {
+          list.innerHTML = '<div style="color: var(--muted)">No updates yet.</div>';
+          return;
+        }
+        list.innerHTML = entries.map(renderUpdate).join('');
+      } catch (e) {
+        list.innerHTML = `<div style="color: var(--muted)">Updates feature coming soon. Backend API not yet configured.</div>`;
+      }
+    }
+
+    function renderUpdate(e) {
+      const ts = e.timestamp ? new Date(e.timestamp).toLocaleString() : '';
+      const text = (e.summary || e.message || '');
+      return `<div class="card"><div style="color: var(--muted); font-size: 0.875rem;">${ts}</div><div style="margin-top:8px; white-space:pre-wrap;">${escapeHtml(text)}</div></div>`;
+    }
+
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, c => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[c]));
+    }
+
+    async function generateUpdate() {
+      const jwt = localStorage.getItem('id_token');
+      if (!jwt || isTokenExpired(jwt)) {
+        toast('Login required');
+        return;
+      }
+      try {
+        const summaryRes = await fetch(API_GATEWAY_URL, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${jwt}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            prompt: "Summarize today's changes to the US Mission Hero website and solutions. Focus on deployments, config updates, and new features. Output 3-5 bullets."
+          })
+        });
+        const sumJson = await summaryRes.json();
+        const summary = sumJson.response || JSON.stringify(sumJson);
+        const append = await fetch(API_LOGS_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${jwt}`
+          },
+          body: JSON.stringify({ summary })
+        });
+        if (!append.ok) throw new Error('Failed to write to log');
+        toast('Update generated');
+        refreshUpdates();
+      } catch (e) {
+        toast('Generate failed: ' + e.message);
+      }
+    }
+
+    // ===== Demo Functions =====
+    function showSecurityTransferDemo() {
+      routeTo('home');
+      setTimeout(() => {
+        const userInfo = $('userInfo');
+        if (userInfo && !userInfo.classList.contains('hidden')) {
+          $('promptInput').value = 'Explain how the Security Data Transfer API works and what compliance features it provides.';
+          userInfo.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+          toast('Please login to try the demo');
+        }
+      }, 300);
+    }
+
+    // ===== Initialization =====
+    window.addEventListener('load', () => {
+      $('year').textContent = new Date().getFullYear();
+
+      // Handle OAuth callback
+      const code = new URLSearchParams(window.location.search).get('code');
+      if (code) {
+        handleCodeCallback(code).finally(() => {
+          const url = new URL(window.location);
+          url.searchParams.delete('code');
+          history.replaceState(null, '', url.pathname + url.search + window.location.hash);
+        });
+        return;
+      }
+
+      // Handle legacy hash-based tokens
+      const legacy = getTokenFromHash();
+      if (legacy.id_token) {
+        persistTokens(legacy);
+        history.replaceState(null, '', window.location.pathname + window.location.hash);
+        onAuthed();
+      } else {
+        // Check for stored token
+        const stored = localStorage.getItem('id_token');
+        if (stored && !isTokenExpired(stored)) {
+          onAuthed();
+        }
+      }
+
+      // Handle routing
+      const hash = window.location.hash.replace('#/', '');
+      const validTabs = ['home', 'government', 'commercial', 'about', 'updates'];
+      selectTab(validTabs.includes(hash) ? hash : 'home');
+
+      debugUrlParams();
+      checkTokenAndDisplay();
+      refreshUpdates();
+    });
+
+    // Handle hash changes for navigation
+    window.addEventListener('hashchange', () => {
+      const hash = window.location.hash.replace('#/', '');
+      const validTabs = ['home', 'government', 'commercial', 'about', 'updates'];
+      selectTab(validTabs.includes(hash) ? hash : 'home');
+    });
+  </script>
+</body>
+</html>

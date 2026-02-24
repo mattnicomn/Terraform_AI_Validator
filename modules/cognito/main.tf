@@ -18,12 +18,7 @@ resource "aws_cognito_user_pool" "this" {
     temporary_password_validity_days = 7
   }
 
-  # Token validity windows
-  token_validity_units {
-    access_token  = "minutes"
-    id_token      = "minutes"
-    refresh_token = "days"
-  }
+
 
   admin_create_user_config {
     allow_admin_create_user_only = false

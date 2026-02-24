@@ -14,7 +14,3 @@ output "issuer_url" {
 output "user_pool_client_id" {
   value = aws_cognito_user_pool_client.app.id
 }
-
-output "hosted_ui_domain" {
-  value = aws_cognito_user_pool_domain.this.domain
-}

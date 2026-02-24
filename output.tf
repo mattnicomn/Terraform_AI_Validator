@@ -1,5 +1,5 @@
-output "api_endpoint"      { value = module.api.api_endpoint }
-output "api_id"            { value = module.api.api_id }
+output "api_endpoint"      { value = module.api_gateway.api_endpoint }
+output "api_id"            { value = module.api_gateway.api_id }
 output "cloudfront_domain" { value = module.cloudfront.domain_name }
 output "cloudfront_url"    { value = "https://${module.cloudfront.domain_name}" }
 output "s3_frontend"       { value = module.s3_frontend.bucket_id }

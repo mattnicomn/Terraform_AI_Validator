@@ -15,36 +15,25 @@ resource "aws_lambda_function" "this" {
 
   package_type = var.package_type
 
-  dynamic "image_config" {
-    for_each = var.package_type == "Image" ? [1] : []
-    content {}
-  }
+  # Image-based Lambda
+  image_uri = var.package_type == "Image" && var.image_uri != null ? var.image_uri : null
 
-  dynamic "image_uri" {
-    for_each = var.package_type == "Image" ? [1] : []
-    content = var.image_uri
-  }
+  # Zip-based Lambda from S3
+  s3_bucket         = var.package_type == "Zip" && var.code_s3_bucket != null ? var.code_s3_bucket : null
+  s3_key            = var.package_type == "Zip" && var.code_s3_key != null ? var.code_s3_key : null
+  s3_object_version = var.package_type == "Zip" && var.code_s3_version != null ? var.code_s3_version : null
 
-  dynamic "filename" {
-    for_each = var.package_type == "Zip" && var.code_s3_bucket == null ? [1] : []
-    content  = null # not used here
+  # Required for Zip packages
+  handler = var.package_type == "Zip" ? var.handler : null
+  runtime = var.package_type == "Zip" ? var.runtime : null
+  
+  # Lifecycle to prevent recreation when code changes
+  lifecycle {
+    ignore_changes = [
+      source_code_hash,
+      last_modified
+    ]
   }
-
-  dynamic "s3_bucket" {
-    for_each = var.package_type == "Zip" && var.code_s3_bucket != null ? [1] : []
-    content  = var.code_s3_bucket
-  }
-  dynamic "s3_key" {
-    for_each = var.package_type == "Zip" && var.code_s3_key != null ? [1] : []
-    content  = var.code_s3_key
-  }
-  dynamic "s3_object_version" {
-    for_each = var.package_type == "Zip" && var.code_s3_version != null ? [1] : []
-    content  = var.code_s3_version
-  }
-
-  handler = var.handler
-  runtime = var.runtime
 }
 
 output "function_arn"  { value = aws_lambda_function.this.arn }

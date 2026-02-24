@@ -39,21 +39,23 @@ resource "aws_bedrockagent_agent" "this" {
   }
 }
 
-resource "aws_bedrockagent_action_group" "this" {
-  agent_id          = aws_bedrockagent_agent.this.id
-  action_group_name = var.action_group_name
-  action_group_state = "ENABLED"
-
-  api_schema {
-    payload = var.openapi_payload
-  }
-
-  action_group_executor {
-    lambda {
-      lambda_arn = var.action_group_lambda
-    }
-  }
-}
+# NOTE: Action groups may need to be configured manually or via AWS CLI
+# The aws_bedrockagent_agent_action_group resource may not be available in all provider versions
+# Uncomment and adjust if your provider version supports it:
+#
+# resource "aws_bedrockagent_agent_action_group" "this" {
+#   agent_id          = aws_bedrockagent_agent.this.id
+#   action_group_name = var.action_group_name
+#   action_group_state = "ENABLED"
+#
+#   api_schema {
+#     payload = var.openapi_payload
+#   }
+#
+#   action_group_executor {
+#     lambda = var.action_group_lambda
+#   }
+# }
 
 resource "aws_bedrockagent_agent_alias" "aliases" {
   for_each      = { for a in var.aliases : a.name => a }
