@@ -50,13 +50,15 @@ resource "aws_s3_bucket_ownership_controls" "this" {
 }
 
 # Default SSE-S3 encryption (AES256), matching CFN
+# Consider using aws:kms for enhanced security and audit trails
 resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
   for_each = aws_s3_bucket.this
 
   bucket = each.value.id
   rule {
     apply_server_side_encryption_by_default {
-      sse_algorithm = "AES256"
+      sse_algorithm     = lookup(var.buckets[each.key], "kms_key_id", null) != null ? "aws:kms" : "AES256"
+      kms_master_key_id = lookup(var.buckets[each.key], "kms_key_id", null)
     }
     bucket_key_enabled = true
   }
@@ -166,13 +168,6 @@ resource "aws_s3_bucket_policy" "results_write" {
   policy = each.value.json
 }
 
-module "s3_quarantine" {
-  source                 = "./modules/s3"
-  bucket_name            = "securitydatatransfers3quarantine"
-  bucket_owner_enforced  = true
-  block_public_access    = true
-  sse_sse_algorithm      = "AES256"
-  cors_rules             = []
-  tags                   = local.common_tags
-}
+# Quarantine bucket module call should be in main.tf, not in the s3 module itself
+# This creates a circular dependency and has been removed
 

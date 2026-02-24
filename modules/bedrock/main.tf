@@ -2,21 +2,40 @@
 # Names may vary slightly depending on provider version.
 
 resource "aws_bedrockagent_agent" "this" {
-  agent_name               = var.agent_name
-  description              = var.description
-  foundation_model         = var.foundation_model
-  idle_session_ttl_in_seconds = 600
-  instruction              = var.instruction
-  agent_resource_role_arn  = var.agent_resource_role_arn
-  tags                     = var.tags
+  agent_name                      = var.agent_name
+  description                     = var.description
+  foundation_model                = var.foundation_model
+  idle_session_ttl_in_seconds     = 600
+  instruction                     = var.instruction
+  agent_resource_role_arn         = var.agent_resource_role_arn
+  prepare_agent                   = true
+  tags                            = var.tags
 
-  # MemoryConfiguration (optional)
-  memory_configuration {
-    enabled_memory_types = ["SESSION_SUMMARY"]
-    session_summary_configuration {
-      max_recent_sessions = 5
+  # Guardrail configuration for enhanced security
+  dynamic "guardrail_configuration" {
+    for_each = var.guardrail_identifier != null ? [1] : []
+    content {
+      guardrail_identifier = var.guardrail_identifier
+      guardrail_version    = var.guardrail_version
     }
-    storage_days = 5
+  }
+
+  # Prompt override configuration for better control
+  dynamic "prompt_override_configuration" {
+    for_each = var.enable_prompt_override ? [1] : []
+    content {
+      prompt_configurations {
+        prompt_type     = "PRE_PROCESSING"
+        prompt_state    = "ENABLED"
+        inference_configuration {
+          temperature   = 0.0
+          top_p         = 0.9
+          top_k         = 250
+          max_length    = 2048
+          stop_sequences = []
+        }
+      }
+    }
   }
 }
 

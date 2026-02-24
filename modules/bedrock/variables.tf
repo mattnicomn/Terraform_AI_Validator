@@ -17,3 +17,21 @@ variable "aliases" {
 }
 
 variable "tags" { type = map(string) default = {} }
+
+variable "guardrail_identifier" {
+  type        = string
+  default     = null
+  description = "Bedrock guardrail identifier for enhanced security"
+}
+
+variable "guardrail_version" {
+  type        = string
+  default     = "DRAFT"
+  description = "Bedrock guardrail version"
+}
+
+variable "enable_prompt_override" {
+  type        = bool
+  default     = false
+  description = "Enable prompt override configuration"
+}

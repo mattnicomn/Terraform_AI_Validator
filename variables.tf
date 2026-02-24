@@ -40,10 +40,60 @@ variable "enable_bedrock_agent" { type = bool default = true }
 # CloudFront public key (CFN had inline PEM; better to pass via var)
 variable "cloudfront_public_key_pem" {
   type        = string
-  description = "PEM of the CloudFront public key"
+  description = "PEM-encoded CloudFront public key for signed URLs"
+  default     = null
+  sensitive   = true
+}
+
+variable "bedrock_agent_id" {
+  type        = string
+  description = "Bedrock Agent ID"
+  default     = "NNKUTQQWKP"
+}
+
+variable "bedrock_agent_alias_id" {
+  type        = string
+  description = "Bedrock Agent Alias ID"
+  default     = "GVM7ZZPOOM"
+}
+
+variable "cloudfront_private_key_pem" {
+  type        = string
+  description = "PEM-encoded CloudFront private key for signed URL generation (stored in SSM)"
+  default     = null
+  sensitive   = true
+}
+
+variable "ssm_kms_key_id" {
+  type        = string
+  description = "KMS key ID for SSM parameter encryption"
   default     = null
 }
 
 variable "quarantine_bucket" {
   type = string
+}
+
+variable "log_group_kms_key_id" {
+  type        = string
+  default     = null
+  description = "KMS key ID for CloudWatch Logs encryption"
+}
+
+variable "enable_bedrock_guardrails" {
+  type        = bool
+  default     = false
+  description = "Enable Bedrock guardrails for enhanced security"
+}
+
+variable "bedrock_guardrail_identifier" {
+  type        = string
+  default     = null
+  description = "Bedrock guardrail identifier"
+}
+
+variable "bedrock_guardrail_version" {
+  type        = string
+  default     = "DRAFT"
+  description = "Bedrock guardrail version"
 }
