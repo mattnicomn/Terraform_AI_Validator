@@ -43,3 +43,7 @@ variable "cloudfront_public_key_pem" {
   description = "PEM of the CloudFront public key"
   default     = null
 }
+
+variable "quarantine_bucket" {
+  type = string
+}

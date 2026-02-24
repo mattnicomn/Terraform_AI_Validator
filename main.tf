@@ -69,7 +69,7 @@ module "iam" {
 
   tags = local.common_tags
 }
-
+/*
 ####################
 # Lambda functions
 ####################
@@ -95,8 +95,10 @@ module "lambda_processor" {
       SOURCE_BUCKETS     = module.s3.names["source"]
       DESTINATION_BUCKETS= module.s3.names["destination"]
       RESULTS_BUCKET     = module.s3.names["results"]
+    }
+  }
 }
-
+*/
 module "lambda_prompt" {
   source           = "./modules/lambda"
   function_name    = local.lambda_prompt_name
@@ -310,10 +312,12 @@ module "lambda_processor" {
   source_bucket      = "securitydatatransfers3source"
   destination_bucket = "securitydatatransfers3destination"
   results_bucket     = "securitydatatransfers3results"
+  quarantine_bucket  = module.s3_quarantine.bucket_id
 
   # Optional extra env
   extra_env = {
     LOG_LEVEL = "INFO"
+    QUARANTINE_BUCKET = module.s3_quarantine.bucket_id # or wired from module var
   }
 
   tags = local.common_tags
