@@ -16,7 +16,8 @@ locals {
   lambda_processor_name = "SecurityDataTransferProcessor"
   lambda_prompt_name    = "BedrockPromptHandler"
 
-  cloudfront_resp_hdrs_policy_id = var.cloudfront_resp_headers_policy_id # you supplied in CFN: 60669652-455b-4ae9-85a4-c4c02393f86c
+  cloudfront_resp_hdrs_policy_id = var.cloudfront_resp_headers_policy_id
+  cloudfront_resp_headers_policy_id = var.cloudfront_resp_headers_policy_id
 
   # Feature toggles
   enable_bedrock_agent = var.enable_bedrock_agent

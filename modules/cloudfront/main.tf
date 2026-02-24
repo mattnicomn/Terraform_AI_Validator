@@ -47,7 +47,6 @@ resource "aws_cloudfront_distribution" "this" {
     domain_name              = var.s3_bucket_domain
     origin_id                = var.default_origin_id
     origin_access_control_id = aws_cloudfront_origin_access_control.oac.id
-    s3_origin_config {}
   }
 
   default_cache_behavior {
@@ -60,11 +59,7 @@ resource "aws_cloudfront_distribution" "this" {
     # Using managed policies
     cache_policy_id            = data.aws_cloudfront_cache_policy.this["Managed-CachingDisabled"].id
     origin_request_policy_id   = data.aws_cloudfront_origin_request_policy.this["Managed-AllViewerExceptHostHeader"].id
-
-    dynamic "response_headers_policy_id" {
-      for_each = var.response_headers_policy_id != "" ? [1] : []
-      content  = var.response_headers_policy_id
-    }
+    response_headers_policy_id = var.response_headers_policy_id != "" ? var.response_headers_policy_id : null
   }
 
   restrictions {
@@ -101,7 +96,3 @@ resource "aws_s3_bucket_policy" "allow_cf" {
     }]
   })
 }
-
-output "distribution_id"  { value = aws_cloudfront_distribution.this.id }
-output "distribution_arn" { value = aws_cloudfront_distribution.this.arn }
-output "domain_name"      { value = aws_cloudfront_distribution.this.domain_name }

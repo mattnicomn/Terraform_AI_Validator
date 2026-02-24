@@ -18,16 +18,37 @@ EOT
 }
 
 # CORS
-variable "cors_allow_origins" { type = list(string)  default = ["*"] }
-variable "cors_allow_headers" { type = list(string)  default = ["authorization","content-type"] }
-variable "cors_allow_methods" { type = list(string)  default = ["OPTIONS","GET","POST","PUT","PATCH","DELETE"] }
+variable "cors_allow_origins" { 
+  type    = list(string)
+  default = ["*"]
+}
+
+variable "cors_allow_headers" { 
+  type    = list(string)
+  default = ["authorization","content-type"]
+}
+
+variable "cors_allow_methods" { 
+  type    = list(string)
+  default = ["OPTIONS","GET","POST","PUT","PATCH","DELETE"]
+}
 
 # Stage
-variable "auto_deploy" { type = bool default = true }
+variable "auto_deploy" { 
+  type    = bool
+  default = true
+}
 
 # API flags/tags
-variable "disable_execute_api_endpoint" { type = bool default = false }
-variable "tags" { type = map(string) default = {} }
+variable "disable_execute_api_endpoint" { 
+  type    = bool
+  default = false
+}
+
+variable "tags" { 
+  type    = map(string)
+  default = {}
+}
 
 # Optional JWT authorizer (Cognito)
 variable "jwt_authorizer" {

@@ -2,6 +2,7 @@ import json
 import boto3
 import uuid
 import datetime
+import os
 import rsa
 import jwt
 from botocore.signers import CloudFrontSigner
@@ -17,13 +18,17 @@ CORS_HEADERS = {
 }
 
 # CloudFront Settings
-cloudfront_key_id = "K3PMISK1CK6HYH"  # Replace with your CloudFront Key ID
-content_url = "https://d11k4vck88gnf5.cloudfront.net/index.html"  # Replace with your content URL
+cloudfront_key_id = os.environ.get('CLOUDFRONT_KEY_ID', 'K3PMISK1CK6HYH')
+content_url = f"https://{os.environ.get('CLOUDFRONT_DOMAIN', 'd11k4vck88gnf5.cloudfront.net')}/index.html"
 
 # Cognito Settings
 cognito_region = 'us-east-1'
-cognito_user_pool_id = 'us-east-1_qsT1OnMXw'  # Replace with your actual user pool ID
-cognito_app_client_id = '7ccfli4ti56r33as43qp6imat2'
+cognito_user_pool_id = os.environ.get('COGNITO_USER_POOL_ID', 'us-east-1_qsT1OnMXw')
+cognito_app_client_id = os.environ.get('COGNITO_CLIENT_ID', '7ccfli4ti56r33as43qp6imat2')
+
+# Bedrock Settings
+bedrock_agent_id = os.environ.get('BEDROCK_AGENT_ID', 'NNKUTQQWKP')
+bedrock_agent_alias_id = os.environ.get('BEDROCK_AGENT_ALIAS', 'GVM7ZZPOOM')
 
 def get_req_parts(event):
     """
@@ -206,11 +211,11 @@ def invoke_bedrock_agent(prompt):
     try:
         client = boto3.client('bedrock-agent-runtime', region_name='us-east-1')
 
-        print(f"Invoking Bedrock agent with agentId: NNKUTQQWKP, agentAliasId: GVM7ZZPOOM")
+        print(f"Invoking Bedrock agent with agentId: {bedrock_agent_id}, agentAliasId: {bedrock_agent_alias_id}")
         
         response = client.invoke_agent(
-            agentId="NNKUTQQWKP",       # <- Replace with your agent ID
-            agentAliasId="GVM7ZZPOOM",  # <- Replace with your agent alias ID
+            agentId=bedrock_agent_id,
+            agentAliasId=bedrock_agent_alias_id,
             sessionId=str(uuid.uuid4()),
             inputText=prompt
         )

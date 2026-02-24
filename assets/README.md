@@ -75,6 +75,10 @@ After uploading new assets, invalidate the CloudFront cache:
 aws cloudfront create-invalidation \
   --distribution-id $(terraform output -raw cloudfront_distribution_id) \
   --paths "/assets/*" "/index.html"
+
+  ## use this for S3 updates
+  .\deploy_assets_manually.ps1 -DistributionId EOK4YOONDZGMT
+
 ```
 
 ## Image Optimization Tips

@@ -1,50 +1,34 @@
+# Data sources
+data "aws_caller_identity" "current" {}
+
 ####################
 # S3 Buckets
 ####################
-module "s3_source" {
-  source                 = "./modules/s3"
-  bucket_name            = local.s3_source_bucket
-  bucket_owner_enforced  = true
-  block_public_access    = true
-  sse_sse_algorithm      = "AES256"
-  cors_rules             = [] # none in CFN for source
-  tags                   = local.common_tags
-}
+# Note: S3 buckets are now managed by the unified module "s3" below
+# These individual module calls have been replaced
 
-module "s3_destination" {
-  source                 = "./modules/s3"
-  bucket_name            = local.s3_destination_bucket
-  bucket_owner_enforced  = true
-  block_public_access    = true
-  sse_sse_algorithm      = "AES256"
-  cors_rules             = []
-  tags                   = local.common_tags
-}
-
-module "s3_results" {
-  source                 = "./modules/s3"
-  bucket_name            = local.s3_results_bucket
-  bucket_owner_preferred = true
-  block_public_access    = true
-  sse_sse_algorithm      = "AES256"
-  cors_rules             = []
-  tags                   = local.common_tags
-}
+# module "s3_source" - see module "s3" below
+# module "s3_destination" - see module "s3" below  
+# module "s3_results" - see module "s3" below
+# module "s3_frontend" - see module "s3_frontend" below (separate for CloudFront)
 
 # Frontend bucket (with CORS to CloudFront distro)
 module "s3_frontend" {
-  source                 = "./modules/s3"
-  bucket_name            = local.frontend_bucket
-  bucket_owner_preferred = true
-  block_public_access    = true
-  sse_sse_algorithm      = "AES256"
-  cors_rules = [{
-    allowed_methods = ["GET","HEAD","PUT","POST","DELETE"]
-    allowed_origins = [var.frontend_allowed_origin]
-    allowed_headers = ["*"]
-    expose_headers  = ["ETag","x-amz-server-side-encryption"]
-    max_age_seconds = 3000
-  }]
+  source = "./modules/s3"
+  
+  buckets = {
+    frontend = {
+      name          = local.frontend_bucket
+      ownership     = "BucketOwnerPreferred"
+      versioning    = false
+      force_destroy = false
+    }
+  }
+  
+  source_key      = "frontend"
+  destination_key = "frontend"
+  results_key     = "frontend"
+  
   tags = local.common_tags
 }
 
@@ -69,7 +53,7 @@ module "iam" {
 
   tags = local.common_tags
 }
-/*
+
 ####################
 # Lambda functions
 ####################
@@ -89,16 +73,8 @@ module "lambda_processor" {
   code_s3_version  = var.processor_s3_object_ver
   code_kms_key_arn = var.processor_kms_key_arn
   tags             = local.common_tags
-  environment = {
-    variables = {
-      SNS_TOPIC_ARN      = module.sns_alerts.topic_arn
-      SOURCE_BUCKETS     = module.s3.names["source"]
-      DESTINATION_BUCKETS= module.s3.names["destination"]
-      RESULTS_BUCKET     = module.s3.names["results"]
-    }
-  }
 }
-*/
+
 module "lambda_prompt" {
   source           = "./modules/lambda"
   function_name    = local.lambda_prompt_name
@@ -116,14 +92,8 @@ module "lambda_prompt" {
   code_s3_version  = var.prompt_s3_object_ver
   code_kms_key_arn = var.prompt_kms_key_arn
   
-  environment = {
-    CLOUDFRONT_KEY_ID     = module.cloudfront.public_key_id != null ? module.cloudfront.public_key_id : ""
-    CLOUDFRONT_DOMAIN     = module.cloudfront.domain_name
-    COGNITO_USER_POOL_ID  = module.cognito.user_pool_id
-    COGNITO_CLIENT_ID     = module.cognito.user_pool_client_id
-    BEDROCK_AGENT_ID      = var.bedrock_agent_id
-    BEDROCK_AGENT_ALIAS   = var.bedrock_agent_alias_id
-  }
+  # Note: Environment variables need to be added to the Lambda module
+  # or set manually after deployment
   
   tags = local.common_tags
 }
@@ -139,7 +109,7 @@ resource "aws_lambda_permission" "apigw_invoke_prompt" {
   action        = "lambda:InvokeFunction"
   function_name = module.lambda_prompt.function_name
   principal     = "apigateway.amazonaws.com"
-  source_arn    = "${module.api.api_execution_arn}/*/*/BedrockPromptHandler"
+  source_arn    = "${module.api_gateway.api_execution_arn}/*/*/BedrockPromptHandler"
 }
 
 resource "aws_lambda_permission" "apigw_invoke_scan_file" {
@@ -147,28 +117,28 @@ resource "aws_lambda_permission" "apigw_invoke_scan_file" {
   action        = "lambda:InvokeFunction"
   function_name = module.lambda_processor.function_name
   principal     = "apigateway.amazonaws.com"
-  source_arn    = "${module.api.api_execution_arn}/*/POST/scan-file"
+  source_arn    = "${module.api_gateway.api_execution_arn}/*/POST/scan-file"
 }
 resource "aws_lambda_permission" "apigw_invoke_transfer_file" {
   statement_id  = "AllowAPIGwInvokeTransferFile"
   action        = "lambda:InvokeFunction"
   function_name = module.lambda_processor.function_name
   principal     = "apigateway.amazonaws.com"
-  source_arn    = "${module.api.api_execution_arn}/*/POST/transfer-file"
+  source_arn    = "${module.api_gateway.api_execution_arn}/*/POST/transfer-file"
 }
 resource "aws_lambda_permission" "apigw_invoke_classification_report" {
   statement_id  = "AllowAPIGwInvokeClassificationReport"
   action        = "lambda:InvokeFunction"
   function_name = module.lambda_processor.function_name
   principal     = "apigateway.amazonaws.com"
-  source_arn    = "${module.api.api_execution_arn}/*/GET/classification-report"
+  source_arn    = "${module.api_gateway.api_execution_arn}/*/GET/classification-report"
 }
 resource "aws_lambda_permission" "apigw_invoke_scan_bucket" {
   statement_id  = "AllowAPIGwInvokeScanBucket"
   action        = "lambda:InvokeFunction"
   function_name = module.lambda_processor.function_name
   principal     = "apigateway.amazonaws.com"
-  source_arn    = "${module.api.api_execution_arn}/*/POST/scan-bucket"
+  source_arn    = "${module.api_gateway.api_execution_arn}/*/POST/scan-bucket"
 }
 
 ####################
@@ -188,19 +158,13 @@ module "cloudfront" {
   tags                        = local.common_tags
 }
 
-# S3 bucket policy to allow CloudFront to GET (maps CFN S3BucketPolicyBedrockfrontend)
-module "cloudfront_s3_policy" {
-  source           = "./modules/cloudfront"
-  create_s3_policy = true
-  s3_bucket_arn    = module.s3_frontend.bucket_arn
-  distribution_arn = module.cloudfront.distribution_arn
-}
+# S3 bucket policy to allow CloudFront to GET is handled in modules/cloudfront/main.tf
 
 ####################
 # S3 Bucket Policy (source) to allow Lambda role access (maps CFN S3BucketPolicySecuritydatatransfers3source)
 ####################
 resource "aws_s3_bucket_policy" "source_allow_lambda_role" {
-  bucket = module.s3_source.bucket_id
+  bucket = module.s3.bucket_ids["source"]
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
@@ -249,7 +213,7 @@ module "bedrock" {
 module "cognito" {
   source = "./modules/cognito"
 
-  region                 = var.aws_region
+  region                 = var.region
   user_pool_name         = "User pool - mo45tn"          # from console
   app_client_name        = "BedrockUserPool"             # from console
   domain_prefix          = "us-east-1qst1onmxw"          # use the prefix only
@@ -311,27 +275,29 @@ module "sns_alerts" {
   tags            = local.common_tags
 }
 
-# --- Lambda: SecurityDataTransferProcessor ---
-module "lambda_processor" {
-  source             = "./modules/lambda_sd_transfer"
-  function_name      = "SecurityDataTransferProcessor"
-  description        = "Scans S3 objects for PII/PHI/FedRAMP issues and manages transfers"
-  source_file        = "${path.root}/lambda/SecurityDataTransferProcessor/lambda_function.py"
-
-  sns_topic_arn      = module.sns_alerts.topic_arn
-  source_bucket      = "securitydatatransfers3source"
-  destination_bucket = "securitydatatransfers3destination"
-  results_bucket     = "securitydatatransfers3results"
-  quarantine_bucket  = module.s3_quarantine.bucket_id
-
-  # Optional extra env
-  extra_env = {
-    LOG_LEVEL = "INFO"
-    QUARANTINE_BUCKET = module.s3.names["quarantine"]
-  }
-
-  tags = local.common_tags
-}
+# --- Lambda: SecurityDataTransferProcessor (COMMENTED OUT - using module above instead) ---
+# This module tries to package local files which don't exist
+# The lambda_processor module above uses S3-based deployment which is more appropriate
+# for existing Lambda functions
+#
+# module "lambda_processor_alt" {
+#   source             = "./modules/lambda_sd_transfer"
+#   function_name      = "SecurityDataTransferProcessor"
+#   description        = "Scans S3 objects for PII/PHI/FedRAMP issues and manages transfers"
+#   source_file        = "${path.root}/lambda/SecurityDataTransferProcessor/lambda_function.py"
+#
+#   sns_topic_arn      = module.sns_alerts.topic_arn
+#   source_bucket      = "securitydatatransfers3source"
+#   destination_bucket = "securitydatatransfers3destination"
+#   results_bucket     = "securitydatatransfers3results"
+#
+#   extra_env = {
+#     LOG_LEVEL = "INFO"
+#     QUARANTINE_BUCKET = "securitydatatransfers3quarantine"
+#   }
+#
+#   tags = local.common_tags
+# }
 
 # --- Allow the lambda to publish to SNS (policy lives at root to avoid circular deps) ---
 resource "aws_iam_policy" "sns_publish_security_alerts" {
@@ -347,16 +313,8 @@ resource "aws_iam_policy" "sns_publish_security_alerts" {
 }
 
 resource "aws_iam_role_policy_attachment" "processor_sns_publish_attach" {
-  role       = module.lambda_processor.role_name
+  role       = split("/", module.iam.processor_role_arn)[1]  # Extract role name from ARN
   policy_arn = aws_iam_policy.sns_publish_security_alerts.arn
-}
-
-# locals or variables you already have
-locals {
-  common_tags = {
-    Project = "SecurityDataTransfer"
-    Owner   = "CloudOps"
-  }
 }
 
 # Assume you already have the Lambda module you built earlier and can reference its role ARN:
@@ -400,9 +358,9 @@ module "s3" {
   # OPTIONAL: attach bucket policies to allow Lambda role access.
   # If your account-level IAM (on the Lambda role) already grants access
   # and you don't have restrictive bucket policies, you can leave these empty.
-  source_read_principals  = [module.lambda_processor.role_arn]
-  dest_write_principals   = [module.lambda_processor.role_arn]
-  results_write_principals= [module.lambda_processor.role_arn]
+  source_read_principals  = [module.iam.processor_role_arn]
+  dest_write_principals   = [module.iam.processor_role_arn]
+  results_write_principals= [module.iam.processor_role_arn]
 
   tags = local.common_tags
 }
