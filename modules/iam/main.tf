@@ -60,7 +60,7 @@ resource "aws_iam_role_policy_attachment" "prompt_basic" {
   policy_arn = data.aws_iam_policy.lambda_basic.arn
 }
 
-# Mirrors the CFN prompt role extras (Bedrock Invoke, S3 Get/Put, SSM GetParameter, kms/* (use sparingly))
+# Improved prompt role policy with least privilege (removed overly permissive kms:* and ssm:*)
 resource "aws_iam_policy" "prompt_inline" {
   count = var.create_prompt_role && var.attach_extra_prompt_policies ? 1 : 0
   name  = "BedrockPromptHandler-Extras"
@@ -68,10 +68,31 @@ resource "aws_iam_policy" "prompt_inline" {
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
-      { Effect="Allow", Action=["bedrock:InvokeModel","bedrock:InvokeModelWithResponseStream"], Resource="*" },
-      { Effect="Allow", Action=["s3:GetObject","s3:GetObjectTagging","s3:PutObject"], Resource="*" },
-      { Effect="Allow", Action=["ssm:GetParameter"], Resource="arn:aws:ssm:*:*:parameter/private_key.pem" },
-      { Effect="Allow", Action=["kms:*","ssm:*"], Resource="*" }
+      { 
+        Effect="Allow", 
+        Action=["bedrock:InvokeModel","bedrock:InvokeModelWithResponseStream"], 
+        Resource="*" 
+      },
+      { 
+        Effect="Allow", 
+        Action=["s3:GetObject","s3:GetObjectTagging","s3:PutObject"], 
+        Resource="*" 
+      },
+      { 
+        Effect="Allow", 
+        Action=["ssm:GetParameter"], 
+        Resource="arn:aws:ssm:*:*:parameter/private_key.pem" 
+      },
+      { 
+        Effect="Allow", 
+        Action=["kms:Decrypt","kms:DescribeKey"], 
+        Resource="*",
+        Condition = {
+          StringEquals = {
+            "kms:ViaService": ["ssm.*.amazonaws.com"]
+          }
+        }
+      }
     ]
   })
 }

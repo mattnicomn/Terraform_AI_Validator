@@ -1,9 +1,27 @@
 resource "aws_cloudfront_origin_access_control" "oac" {
   name                              = var.oac_name
-  description                       = ""
+  description                       = "OAC for ${var.oac_name}"
   origin_access_control_origin_type = "s3"
   signing_behavior                  = "always"
   signing_protocol                  = "sigv4"
+}
+
+# CloudFront Public Key for signed URLs
+resource "aws_cloudfront_public_key" "this" {
+  count = var.public_key_pem != null ? 1 : 0
+
+  name        = "${var.oac_name}-public-key"
+  encoded_key = var.public_key_pem
+  comment     = "Public key for CloudFront signed URLs"
+}
+
+# CloudFront Key Group for signed URLs
+resource "aws_cloudfront_key_group" "this" {
+  count = var.public_key_pem != null ? 1 : 0
+
+  name    = "${var.oac_name}-key-group"
+  comment = "Key group for signed URL access"
+  items   = [aws_cloudfront_public_key.this[0].id]
 }
 
 # Look up AWS Managed policies by name
@@ -55,8 +73,8 @@ resource "aws_cloudfront_distribution" "this" {
 
   viewer_certificate {
     cloudfront_default_certificate = true
-    minimum_protocol_version       = "TLSv1"
-    ssl_support_method             = "vip"
+    minimum_protocol_version       = "TLSv1.2_2021"
+    ssl_support_method             = "sni-only"
   }
 
   tags = var.tags

@@ -57,3 +57,9 @@ variable "tags" {
     type = map(string) 
     default = {} 
 }
+
+variable "log_group_kms_key_id" {
+  type        = string
+  default     = null
+  description = "KMS key ID for encrypting CloudWatch Logs"
+}

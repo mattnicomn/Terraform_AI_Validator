@@ -104,7 +104,7 @@ module "lambda_prompt" {
   function_name    = local.lambda_prompt_name
   role_arn         = module.iam.prompt_role_arn
   runtime          = "python3.12"
-  handler          = "lambda_function.lambda_handler"
+  handler          = "BedrockPromptHandler.lambda_handler"
   timeout          = 120
   memory_size      = 128
   architectures    = ["x86_64"]
@@ -115,7 +115,17 @@ module "lambda_prompt" {
   code_s3_key      = var.prompt_s3_key
   code_s3_version  = var.prompt_s3_object_ver
   code_kms_key_arn = var.prompt_kms_key_arn
-  tags             = local.common_tags
+  
+  environment = {
+    CLOUDFRONT_KEY_ID     = module.cloudfront.public_key_id != null ? module.cloudfront.public_key_id : ""
+    CLOUDFRONT_DOMAIN     = module.cloudfront.domain_name
+    COGNITO_USER_POOL_ID  = module.cognito.user_pool_id
+    COGNITO_CLIENT_ID     = module.cognito.user_pool_client_id
+    BEDROCK_AGENT_ID      = var.bedrock_agent_id
+    BEDROCK_AGENT_ALIAS   = var.bedrock_agent_alias_id
+  }
+  
+  tags = local.common_tags
 }
 
 
@@ -317,7 +327,7 @@ module "lambda_processor" {
   # Optional extra env
   extra_env = {
     LOG_LEVEL = "INFO"
-    QUARANTINE_BUCKET = module.s3_quarantine.bucket_id # or wired from module var
+    QUARANTINE_BUCKET = module.s3.names["quarantine"]
   }
 
   tags = local.common_tags
@@ -372,6 +382,12 @@ module "s3" {
     results = {
       name          = "securitydatatransfers3results"
       ownership     = "BucketOwnerPreferred"  # matches CFN
+      versioning    = false
+      force_destroy = false
+    }
+    quarantine = {
+      name          = "securitydatatransfers3quarantine"
+      ownership     = "BucketOwnerEnforced"
       versioning    = false
       force_destroy = false
     }

@@ -13,3 +13,15 @@ variable "s3_bucket_arn"    { type = string default = null }
 variable "distribution_arn" { type = string default = null }
 
 variable "tags" { type = map(string) default = {} }
+
+variable "public_key_pem" {
+  type        = string
+  default     = null
+  description = "PEM-encoded public key for CloudFront signed URLs"
+}
+
+variable "enable_signed_urls" {
+  type        = bool
+  default     = false
+  description = "Enable CloudFront signed URLs with key group"
+}

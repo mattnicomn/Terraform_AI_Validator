@@ -1,6 +1,7 @@
 resource "aws_cloudwatch_log_group" "lg" {
   name              = var.log_group_name
   retention_in_days = 30
+  kms_key_id        = var.log_group_kms_key_id
   tags              = var.tags
 }
 

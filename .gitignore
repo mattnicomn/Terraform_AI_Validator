@@ -144,3 +144,19 @@ desktop.ini
 !examples/**
 !README.md
 !docs/**
+
+
+##############################
+# Assets (Optional)
+##############################
+# Uncomment the lines below if you want to keep assets private
+# and not commit them to the repository
+# assets/*.png
+# assets/*.jpg
+# assets/*.jpeg
+# assets/*.ico
+# assets/*.pdf
+
+# Always track the README
+!assets/README.md
+!assets/.gitkeep
