@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RMF/NIST 800-53 Automation - US Mission Hero</title>
+  <link rel="stylesheet" href="/css/theme.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-content">
+      <div class="brand">
+        <img class="logo" src="https://d11k4vck88gnf5.cloudfront.net/assets/US-Mission-Hero.png" alt="US Mission Hero Logo" />
+        <div class="brand-text">
+          <div class="title">US Mission Hero</div>
+          <div class="tagline">Secure Cloud Solutions for Government & Commercial</div>
+        </div>
+      </div>
+      <nav class="nav-tabs">
+        <a href="/" class="btn btn-secondary">← Back to Home</a>
+        <a href="/contact.html" class="btn btn-primary">Contact Us</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding: 40px 24px 60px;">
+    <div class="section">
+      <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px;">
+        <h1 style="margin: 0;">RMF/NIST 800-53 Automation</h1>
+        <span class="badge badge-beta">Beta</span>
+      </div>
+      
+      <p style="font-size: 1.125rem; color: var(--text-secondary);">
+        Automated Risk Management Framework (RMF) implementation and NIST 800-53 control assessment.
+      </p>
+    </div>
+
+    <div class="section">
+      <h2>Overview</h2>
+      <p>
+        Our RMF/NIST 800-53 Automation solution streamlines the Risk Management Framework process by automating control assessment, evidence collection, and continuous monitoring. Built on AWS Config, Security Hub, and custom automation, we reduce the time and effort required to achieve and maintain Authority to Operate (ATO).
+      </p>
+    </div>
+
+    <div class="section">
+      <h2>RMF Process Automation</h2>
+      <div class="grid grid-2">
+        <div class="card">
+          <h3>📋 Step 1: Categorize</h3>
+          <p>Automated system categorization based on FIPS 199 impact levels using asset tagging and metadata.</p>
+        </div>
+        <div class="card">
+          <h3>🔍 Step 2: Select</h3>
+          <p>Control baseline selection with tailoring recommendations based on system characteristics.</p>
+        </div>
+        <div class="card">
+          <h3>⚙️ Step 3: Implement</h3>
+          <p>Infrastructure-as-Code templates with pre-configured NIST 800-53 controls.</p>
+        </div>
+        <div class="card">
+          <h3>✅ Step 4: Assess</h3>
+          <p>Automated control assessment using AWS Config rules and custom Lambda functions.</p>
+        </div>
+        <div class="card">
+          <h3>🔐 Step 5: Authorize</h3>
+          <p>ATO package generation with System Security Plan (SSP), SAR, and POA&M documentation.</p>
+        </div>
+        <div class="card">
+          <h3>📊 Step 6: Monitor</h3>
+          <p>Continuous monitoring with real-time compliance dashboards and automated reporting.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>NIST 800-53 Control Families</h2>
+      <p>Automated assessment and monitoring for all 20 control families:</p>
+      <div class="grid grid-3">
+        <div style="color: var(--text-secondary); font-size: 0.9rem;">
+          <strong>AC</strong> - Access Control<br>
+          <strong>AT</strong> - Awareness & Training<br>
+          <strong>AU</strong> - Audit & Accountability<br>
+          <strong>CA</strong> - Assessment & Authorization<br>
+          <strong>CM</strong> - Configuration Management<br>
+          <strong>CP</strong> - Contingency Planning<br>
+          <strong>IA</strong> - Identification & Authentication
+        </div>
+        <div style="color: var(--text-secondary); font-size: 0.9rem;">
+          <strong>IR</strong> - Incident Response<br>
+          <strong>MA</strong> - Maintenance<br>
+          <strong>MP</strong> - Media Protection<br>
+          <strong>PE</strong> - Physical & Environmental<br>
+          <strong>PL</strong> - Planning<br>
+          <strong>PM</strong> - Program Management<br>
+          <strong>PS</strong> - Personnel Security
+        </div>
+        <div style="color: var(--text-secondary); font-size: 0.9rem;">
+          <strong>PT</strong> - PII Processing<br>
+          <strong>RA</strong> - Risk Assessment<br>
+          <strong>SA</strong> - System & Services Acquisition<br>
+          <strong>SC</strong> - System & Communications Protection<br>
+          <strong>SI</strong> - System & Information Integrity<br>
+          <strong>SR</strong> - Supply Chain Risk Management
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Key Features</h2>
+      <ul style="color: var(--text-secondary); line-height: 2;">
+        <li><strong>Control Mapping:</strong> Automated mapping of AWS/Azure services to NIST 800-53 controls</li>
+        <li><strong>Evidence Collection:</strong> Continuous collection of compliance evidence from cloud services</li>
+        <li><strong>Assessment Automation:</strong> Automated control testing with pass/fail determination</li>
+        <li><strong>POA&M Management:</strong> Track and manage Plans of Action & Milestones</li>
+        <li><strong>SSP Generation:</strong> Auto-generate System Security Plan documentation</li>
+        <li><strong>Continuous Monitoring:</strong> Real-time compliance status with alerting</li>
+        <li><strong>Reporting:</strong> Automated generation of SAR, POA&M, and compliance reports</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Architecture</h2>
+      <div style="background: var(--bg-dark); padding: 24px; border-radius: 8px; margin-top: 16px;">
+        <pre style="color: var(--text-secondary); overflow-x: auto;">
+┌─────────────────────────────────────────────────────────────┐
+│                    RMF Automation Platform                  │
+└─────────────────────────────────────────────────────────────┘
+         │                    │                    │
+         ▼                    ▼                    ▼
+┌──────────────┐    ┌──────────────┐    ┌──────────────┐
+│ AWS Config   │    │ Security Hub │    │  CloudTrail  │
+│ (Controls)   │    │ (Findings)   │    │  (Audit)     │
+└──────────────┘    └──────────────┘    └──────────────┘
+         │                    │                    │
+         └────────────────────┴────────────────────┘
+                              │
+                              ▼
+                    ┌──────────────────┐
+                    │  Lambda          │
+                    │  (Assessment)    │
+                    └──────────────────┘
+                              │
+                              ▼
+                    ┌──────────────────┐
+                    │  DynamoDB        │
+                    │  (Evidence)      │
+                    └──────────────────┘
+                              │
+                              ▼
+                    ┌──────────────────┐
+                    │  QuickSight      │
+                    │  (Dashboard)     │
+                    └──────────────────┘
+        </pre>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Benefits</h2>
+      <ul style="color: var(--text-secondary); line-height: 2;">
+        <li><strong>Faster ATO:</strong> Reduce ATO timeline from 12-18 months to 6-9 months</li>
+        <li><strong>Cost Savings:</strong> 60-70% reduction in manual assessment effort</li>
+        <li><strong>Continuous Compliance:</strong> Real-time visibility into control effectiveness</li>
+        <li><strong>Audit Readiness:</strong> Always prepared with organized evidence and documentation</li>
+        <li><strong>Risk Reduction:</strong> Proactive identification and remediation of compliance gaps</li>
+        <li><strong>Scalability:</strong> Support multiple systems and environments from single platform</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Supported Baselines</h2>
+      <div class="grid grid-2">
+        <div class="card">
+          <h4>NIST 800-53 Rev 5</h4>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">
+            Low, Moderate, and High baselines with privacy controls
+          </p>
+        </div>
+        <div class="card">
+          <h4>NIST 800-171</h4>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">
+            Protecting Controlled Unclassified Information (CUI)
+          </p>
+        </div>
+        <div class="card">
+          <h4>FedRAMP Baselines</h4>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">
+            Low, Moderate, and High impact level requirements
+          </p>
+        </div>
+        <div class="card">
+          <h4>DoD Cloud SRG</h4>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">
+            IL2, IL4, IL5, and IL6 security requirements
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section text-center">
+      <h2>Ready to Automate Your RMF Process?</h2>
+      <p style="color: var(--text-secondary); margin-bottom: 24px;">
+        Contact us to discuss implementing RMF automation in your environment.
+      </p>
+      <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+        <a href="/contact.html" class="btn btn-primary">Request Demo</a>
+        <a href="/" class="btn btn-secondary">View All Solutions</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>US Mission Hero</h3>
+          <p style="color: var(--text-secondary);">
+            Delivering secure, compliant cloud solutions for government agencies and commercial enterprises.
+          </p>
+        </div>
+        <div class="footer-section">
+          <h3>Solutions</h3>
+          <ul class="footer-links">
+            <li><a href="/#government">Government Solutions</a></li>
+            <li><a href="/#commercial">Commercial Solutions</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Company</h3>
+          <ul class="footer-links">
+            <li><a href="/#about">About Us</a></li>
+            <li><a href="/contact.html">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 US Mission Hero. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

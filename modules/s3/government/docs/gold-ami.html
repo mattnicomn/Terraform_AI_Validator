@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gold AMI Pipeline - US Mission Hero</title>
+  <link rel="stylesheet" href="/css/theme.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-content">
+      <div class="brand">
+        <img class="logo" src="https://d11k4vck88gnf5.cloudfront.net/assets/US-Mission-Hero.png" alt="US Mission Hero Logo" />
+        <div class="brand-text">
+          <div class="title">US Mission Hero</div>
+          <div class="tagline">Secure Cloud Solutions for Government & Commercial</div>
+        </div>
+      </div>
+      <nav class="nav-tabs">
+        <a href="/" class="btn btn-secondary">← Back to Home</a>
+        <a href="/contact.html" class="btn btn-primary">Contact Us</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding: 40px 24px 60px;">
+    <div class="section">
+      <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px;">
+        <h1 style="margin: 0;">Gold AMI Pipeline</h1>
+        <span class="badge badge-active">Active</span>
+      </div>
+      
+      <p style="font-size: 1.125rem; color: var(--text-secondary);">
+        Automated hardened AMI creation pipeline with DISA STIG compliance and continuous security scanning.
+      </p>
+    </div>
+
+    <div class="section">
+      <h2>Overview</h2>
+      <p>
+        Our Gold AMI Pipeline automates the creation, hardening, testing, and distribution of secure Amazon Machine Images (AMIs) that meet DISA STIG requirements and organizational security standards. The pipeline ensures consistent, repeatable, and auditable image builds with integrated security scanning and compliance validation.
+      </p>
+    </div>
+
+    <div class="section">
+      <h2>Pipeline Stages</h2>
+      <div class="grid grid-2">
+        <div class="card">
+          <h3>1️⃣ Base Image Selection</h3>
+          <p>Start with approved base AMIs from AWS Marketplace or custom sources with version control.</p>
+        </div>
+        <div class="card">
+          <h3>2️⃣ Hardening & Configuration</h3>
+          <p>Apply DISA STIGs, CIS benchmarks, and custom security configurations using Ansible/Packer.</p>
+        </div>
+        <div class="card">
+          <h3>3️⃣ Security Scanning</h3>
+          <p>Automated vulnerability scanning with Inspector, Qualys, or Tenable for CVE detection.</p>
+        </div>
+        <div class="card">
+          <h3>4️⃣ Compliance Validation</h3>
+          <p>STIG compliance testing with OpenSCAP and custom validation scripts.</p>
+        </div>
+        <div class="card">
+          <h3>5️⃣ Testing & Validation</h3>
+          <p>Automated functional testing, performance benchmarking, and integration tests.</p>
+        </div>
+        <div class="card">
+          <h3>6️⃣ Distribution & Tagging</h3>
+          <p>Multi-region AMI distribution with metadata tagging and access control.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>DISA STIG Compliance</h2>
+      <p>Automated application of Security Technical Implementation Guides:</p>
+      <ul style="color: var(--text-secondary); line-height: 2;">
+        <li><strong>Red Hat Enterprise Linux (RHEL) STIG</strong> - CAT I, II, and III findings</li>
+        <li><strong>Windows Server STIG</strong> - Domain and standalone configurations</li>
+        <li><strong>Application STIGs</strong> - Apache, NGINX, Docker, Kubernetes</li>
+        <li><strong>Database STIGs</strong> - PostgreSQL, MySQL, Oracle, MS SQL</li>
+        <li><strong>Cloud STIGs</strong> - AWS and Azure specific security configurations</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Architecture</h2>
+      <div style="background: var(--bg-dark); padding: 24px; border-radius: 8px; margin-top: 16px;">
+        <pre style="color: var(--text-secondary); overflow-x: auto;">
+┌─────────────────────────────────────────────────────────────┐
+│                    CodePipeline (Orchestration)             │
+└─────────────────────────────────────────────────────────────┘
+         │
+         ▼
+┌──────────────────┐         ┌──────────────────┐
+│   CodeCommit     │────────▶│   CodeBuild      │
+│  (IaC Configs)   │         │  (Packer Build)  │
+└──────────────────┘         └──────────────────┘
+                                      │
+                                      ▼
+                            ┌──────────────────┐
+                            │  EC2 Instance    │
+                            │  (Build Server)  │
+                            └──────────────────┘
+                                      │
+                                      ▼
+                            ┌──────────────────┐
+                            │  Ansible         │
+                            │  (Hardening)     │
+                            └──────────────────┘
+                                      │
+                                      ▼
+                            ┌──────────────────┐
+                            │  Inspector       │
+                            │  (Scanning)      │
+                            └──────────────────┘
+                                      │
+                                      ▼
+                            ┌──────────────────┐
+                            │  Lambda          │
+                            │  (Validation)    │
+                            └──────────────────┘
+                                      │
+                                      ▼
+                            ┌──────────────────┐
+                            │  AMI Registry    │
+                            │  (Distribution)  │
+                            └──────────────────┘
+        </pre>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Key Features</h2>
+      <ul style="color: var(--text-secondary); line-height: 2;">
+        <li><strong>Automated Builds:</strong> Scheduled or event-triggered AMI builds with zero manual intervention</li>
+        <li><strong>Version Control:</strong> Git-based configuration management with change tracking</li>
+        <li><strong>Multi-OS Support:</strong> RHEL, CentOS, Ubuntu, Amazon Linux, Windows Server</li>
+        <li><strong>Compliance as Code:</strong> STIG configurations stored as Ansible playbooks</li>
+        <li><strong>Vulnerability Management:</strong> Automated patching and CVE remediation</li>
+        <li><strong>Immutable Infrastructure:</strong> Promote immutable deployment patterns</li>
+        <li><strong>Audit Trail:</strong> Complete build history with compliance reports</li>
+        <li><strong>Self-Service:</strong> Teams can request custom AMIs through automated workflows</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Hardening Standards</h2>
+      <div class="grid grid-3">
+        <div class="card">
+          <h4>DISA STIGs</h4>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">
+            Security Technical Implementation Guides for all supported operating systems
+          </p>
+        </div>
+        <div class="card">
+          <h4>CIS Benchmarks</h4>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">
+            Center for Internet Security hardening guidelines
+          </p>
+        </div>
+        <div class="card">
+          <h4>NIST 800-53</h4>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">
+            Security controls for federal information systems
+          </p>
+        </div>
+        <div class="card">
+          <h4>PCI-DSS</h4>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">
+            Payment Card Industry Data Security Standard
+          </p>
+        </div>
+        <div class="card">
+          <h4>HIPAA</h4>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">
+            Health Insurance Portability and Accountability Act
+          </p>
+        </div>
+        <div class="card">
+          <h4>Custom Policies</h4>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">
+            Organization-specific security requirements
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Benefits</h2>
+      <ul style="color: var(--text-secondary); line-height: 2;">
+        <li><strong>Consistency:</strong> Eliminate configuration drift with standardized images</li>
+        <li><strong>Speed:</strong> Reduce deployment time from hours to minutes</li>
+        <li><strong>Security:</strong> Ensure all instances start from hardened, compliant baseline</li>
+        <li><strong>Compliance:</strong> Maintain continuous STIG compliance across fleet</li>
+        <li><strong>Auditability:</strong> Complete audit trail of all image builds and changes</li>
+        <li><strong>Cost Savings:</strong> Reduce manual hardening effort by 80-90%</li>
+        <li><strong>Scalability:</strong> Support thousands of instances with consistent configuration</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Integration Points</h2>
+      <div class="grid grid-2">
+        <div class="card">
+          <h4>CI/CD Pipelines</h4>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">
+            Integrate with GitLab CI, Jenkins, or GitHub Actions
+          </p>
+        </div>
+        <div class="card">
+          <h4>Configuration Management</h4>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">
+            Works with Ansible, Chef, Puppet, or Salt
+          </p>
+        </div>
+        <div class="card">
+          <h4>Security Tools</h4>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">
+            Integrates with Qualys, Tenable, Rapid7, and others
+          </p>
+        </div>
+        <div class="card">
+          <h4>Service Catalog</h4>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">
+            Publish AMIs to AWS Service Catalog for self-service
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section text-center">
+      <h2>Ready to Automate Your AMI Pipeline?</h2>
+      <p style="color: var(--text-secondary); margin-bottom: 24px;">
+        Contact us to discuss implementing a Gold AMI pipeline in your environment.
+      </p>
+      <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+        <a href="/contact.html" class="btn btn-primary">Schedule Demo</a>
+        <a href="/" class="btn btn-secondary">View All Solutions</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>US Mission Hero</h3>
+          <p style="color: var(--text-secondary);">
+            Delivering secure, compliant cloud solutions for government agencies and commercial enterprises.
+          </p>
+        </div>
+        <div class="footer-section">
+          <h3>Solutions</h3>
+          <ul class="footer-links">
+            <li><a href="/#government">Government Solutions</a></li>
+            <li><a href="/#commercial">Commercial Solutions</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Company</h3>
+          <ul class="footer-links">
+            <li><a href="/#about">About Us</a></li>
+            <li><a href="/contact.html">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 US Mission Hero. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

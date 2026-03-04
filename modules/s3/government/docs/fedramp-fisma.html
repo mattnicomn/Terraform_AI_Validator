@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FedRAMP/FISMA Compliance Tools - US Mission Hero</title>
+  <link rel="stylesheet" href="/css/theme.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-content">
+      <div class="brand">
+        <img class="logo" src="https://d11k4vck88gnf5.cloudfront.net/assets/US-Mission-Hero.png" alt="US Mission Hero Logo" />
+        <div class="brand-text">
+          <div class="title">US Mission Hero</div>
+          <div class="tagline">Secure Cloud Solutions for Government & Commercial</div>
+        </div>
+      </div>
+      <nav class="nav-tabs">
+        <a href="/" class="btn btn-secondary">← Back to Home</a>
+        <a href="/contact.html" class="btn btn-primary">Contact Us</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding: 40px 24px 60px;">
+    <div class="section">
+      <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px;">
+        <h1 style="margin: 0;">FedRAMP/FISMA Compliance Tools</h1>
+        <span class="badge badge-beta">Beta</span>
+      </div>
+      
+      <p style="font-size: 1.125rem; color: var(--text-secondary);">
+        Automated compliance scanning, continuous monitoring, and audit-ready reporting for FedRAMP and FISMA requirements.
+      </p>
+    </div>
+
+    <div class="section">
+      <h2>Overview</h2>
+      <p>
+        Our FedRAMP/FISMA Compliance Tools provide automated assessment and continuous monitoring capabilities to help federal agencies and cloud service providers maintain compliance with Federal Risk and Authorization Management Program (FedRAMP) and Federal Information Security Management Act (FISMA) requirements. Built on AWS Security Hub, Config, and CloudTrail for comprehensive security posture management.
+      </p>
+    </div>
+
+    <div class="section">
+      <h2>Key Features</h2>
+      <div class="grid grid-2">
+        <div class="card">
+          <h3>🔍 Automated Scanning</h3>
+          <p>Continuous compliance scanning using AWS Config rules mapped to FedRAMP and FISMA controls.</p>
+        </div>
+        <div class="card">
+          <h3>📊 Real-Time Dashboards</h3>
+          <p>CloudWatch dashboards showing compliance status, findings, and remediation progress.</p>
+        </div>
+        <div class="card">
+          <h3>📋 Evidence Collection</h3>
+          <p>Automated collection and organization of compliance evidence for audits and assessments.</p>
+        </div>
+        <div class="card">
+          <h3>🔧 Auto-Remediation</h3>
+          <p>Automated remediation of common compliance violations using Systems Manager and Lambda.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Compliance Standards</h2>
+      <ul style="color: var(--text-secondary); line-height: 2;">
+        <li><strong>FedRAMP Moderate</strong> - 325 security controls</li>
+        <li><strong>FedRAMP High</strong> - 421 security controls</li>
+        <li><strong>FISMA Low/Moderate/High</strong> - NIST 800-53 control families</li>
+        <li><strong>NIST 800-53 Rev 5</strong> - Latest security control baseline</li>
+        <li><strong>NIST 800-171</strong> - Protecting CUI in nonfederal systems</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Architecture</h2>
+      <p>The solution leverages native AWS security and compliance services:</p>
+      <div style="background: var(--bg-dark); padding: 24px; border-radius: 8px; margin-top: 16px;">
+        <pre style="color: var(--text-secondary); overflow-x: auto;">
+┌─────────────────────────────────────────────────────────────┐
+│                    AWS Security Hub                         │
+│              (Centralized Findings)                         │
+└─────────────────────────────────────────────────────────────┘
+         │                    │                    │
+         ▼                    ▼                    ▼
+┌──────────────┐    ┌──────────────┐    ┌──────────────┐
+│ AWS Config   │    │  GuardDuty   │    │  Inspector   │
+│ (Compliance) │    │  (Threats)   │    │ (Vulns)      │
+└──────────────┘    └──────────────┘    └──────────────┘
+         │                    │                    │
+         └────────────────────┴────────────────────┘
+                              │
+                              ▼
+                    ┌──────────────────┐
+                    │  EventBridge     │
+                    │  (Automation)    │
+                    └──────────────────┘
+                              │
+                              ▼
+                    ┌──────────────────┐
+                    │  Lambda          │
+                    │  (Remediation)   │
+                    └──────────────────┘
+        </pre>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Control Families Covered</h2>
+      <div class="grid grid-3">
+        <div class="card">
+          <h4>Access Control (AC)</h4>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">
+            IAM policies, MFA enforcement, least privilege access
+          </p>
+        </div>
+        <div class="card">
+          <h4>Audit & Accountability (AU)</h4>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">
+            CloudTrail logging, log retention, audit review
+          </p>
+        </div>
+        <div class="card">
+          <h4>Configuration Management (CM)</h4>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">
+            Baseline configurations, change control, inventory
+          </p>
+        </div>
+        <div class="card">
+          <h4>Identification & Authentication (IA)</h4>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">
+            User authentication, device authentication, MFA
+          </p>
+        </div>
+        <div class="card">
+          <h4>Incident Response (IR)</h4>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">
+            Automated detection, alerting, response procedures
+          </p>
+        </div>
+        <div class="card">
+          <h4>System & Communications Protection (SC)</h4>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">
+            Encryption in transit/at rest, network segmentation
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Use Cases</h2>
+      <ul style="color: var(--text-secondary); line-height: 2;">
+        <li><strong>FedRAMP Authorization:</strong> Accelerate FedRAMP authorization process with automated evidence collection</li>
+        <li><strong>Continuous Monitoring:</strong> Maintain FedRAMP authorization with ongoing compliance monitoring</li>
+        <li><strong>FISMA Reporting:</strong> Generate FISMA compliance reports for annual assessments</li>
+        <li><strong>ATO Preparation:</strong> Prepare for Authority to Operate (ATO) with comprehensive security documentation</li>
+        <li><strong>Multi-Account Governance:</strong> Enforce compliance across multiple AWS accounts and regions</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Benefits</h2>
+      <ul style="color: var(--text-secondary); line-height: 2;">
+        <li><strong>Faster Authorization:</strong> Reduce FedRAMP authorization timeline from 12-18 months to 6-9 months</li>
+        <li><strong>Reduced Manual Effort:</strong> Automate 70% of compliance assessment activities</li>
+        <li><strong>Continuous Compliance:</strong> Real-time visibility into compliance posture</li>
+        <li><strong>Cost Savings:</strong> Reduce compliance assessment costs by 40-60%</li>
+        <li><strong>Audit Readiness:</strong> Always prepared for audits with organized evidence</li>
+      </ul>
+    </div>
+
+    <div class="section text-center">
+      <h2>Ready to Get Started?</h2>
+      <p style="color: var(--text-secondary); margin-bottom: 24px;">
+        Contact us to discuss implementing FedRAMP/FISMA compliance automation in your environment.
+      </p>
+      <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+        <a href="/contact.html" class="btn btn-primary">Request Consultation</a>
+        <a href="/" class="btn btn-secondary">View All Solutions</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>US Mission Hero</h3>
+          <p style="color: var(--text-secondary);">
+            Delivering secure, compliant cloud solutions for government agencies and commercial enterprises.
+          </p>
+        </div>
+        <div class="footer-section">
+          <h3>Solutions</h3>
+          <ul class="footer-links">
+            <li><a href="/#government">Government Solutions</a></li>
+            <li><a href="/#commercial">Commercial Solutions</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Company</h3>
+          <ul class="footer-links">
+            <li><a href="/#about">About Us</a></li>
+            <li><a href="/contact.html">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 US Mission Hero. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
