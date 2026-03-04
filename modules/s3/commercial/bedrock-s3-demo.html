@@ -1,153 +1,392 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bedrock & S3 Demo - US Mission Hero</title>
-<style>
-body { 
-  font-family: Arial, sans-serif; 
-  background: #f5f7fa; 
-  color: #2c3e50; 
-  margin: 0; 
-}
-header { 
-  background: #003366; 
-  color: #fff; 
-  padding: 20px; 
-  text-align: center; 
-}
-.container { 
-  max-width: 960px; 
-  margin: 0 auto; 
-  padding: 20px; 
-}
-.section { 
-  background: #fff; 
-  border-radius: 8px; 
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
-  padding: 20px; 
-  margin-bottom: 40px; 
-}
-button { 
-  background: #003366; 
-  color: #fff; 
-  border: none; 
-  padding: 10px 16px; 
-  border-radius: 4px; 
-  cursor: pointer; 
-  font-size: 14px;
-}
-button:hover { 
-  background: #205081; 
-}
-input[type="file"], textarea { 
-  width: 100%; 
-  padding: 8px; 
-  margin-top: 10px; 
-  border: 1px solid #ccc; 
-  border-radius: 4px; 
-  box-sizing: border-box;
-}
-textarea {
-  min-height: 100px;
-  font-family: inherit;
-}
-.result { 
-  background: #f0f4f8; 
-  padding: 10px; 
-  border-radius: 4px; 
-  margin-top: 10px; 
-  min-height: 40px; 
-  white-space: pre-wrap;
-}
-.back-button {
-  text-align: center;
-  margin-top: 20px;
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bedrock & S3 Integration Demo - US Mission Hero</title>
+  <link rel="stylesheet" href="/css/theme.css">
+  <style>
+    /* Demo-specific styles */
+    .page-hero {
+      text-align: center;
+      padding: 60px 24px 40px;
+      margin-bottom: 40px;
+    }
+    
+    .page-hero h1 {
+      font-size: 2.75rem;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .page-hero .subtitle {
+      font-size: 1.25rem;
+      color: var(--text-secondary);
+      max-width: 800px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+    
+    .demo-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px;
+      margin-bottom: 32px;
+      transition: all 0.3s;
+    }
+    
+    .demo-section:hover {
+      border-color: var(--brand-secondary);
+      box-shadow: var(--shadow-lg);
+    }
+    
+    .demo-section h2 {
+      color: var(--brand-secondary);
+      margin-bottom: 16px;
+      font-size: 1.75rem;
+    }
+    
+    .result-box {
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      margin-top: 16px;
+      min-height: 80px;
+      color: var(--text-secondary);
+      white-space: pre-wrap;
+      font-family: 'Courier New', monospace;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+    
+    .result-box:empty::before {
+      content: 'Results will appear here...';
+      color: var(--text-muted);
+      font-style: italic;
+    }
+    
+    textarea {
+      width: 100%;
+      min-height: 120px;
+      padding: 16px;
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-size: 1rem;
+      font-family: inherit;
+      resize: vertical;
+      transition: all 0.2s;
+    }
+    
+    textarea:focus {
+      outline: none;
+      border-color: var(--brand-secondary);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
+    
+    input[type="file"] {
+      width: 100%;
+      padding: 12px;
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-primary);
+      cursor: pointer;
+    }
+    
+    input[type="file"]::-webkit-file-upload-button {
+      background: var(--brand-secondary);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-right: 12px;
+    }
+    
+    .info-section {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(59, 130, 246, 0.1));
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px;
+      margin-top: 40px;
+    }
+    
+    .info-section h2 {
+      color: var(--text-primary);
+      margin-bottom: 16px;
+    }
+    
+    .info-section ul {
+      color: var(--text-secondary);
+      line-height: 2;
+      margin-left: 20px;
+    }
+    
+    .status-indicator {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-right: 8px;
+      animation: pulse 2s infinite;
+    }
+    
+    .status-success { background: var(--success); }
+    .status-processing { background: var(--info); }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    
+    @media (max-width: 768px) {
+      .page-hero h1 {
+        font-size: 2rem;
+      }
+      
+      .page-hero .subtitle {
+        font-size: 1rem;
+      }
+      
+      .demo-section {
+        padding: 24px;
+      }
+    }
+  </style>
 </head>
 <body>
-<header>
-<h1>Bedrock & S3 Integration Demo</h1>
-<p>Explore how generative AI and secure data transfers power modern solutions.</p>
-</header>
+  <header class="site-header">
+    <div class="container header-content">
+      <div class="brand">
+        <div class="brand-text">
+          <div class="title">US Mission Hero</div>
+          <div class="tagline">Secure Cloud Solutions for Government & Commercial</div>
+        </div>
+      </div>
+      <nav class="nav-tabs">
+        <a href="/" class="btn btn-secondary">← Home</a>
+        <a href="/contact.html" class="btn btn-secondary">Contact</a>
+      </nav>
+    </div>
+  </header>
 
-<div class="container">
-<section class="section">
-<h2>Generative AI (Bedrock) Demo</h2>
-<p>Paste text or ask a question. This simulated model response illustrates how Bedrock can generate summaries or answers using a model fine-tuned with your own data in Amazon S3.</p>
-<textarea id="genInput" placeholder="Enter your text or question here..."></textarea>
-<button onclick="generateResponse()">Generate</button>
-<div id="genOutput" class="result"></div>
-</section>
+  <main class="container" style="padding: 40px 24px 60px; max-width: 1200px;">
+    <!-- Hero Section -->
+    <div class="page-hero">
+      <h1>Bedrock & S3 Integration Demo</h1>
+      <p class="subtitle">
+        Explore how generative AI and intelligent data management power modern commercial applications
+      </p>
+    </div>
 
-<section class="section">
-<h2>S3 Validator & Cross-Bucket Transfer Demo</h2>
-<p>Select a file to validate. If the file type is acceptable (e.g., .csv, .json), the demo simulates transferring it to a destination bucket. Real S3 replication automatically copies objects to another bucket based on defined rules and preserves metadata.</p>
-<input type="file" id="fileInput" />
-<button onclick="validateAndTransfer()">Validate & Transfer</button>
-<div id="fileOutput" class="result"></div>
-</section>
+    <!-- Generative AI Demo -->
+    <div class="demo-section">
+      <h2>🤖 Generative AI with Amazon Bedrock</h2>
+      <p style="color: var(--text-secondary); margin-bottom: 20px;">
+        Enter text or ask a question. This simulates how Bedrock can generate intelligent responses using foundation models fine-tuned with your proprietary data stored in S3.
+      </p>
+      
+      <textarea id="genInput" placeholder="Example: Summarize our Q4 sales data and identify key trends..."></textarea>
+      
+      <div style="margin-top: 16px;">
+        <button class="btn btn-success" onclick="generateResponse()">Generate AI Response</button>
+        <button class="btn btn-secondary" onclick="document.getElementById('genInput').value=''; document.getElementById('genOutput').innerText=''">Clear</button>
+      </div>
+      
+      <div id="genOutput" class="result-box"></div>
+    </div>
 
-<section class="section">
-<h2>How it works</h2>
-<p>Amazon Bedrock lets businesses build, fine-tune and deploy large language models using their own data stored in S3. Fine-tuning datasets are uploaded to S3 and accessed during training, ensuring that sensitive data remains private.</p>
-<p>Amazon S3 replication automatically copies objects from a source bucket to a destination bucket for disaster recovery, latency reduction and compliance. A validation step (shown here) can ensure only approved file types are replicated.</p>
-<p><strong>Key Benefits:</strong></p>
-<ul>
-<li>Secure data handling with AWS encryption and access controls</li>
-<li>Scalable AI/ML model training with your proprietary data</li>
-<li>Automated cross-region replication for compliance and disaster recovery</li>
-<li>Cost-effective storage with S3 lifecycle policies</li>
-</ul>
-</section>
+    <!-- S3 Data Processing Demo -->
+    <div class="demo-section">
+      <h2>📦 S3 Data Validation & Processing</h2>
+      <p style="color: var(--text-secondary); margin-bottom: 20px;">
+        Upload a file to validate and process. The system checks file type, size, and simulates automated data pipeline processing with S3 event triggers.
+      </p>
+      
+      <input type="file" id="fileInput" accept=".csv,.json,.xlsx,.txt" />
+      
+      <div style="margin-top: 16px;">
+        <button class="btn btn-success" onclick="validateAndProcess()">Validate & Process</button>
+      </div>
+      
+      <div id="fileOutput" class="result-box"></div>
+    </div>
 
-<div class="back-button">
-<button onclick="location.href='/'">Back to Home</button>
-</div>
-</div>
+    <!-- Use Cases -->
+    <div class="info-section">
+      <h2>Commercial Use Cases</h2>
+      <div class="grid grid-2">
+        <div>
+          <h3 style="color: var(--brand-secondary); font-size: 1.25rem; margin-bottom: 12px;">AI-Powered Analytics</h3>
+          <ul>
+            <li>Automated report generation from business data</li>
+            <li>Customer sentiment analysis</li>
+            <li>Predictive maintenance insights</li>
+            <li>Market trend forecasting</li>
+          </ul>
+        </div>
+        <div>
+          <h3 style="color: var(--brand-secondary); font-size: 1.25rem; margin-bottom: 12px;">Intelligent Data Pipelines</h3>
+          <ul>
+            <li>Automated data validation and cleansing</li>
+            <li>Real-time data transformation</li>
+            <li>Multi-region data replication</li>
+            <li>Event-driven processing workflows</li>
+          </ul>
+        </div>
+      </div>
+    </div>
 
-<script>
-function generateResponse() {
-  const input = document.getElementById('genInput').value.trim();
-  if (!input) { 
-    document.getElementById('genOutput').innerText = ''; 
-    return; 
-  }
-  
-  // Predefined responses to simulate Bedrock output
-  const responses = [
-    'Here is a concise summary of your input. (This simulates a Bedrock model fine-tuned with your S3 data.)',
-    'This answer illustrates how a generative model can extract key information from your proprietary datasets.',
-    'Our system would securely access your data stored in S3 to generate a customized response tailored to your business needs.',
-    'Based on your input, here are the key insights: [Analysis would be generated using your fine-tuned Bedrock model with data from S3]'
-  ];
-  
-  document.getElementById('genOutput').innerText = responses[Math.floor(Math.random() * responses.length)];
-}
+    <!-- How It Works -->
+    <div class="info-section">
+      <h2>How It Works</h2>
+      <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 16px;">
+        <strong>Amazon Bedrock</strong> enables businesses to build and deploy generative AI applications using foundation models from leading AI companies. Fine-tune models with your proprietary data stored securely in S3, ensuring data privacy while leveraging powerful AI capabilities.
+      </p>
+      <p style="color: var(--text-secondary); line-height: 1.8;">
+        <strong>Amazon S3</strong> provides scalable object storage with built-in event notifications, lifecycle policies, and cross-region replication. Trigger Lambda functions, Step Functions, or other AWS services automatically when data arrives, enabling fully automated data pipelines.
+      </p>
+      
+      <div style="margin-top: 24px;">
+        <h3 style="color: var(--text-primary); margin-bottom: 12px;">Key Benefits</h3>
+        <ul style="color: var(--text-secondary); line-height: 2;">
+          <li><strong>Scalability:</strong> Handle petabytes of data with automatic scaling</li>
+          <li><strong>Cost-Effective:</strong> Pay only for what you use with S3 storage classes</li>
+          <li><strong>Secure:</strong> Encryption at rest and in transit, IAM access controls</li>
+          <li><strong>Intelligent:</strong> AI-powered insights from your business data</li>
+          <li><strong>Automated:</strong> Event-driven workflows reduce manual processing</li>
+        </ul>
+      </div>
+    </div>
 
-function validateAndTransfer() {
-  const file = document.getElementById('fileInput').files[0];
-  if (!file) { 
-    document.getElementById('fileOutput').innerText = 'Please choose a file.'; 
-    return; 
-  }
-  
-  const allowedTypes = ['application/json', 'text/csv'];
-  const fileName = file.name.toLowerCase();
-  const isAllowed = allowedTypes.includes(file.type) || fileName.endsWith('.csv') || fileName.endsWith('.json');
-  
-  if (!isAllowed) {
-    document.getElementById('fileOutput').innerText = 'Unsupported file type. Please upload a CSV or JSON file.';
-  } else {
-    document.getElementById('fileOutput').innerText = 
-      'File validated: ' + file.name + '\n' +
-      'Size: ' + (file.size / 1024).toFixed(2) + ' KB\n' +
-      'Transferring to destination bucket...\n' +
-      'Transfer complete! File replicated with metadata preserved.';
-  }
-}
-</script>
+    <!-- CTA -->
+    <div style="text-align: center; margin-top: 48px;">
+      <h2>Ready to Build Your AI-Powered Solution?</h2>
+      <p style="color: var(--text-secondary); margin: 16px 0 24px;">
+        Contact us to discuss implementing Bedrock and S3 in your commercial applications.
+      </p>
+      <a href="/contact.html" class="btn btn-primary">Get Started</a>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>US Mission Hero</h3>
+          <p style="color: var(--text-secondary);">
+            Delivering secure, compliant cloud solutions for government agencies and commercial enterprises.
+          </p>
+        </div>
+        <div class="footer-section">
+          <h3>Solutions</h3>
+          <ul class="footer-links">
+            <li><a href="/#government">Government Solutions</a></li>
+            <li><a href="/#commercial">Commercial Solutions</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Company</h3>
+          <ul class="footer-links">
+            <li><a href="/#about">About Us</a></li>
+            <li><a href="/contact.html">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 US Mission Hero. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function generateResponse() {
+      const input = document.getElementById('genInput').value.trim();
+      const output = document.getElementById('genOutput');
+      
+      if (!input) {
+        output.innerHTML = '<span style="color: var(--warning);">Please enter some text or a question first.</span>';
+        return;
+      }
+      
+      // Show processing state
+      output.innerHTML = '<span class="status-indicator status-processing"></span>Processing with Amazon Bedrock...';
+      
+      // Simulate AI response after delay
+      setTimeout(() => {
+        const responses = [
+          `AI Analysis:\n\nBased on your input, here are the key insights:\n\n• This demonstrates how Bedrock can analyze your business data stored in S3\n• Foundation models can be fine-tuned with your proprietary datasets\n• Responses are generated in real-time with low latency\n• Data remains secure within your AWS environment\n\nThis simulated response shows how Bedrock would process your actual business queries using your S3-stored data.`,
+          
+          `Bedrock Response:\n\nYour query has been processed using a foundation model fine-tuned with your data:\n\n✓ Data retrieved from S3 bucket\n✓ Model inference completed\n✓ Response generated with context awareness\n\nIn production, this would provide:\n- Customized insights based on your business data\n- Real-time analysis and recommendations\n- Automated report generation\n- Intelligent data summarization`,
+          
+          `AI-Generated Summary:\n\nKey Findings:\n1. Your data has been analyzed using advanced language models\n2. Bedrock enables secure AI processing of sensitive business data\n3. S3 integration allows seamless access to training datasets\n4. Results can trigger automated workflows and notifications\n\nThis demonstrates the power of combining generative AI with scalable cloud storage for commercial applications.`
+        ];
+        
+        const response = responses[Math.floor(Math.random() * responses.length)];
+        output.innerHTML = '<span class="status-indicator status-success"></span>' + response;
+      }, 1500);
+    }
+
+    function validateAndProcess() {
+      const fileInput = document.getElementById('fileInput');
+      const output = document.getElementById('fileOutput');
+      
+      if (!fileInput.files.length) {
+        output.innerHTML = '<span style="color: var(--warning);">Please select a file first.</span>';
+        return;
+      }
+      
+      const file = fileInput.files[0];
+      const allowedTypes = ['.csv', '.json', '.xlsx', '.txt'];
+      const fileExt = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
+      
+      // Show processing
+      output.innerHTML = '<span class="status-indicator status-processing"></span>Validating and processing file...';
+      
+      setTimeout(() => {
+        if (!allowedTypes.includes(fileExt)) {
+          output.innerHTML = `<span style="color: var(--danger);">✗ File type not supported: ${fileExt}</span>\n\nSupported types: ${allowedTypes.join(', ')}`;
+          return;
+        }
+        
+        const sizeKB = (file.size / 1024).toFixed(2);
+        const sizeMB = (file.size / 1024 / 1024).toFixed(2);
+        const displaySize = file.size > 1024 * 1024 ? `${sizeMB} MB` : `${sizeKB} KB`;
+        
+        output.innerHTML = `<span class="status-indicator status-success"></span>File Processing Complete!\n\nFile Details:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Name: ${file.name}
+Type: ${fileExt.toUpperCase()}
+Size: ${displaySize}
+Status: ✓ Validated
+
+Processing Pipeline:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✓ File uploaded to S3 bucket
+✓ S3 event notification triggered
+✓ Lambda function invoked for processing
+✓ Data validation completed
+✓ Metadata extracted and indexed
+✓ Cross-region replication initiated
+✓ CloudWatch metrics updated
+
+Next Steps:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+→ Data available for Bedrock AI analysis
+→ Automated workflows triggered
+→ Results stored in destination bucket
+→ Notifications sent to stakeholders
+
+This demonstrates how S3 event-driven architecture enables fully automated data processing pipelines.`;
+      }, 1200);
+    }
+  </script>
 </body>
 </html>
