@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us - US Mission Hero</title>
+  <link rel="stylesheet" href="/css/theme.css">
+  <style>
+    .contact-hero {
+      text-align: center;
+      padding: 60px 24px 40px;
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(16, 185, 129, 0.1));
+      border-radius: 16px;
+      margin-bottom: 40px;
+    }
+    
+    .contact-methods {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+    
+    .contact-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      text-align: center;
+    }
+    
+    .contact-icon {
+      font-size: 3rem;
+      margin-bottom: 16px;
+    }
+    
+    .contact-card h3 {
+      margin-bottom: 16px;
+      font-size: 1.25rem;
+    }
+    
+    .contact-info {
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+    
+    .contact-info a {
+      color: var(--brand-primary);
+      word-break: break-all;
+    }
+    
+    .team-section {
+      margin-top: 40px;
+    }
+    
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-top: 24px;
+    }
+    
+    .team-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      text-align: center;
+    }
+    
+    .team-card h4 {
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+    
+    .team-role {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+    }
+    
+    .team-links {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 16px;
+    }
+    
+    .social-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      transition: all 0.2s;
+    }
+    
+    .social-link:hover {
+      border-color: var(--brand-primary);
+      color: var(--brand-primary);
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container header-content">
+      <div class="brand">
+        <img class="logo" src="https://d11k4vck88gnf5.cloudfront.net/assets/US-Mission-Hero.png" alt="US Mission Hero Logo" />
+        <div class="brand-text">
+          <div class="title">US Mission Hero</div>
+          <div class="tagline">Secure Cloud Solutions for Government & Commercial</div>
+        </div>
+      </div>
+      <nav class="nav-tabs">
+        <a href="/" class="btn btn-secondary">← Back to Home</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container" style="padding-top: 40px; padding-bottom: 60px;">
+    <div class="contact-hero">
+      <h1>Get in Touch</h1>
+      <p style="font-size: 1.125rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto;">
+        Ready to modernize your infrastructure? Let's discuss how we can help secure and scale your mission-critical systems.
+      </p>
+    </div>
+
+    <!-- Contact Methods -->
+    <div class="contact-methods">
+      <div class="contact-card">
+        <div class="contact-icon">🏛️</div>
+        <h3>Government Inquiries</h3>
+        <p class="contact-info">For federal, state, and local government agencies</p>
+        <p class="contact-info">
+          <a href="mailto:matthew.nico@usmissionhero.com?subject=Government Inquiry">matthew.nico@usmissionhero.com</a>
+        </p>
+      </div>
+
+      <div class="contact-card">
+        <div class="contact-icon">🏢</div>
+        <h3>Commercial Inquiries</h3>
+        <p class="contact-info">For enterprise and commercial organizations</p>
+        <p class="contact-info">
+          <a href="mailto:ecc@myniftycloud.com?subject=Commercial Inquiry">ecc@myniftycloud.com</a>
+        </p>
+      </div>
+
+      <div class="contact-card">
+        <div class="contact-icon">💼</div>
+        <h3>General Support</h3>
+        <p class="contact-info">Questions, partnerships, and general inquiries</p>
+        <p class="contact-info">
+          <a href="mailto:matthew.nico@usmissionhero.com,ecc@myniftycloud.com?subject=General Inquiry">Contact Both</a>
+        </p>
+      </div>
+    </div>
+
+    <!-- Contact Form -->
+    <div class="section">
+      <h2>Send Us a Message</h2>
+      <p style="color: var(--text-secondary); margin-bottom: 24px;">
+        Fill out the form below and we'll get back to you within 24 hours.
+      </p>
+      
+      <form id="contactForm">
+        <div class="grid grid-2">
+          <div class="form-group">
+            <label class="form-label" for="name">Name *</label>
+            <input type="text" id="name" class="form-input" required placeholder="Your full name">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="email">Email *</label>
+            <input type="email" id="email" class="form-input" required placeholder="your.email@example.com">
+          </div>
+        </div>
+        
+        <div class="grid grid-2">
+          <div class="form-group">
+            <label class="form-label" for="company">Organization</label>
+            <input type="text" id="company" class="form-input" placeholder="Your organization">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="inquiry-type">Inquiry Type *</label>
+            <select id="inquiry-type" class="form-select" required>
+              <option value="">Select type...</option>
+              <option value="government">Government Solutions</option>
+              <option value="commercial">Commercial Solutions</option>
+              <option value="demo">Request Demo</option>
+              <option value="partnership">Partnership</option>
+              <option value="support">Technical Support</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="message">Message *</label>
+          <textarea id="message" class="form-textarea" required placeholder="Tell us about your project or inquiry..."></textarea>
+        </div>
+        
+        <div class="text-center">
+          <button type="submit" class="btn btn-primary">Send Message</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Team Section -->
+    <div class="team-section">
+      <h2 class="text-center">Meet the Team</h2>
+      <p class="text-center" style="color: var(--text-secondary); margin-bottom: 32px;">
+        Co-founders with 25+ years of combined experience in cloud architecture and AI/ML solutions
+      </p>
+      
+      <div class="team-grid">
+        <div class="team-card">
+          <h4>Matthew Nico</h4>
+          <p class="team-role">Co-Founder & Cloud Architect</p>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">
+            12+ years in cloud strategy, SCCA/SACA architecture, and infrastructure modernization for DoD and federal agencies.
+          </p>
+          <div class="team-links">
+            <a href="mailto:matthew.nico@usmissionhero.com" class="social-link">
+              📧 Email
+            </a>
+            <a href="https://www.linkedin.com/in/matthew-nico" target="_blank" class="social-link">
+              💼 LinkedIn
+            </a>
+          </div>
+        </div>
+
+        <div class="team-card">
+          <h4>Ernest Candanedo Cruz</h4>
+          <p class="team-role">Co-Founder & Lead AI/ML Engineer</p>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">
+            13+ years in AI/ML, AWS Bedrock/SageMaker, and multi-cloud architecture for mission-critical DoD systems.
+          </p>
+          <div class="team-links">
+            <a href="mailto:ecc@myniftycloud.com" class="social-link">
+              📧 Email
+            </a>
+            <a href="https://www.linkedin.com/in/ernesto-candanedo-cruz" target="_blank" class="social-link">
+              💼 LinkedIn
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>US Mission Hero</h3>
+          <p style="color: var(--text-secondary);">
+            Delivering secure, compliant cloud solutions for government agencies and commercial enterprises.
+          </p>
+        </div>
+        
+        <div class="footer-section">
+          <h3>Solutions</h3>
+          <ul class="footer-links">
+            <li><a href="/#government">Government Solutions</a></li>
+            <li><a href="/#commercial">Commercial Solutions</a></li>
+            <li><a href="/commercial/bedrock-s3-demo.html">Bedrock & S3 Demo</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-section">
+          <h3>Company</h3>
+          <ul class="footer-links">
+            <li><a href="/#about">About Us</a></li>
+            <li><a href="/contact.html">Contact</a></li>
+            <li><a href="https://github.com/mattnicomn/Terraform_AI_Validator" target="_blank">GitHub</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="footer-bottom">
+        <p>&copy; 2026 US Mission Hero. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const company = document.getElementById('company').value;
+      const inquiryType = document.getElementById('inquiry-type').value;
+      const message = document.getElementById('message').value;
+      
+      // Build email body
+      const emailBody = `Name: ${name}%0D%0AEmail: ${email}%0D%0AOrganization: ${company}%0D%0AInquiry Type: ${inquiryType}%0D%0A%0D%0AMessage:%0D%0A${encodeURIComponent(message)}`;
+      
+      // Determine recipient based on inquiry type
+      let recipient = 'matthew.nico@usmissionhero.com,ecc@myniftycloud.com';
+      if (inquiryType === 'government') {
+        recipient = 'matthew.nico@usmissionhero.com';
+      } else if (inquiryType === 'commercial') {
+        recipient = 'ecc@myniftycloud.com';
+      }
+      
+      // Open email client
+      window.location.href = `mailto:${recipient}?subject=Contact Form: ${inquiryType}&body=${emailBody}`;
+      
+      // Show confirmation
+      alert('Opening your email client. Please send the pre-filled message.');
+    });
+  </script>
+</body>
+</html>

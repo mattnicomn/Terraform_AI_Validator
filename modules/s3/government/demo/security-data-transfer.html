@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Security Data Transfer Demo - US Mission Hero</title>
+  <link rel="stylesheet" href="/css/theme.css">
+  <style>
+    .demo-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    
+    .result-box {
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 16px;
+      min-height: 60px;
+      color: var(--text-secondary);
+      white-space: pre-wrap;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+    }
+    
+    .status-indicator {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
+    
+    .status-success { background: var(--success); }
+    .status-error { background: var(--danger); }
+    .status-warning { background: var(--warning); }
+    .status-info { background: var(--info); }
+    
+    .file-info {
+      background: var(--bg-dark);
+      padding: 12px;
+      border-radius: 6px;
+      margin-top: 12px;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-content">
+      <div class="brand">
+        <img class="logo" src="https://d11k4vck88gnf5.cloudfront.net/assets/US-Mission-Hero.png" alt="US Mission Hero Logo" />
+        <div class="brand-text">
+          <div class="title">US Mission Hero</div>
+          <div class="tagline">Secure Cloud Solutions for Government & Commercial</div>
+        </div>
+      </div>
+      <nav class="nav-tabs">
+        <a href="/" class="btn btn-secondary">← Home</a>
+        <a href="/government/docs/security-data-transfer.html" class="btn btn-secondary">📄 Documentation</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding: 40px 24px 60px;">
+    <div style="text-align: center; margin-bottom: 40px;">
+      <h1>Security Data Transfer API Demo</h1>
+      <p style="font-size: 1.125rem; color: var(--text-secondary);">
+        Interactive demonstration of secure cross-domain data transfer capabilities
+      </p>
+    </div>
+
+    <!-- File Upload & Validation -->
+    <div class="demo-section">
+      <h2>Step 1: File Upload & Validation</h2>
+      <p style="color: var(--text-secondary);">
+        Select a file to validate. The system will check file type, size, and perform security scans before allowing transfer.
+      </p>
+      
+      <div class="form-group">
+        <label class="form-label">Select File</label>
+        <input type="file" id="fileInput" class="form-input" />
+      </div>
+      
+      <button class="btn btn-primary" onclick="validateFile()">Validate File</button>
+      
+      <div id="validationResult" class="result-box" style="display: none;"></div>
+    </div>
+
+    <!-- Security Classification -->
+    <div class="demo-section">
+      <h2>Step 2: Security Classification</h2>
+      <p style="color: var(--text-secondary);">
+        Specify the source and destination security domains for the transfer.
+      </p>
+      
+      <div class="grid grid-2">
+        <div class="form-group">
+          <label class="form-label">Source Domain</label>
+          <select id="sourceDomain" class="form-select">
+            <option value="classified">Classified (IL5)</option>
+            <option value="secret">Secret (IL6)</option>
+            <option value="topsecret">Top Secret (IL6+)</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Destination Domain</label>
+          <select id="destDomain" class="form-select">
+            <option value="unclassified">Unclassified (IL2)</option>
+            <option value="cui">CUI (IL4)</option>
+            <option value="classified">Classified (IL5)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Transfer Execution -->
+    <div class="demo-section">
+      <h2>Step 3: Execute Transfer</h2>
+      <p style="color: var(--text-secondary);">
+        Initiate the secure transfer with encryption, audit logging, and compliance checks.
+      </p>
+      
+      <button class="btn btn-success" onclick="executeTransfer()" id="transferBtn" disabled>
+        Execute Secure Transfer
+      </button>
+      
+      <div id="transferResult" class="result-box" style="display: none;"></div>
+    </div>
+
+    <!-- Audit Log -->
+    <div class="demo-section">
+      <h2>Step 4: Audit Trail</h2>
+      <p style="color: var(--text-secondary);">
+        View the complete audit log for this transfer operation.
+      </p>
+      
+      <button class="btn btn-secondary" onclick="viewAuditLog()" id="auditBtn" disabled>
+        View Audit Log
+      </button>
+      
+      <div id="auditResult" class="result-box" style="display: none;"></div>
+    </div>
+
+    <!-- How It Works -->
+    <div class="section">
+      <h2>How It Works</h2>
+      <p>This demo simulates the Security Data Transfer API workflow:</p>
+      <ol style="color: var(--text-secondary); line-height: 2;">
+        <li><strong>File Validation:</strong> Checks file type, size, and performs malware scanning</li>
+        <li><strong>Classification Check:</strong> Verifies source and destination security domains are compatible</li>
+        <li><strong>Encryption:</strong> Applies AES-256 encryption using AWS KMS</li>
+        <li><strong>Transfer:</strong> Securely moves data through isolated network paths</li>
+        <li><strong>Audit Logging:</strong> Records all operations in CloudTrail for compliance</li>
+        <li><strong>Verification:</strong> Confirms successful transfer and data integrity</li>
+      </ol>
+    </div>
+
+    <div class="section text-center">
+      <h2>Ready to Implement?</h2>
+      <p style="color: var(--text-secondary); margin-bottom: 24px;">
+        Contact us to discuss deploying this solution in your environment.
+      </p>
+      <a href="/contact.html" class="btn btn-primary">Contact Us</a>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>US Mission Hero</h3>
+          <p style="color: var(--text-secondary);">
+            Delivering secure, compliant cloud solutions for government agencies and commercial enterprises.
+          </p>
+        </div>
+        <div class="footer-section">
+          <h3>Solutions</h3>
+          <ul class="footer-links">
+            <li><a href="/#government">Government Solutions</a></li>
+            <li><a href="/#commercial">Commercial Solutions</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Company</h3>
+          <ul class="footer-links">
+            <li><a href="/#about">About Us</a></li>
+            <li><a href="/contact.html">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 US Mission Hero. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    let selectedFile = null;
+    let validationPassed = false;
+
+    function validateFile() {
+      const fileInput = document.getElementById('fileInput');
+      const resultDiv = document.getElementById('validationResult');
+      const transferBtn = document.getElementById('transferBtn');
+      
+      if (!fileInput.files.length) {
+        resultDiv.style.display = 'block';
+        resultDiv.innerHTML = '<span class="status-indicator status-error"></span>Please select a file first.';
+        return;
+      }
+      
+      selectedFile = fileInput.files[0];
+      const allowedTypes = ['.pdf', '.docx', '.xlsx', '.csv', '.json', '.txt'];
+      const fileExt = selectedFile.name.substring(selectedFile.name.lastIndexOf('.')).toLowerCase();
+      const maxSize = 100 * 1024 * 1024; // 100MB
+      
+      resultDiv.style.display = 'block';
+      
+      if (!allowedTypes.includes(fileExt)) {
+        resultDiv.innerHTML = `<span class="status-indicator status-error"></span>File type not allowed: ${fileExt}\nAllowed types: ${allowedTypes.join(', ')}`;
+        validationPassed = false;
+        transferBtn.disabled = true;
+        return;
+      }
+      
+      if (selectedFile.size > maxSize) {
+        resultDiv.innerHTML = `<span class="status-indicator status-error"></span>File too large: ${(selectedFile.size / 1024 / 1024).toFixed(2)} MB\nMaximum size: 100 MB`;
+        validationPassed = false;
+        transferBtn.disabled = true;
+        return;
+      }
+      
+      // Simulate validation process
+      resultDiv.innerHTML = '<span class="status-indicator status-info"></span>Validating file...';
+      
+      setTimeout(() => {
+        resultDiv.innerHTML = `<span class="status-indicator status-success"></span>✓ File validation successful
+
+File: ${selectedFile.name}
+Size: ${(selectedFile.size / 1024).toFixed(2)} KB
+Type: ${fileExt}
+Status: Ready for transfer
+
+Security Checks:
+  ✓ File type approved
+  ✓ Size within limits
+  ✓ Malware scan passed
+  ✓ Content inspection passed`;
+        
+        validationPassed = true;
+        transferBtn.disabled = false;
+      }, 1500);
+    }
+
+    function executeTransfer() {
+      if (!validationPassed) {
+        alert('Please validate a file first.');
+        return;
+      }
+      
+      const sourceDomain = document.getElementById('sourceDomain').value;
+      const destDomain = document.getElementById('destDomain').value;
+      const resultDiv = document.getElementById('transferResult');
+      const auditBtn = document.getElementById('auditBtn');
+      
+      resultDiv.style.display = 'block';
+      resultDiv.innerHTML = '<span class="status-indicator status-info"></span>Initiating secure transfer...';
+      
+      setTimeout(() => {
+        const transferId = 'TXN-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+        resultDiv.innerHTML = `<span class="status-indicator status-success"></span>✓ Transfer completed successfully
+
+Transfer ID: ${transferId}
+Source: ${sourceDomain.toUpperCase()}
+Destination: ${destDomain.toUpperCase()}
+File: ${selectedFile.name}
+Timestamp: ${new Date().toISOString()}
+
+Transfer Steps:
+  ✓ File encrypted (AES-256)
+  ✓ KMS key applied
+  ✓ Cross-domain transfer initiated
+  ✓ Data integrity verified
+  ✓ Audit log created
+  ✓ Destination confirmed
+
+Status: COMPLETE`;
+        
+        auditBtn.disabled = false;
+      }, 2000);
+    }
+
+    function viewAuditLog() {
+      const resultDiv = document.getElementById('auditResult');
+      const sourceDomain = document.getElementById('sourceDomain').value;
+      const destDomain = document.getElementById('destDomain').value;
+      
+      resultDiv.style.display = 'block';
+      resultDiv.innerHTML = `<span class="status-indicator status-info"></span>AUDIT LOG - Security Data Transfer
+
+Timestamp: ${new Date().toISOString()}
+User: demo-user@usmissionhero.com
+Action: CROSS_DOMAIN_TRANSFER
+Status: SUCCESS
+
+Event Details:
+  - File uploaded: ${selectedFile.name}
+  - Source domain: ${sourceDomain.toUpperCase()}
+  - Destination domain: ${destDomain.toUpperCase()}
+  - Encryption: AES-256-GCM
+  - KMS Key ID: arn:aws:kms:us-gov-west-1:***:key/***
+  - Transfer method: S3 Cross-Region Replication
+  - Compliance: NIST 800-53, DISA STIG, FedRAMP High
+
+CloudTrail Events:
+  [${new Date().toISOString()}] PutObject - s3://source-bucket/${selectedFile.name}
+  [${new Date().toISOString()}] Encrypt - kms:Encrypt
+  [${new Date().toISOString()}] ReplicateObject - s3://dest-bucket/${selectedFile.name}
+  [${new Date().toISOString()}] GetObject - Verification successful
+
+Compliance Status: PASSED
+Audit Trail: Complete`;
+    }
+  </script>
+</body>
+</html>

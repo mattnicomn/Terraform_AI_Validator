@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Security Data Transfer API - US Mission Hero</title>
+  <link rel="stylesheet" href="/css/theme.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-content">
+      <div class="brand">
+        <img class="logo" src="https://d11k4vck88gnf5.cloudfront.net/assets/US-Mission-Hero.png" alt="US Mission Hero Logo" />
+        <div class="brand-text">
+          <div class="title">US Mission Hero</div>
+          <div class="tagline">Secure Cloud Solutions for Government & Commercial</div>
+        </div>
+      </div>
+      <nav class="nav-tabs">
+        <a href="/" class="btn btn-secondary">← Back to Home</a>
+        <a href="/government/demo/security-data-transfer.html" class="btn btn-primary">Try Demo</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding: 40px 24px 60px;">
+    <div class="section">
+      <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px;">
+        <h1 style="margin: 0;">Security Data Transfer API</h1>
+        <span class="badge badge-active">Active</span>
+      </div>
+      
+      <p style="font-size: 1.125rem; color: var(--text-secondary);">
+        Secure, compliant cross-domain data transfer solution for classified and sensitive government systems.
+      </p>
+    </div>
+
+    <div class="section">
+      <h2>Overview</h2>
+      <p>
+        The Security Data Transfer API provides a robust, auditable solution for transferring sensitive data between security domains while maintaining strict compliance with DoD and federal security requirements. Built on AWS GovCloud infrastructure with end-to-end encryption and comprehensive audit logging.
+      </p>
+    </div>
+
+    <div class="section">
+      <h2>Key Features</h2>
+      <div class="grid grid-2">
+        <div class="card">
+          <h3>🔒 End-to-End Encryption</h3>
+          <p>AES-256 encryption in transit and at rest using AWS KMS with FIPS 140-2 validated modules.</p>
+        </div>
+        <div class="card">
+          <h3>📋 Comprehensive Auditing</h3>
+          <p>Complete audit trail with CloudTrail integration, tracking every access and transfer operation.</p>
+        </div>
+        <div class="card">
+          <h3>✅ Automated Validation</h3>
+          <p>File type validation, malware scanning, and content inspection before cross-domain transfer.</p>
+        </div>
+        <div class="card">
+          <h3>🔐 Access Controls</h3>
+          <p>Role-based access control (RBAC) with multi-factor authentication and least-privilege principles.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Compliance Standards</h2>
+      <ul style="color: var(--text-secondary); line-height: 2;">
+        <li><strong>NIST 800-53</strong> - Security and Privacy Controls</li>
+        <li><strong>DISA STIG</strong> - Security Technical Implementation Guides</li>
+        <li><strong>FedRAMP High</strong> - Federal Risk and Authorization Management Program</li>
+        <li><strong>DoD IL5/IL6</strong> - Impact Level 5 and 6 compliance</li>
+        <li><strong>FIPS 140-2</strong> - Cryptographic module validation</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Architecture</h2>
+      <p>The solution leverages AWS GovCloud services in a secure, isolated architecture:</p>
+      <div style="background: var(--bg-dark); padding: 24px; border-radius: 8px; margin-top: 16px;">
+        <pre style="color: var(--text-secondary); overflow-x: auto;">
+┌─────────────────┐         ┌──────────────────┐         ┌─────────────────┐
+│  Source Domain  │────────▶│  Transfer API    │────────▶│  Dest. Domain   │
+│  (Classified)   │         │  (AWS Lambda)    │         │  (Unclassified) │
+└─────────────────┘         └──────────────────┘         └─────────────────┘
+                                     │
+                                     ▼
+                            ┌──────────────────┐
+                            │  S3 + KMS        │
+                            │  Encryption      │
+                            └──────────────────┘
+                                     │
+                                     ▼
+                            ┌──────────────────┐
+                            │  CloudTrail      │
+                            │  Audit Logs      │
+                            └──────────────────┘
+        </pre>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Use Cases</h2>
+      <div class="grid grid-3">
+        <div class="card">
+          <h4>Intelligence Sharing</h4>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">
+            Secure transfer of intelligence reports between classified and unclassified networks.
+          </p>
+        </div>
+        <div class="card">
+          <h4>Mission Data</h4>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">
+            Transfer operational data for analysis while maintaining security boundaries.
+          </p>
+        </div>
+        <div class="card">
+          <h4>Compliance Reporting</h4>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">
+            Automated transfer of compliance reports to oversight systems.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Benefits</h2>
+      <ul style="color: var(--text-secondary); line-height: 2;">
+        <li><strong>Reduced Manual Processes:</strong> Automate data transfers that previously required manual intervention</li>
+        <li><strong>Enhanced Security:</strong> Eliminate USB drives and other physical transfer methods</li>
+        <li><strong>Complete Auditability:</strong> Every transfer is logged and traceable for compliance</li>
+        <li><strong>Scalability:</strong> Handle high-volume transfers without infrastructure changes</li>
+        <li><strong>Cost Savings:</strong> Reduce operational overhead and manual labor costs</li>
+      </ul>
+    </div>
+
+    <div class="section text-center">
+      <h2>Ready to Get Started?</h2>
+      <p style="color: var(--text-secondary); margin-bottom: 24px;">
+        Try our interactive demo or contact us to discuss your specific requirements.
+      </p>
+      <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+        <a href="/government/demo/security-data-transfer.html" class="btn btn-primary">Try Interactive Demo</a>
+        <a href="/contact.html" class="btn btn-secondary">Contact Us</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>US Mission Hero</h3>
+          <p style="color: var(--text-secondary);">
+            Delivering secure, compliant cloud solutions for government agencies and commercial enterprises.
+          </p>
+        </div>
+        <div class="footer-section">
+          <h3>Solutions</h3>
+          <ul class="footer-links">
+            <li><a href="/#government">Government Solutions</a></li>
+            <li><a href="/#commercial">Commercial Solutions</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Company</h3>
+          <ul class="footer-links">
+            <li><a href="/#about">About Us</a></li>
+            <li><a href="/contact.html">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 US Mission Hero. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
