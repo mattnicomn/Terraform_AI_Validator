@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bedrock & S3 Demo - US Mission Hero</title>
+<style>
+body { 
+  font-family: Arial, sans-serif; 
+  background: #f5f7fa; 
+  color: #2c3e50; 
+  margin: 0; 
+}
+header { 
+  background: #003366; 
+  color: #fff; 
+  padding: 20px; 
+  text-align: center; 
+}
+.container { 
+  max-width: 960px; 
+  margin: 0 auto; 
+  padding: 20px; 
+}
+.section { 
+  background: #fff; 
+  border-radius: 8px; 
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+  padding: 20px; 
+  margin-bottom: 40px; 
+}
+button { 
+  background: #003366; 
+  color: #fff; 
+  border: none; 
+  padding: 10px 16px; 
+  border-radius: 4px; 
+  cursor: pointer; 
+  font-size: 14px;
+}
+button:hover { 
+  background: #205081; 
+}
+input[type="file"], textarea { 
+  width: 100%; 
+  padding: 8px; 
+  margin-top: 10px; 
+  border: 1px solid #ccc; 
+  border-radius: 4px; 
+  box-sizing: border-box;
+}
+textarea {
+  min-height: 100px;
+  font-family: inherit;
+}
+.result { 
+  background: #f0f4f8; 
+  padding: 10px; 
+  border-radius: 4px; 
+  margin-top: 10px; 
+  min-height: 40px; 
+  white-space: pre-wrap;
+}
+.back-button {
+  text-align: center;
+  margin-top: 20px;
+}
+</style>
+</head>
+<body>
+<header>
+<h1>Bedrock & S3 Integration Demo</h1>
+<p>Explore how generative AI and secure data transfers power modern solutions.</p>
+</header>
+
+<div class="container">
+<section class="section">
+<h2>Generative AI (Bedrock) Demo</h2>
+<p>Paste text or ask a question. This simulated model response illustrates how Bedrock can generate summaries or answers using a model fine-tuned with your own data in Amazon S3.</p>
+<textarea id="genInput" placeholder="Enter your text or question here..."></textarea>
+<button onclick="generateResponse()">Generate</button>
+<div id="genOutput" class="result"></div>
+</section>
+
+<section class="section">
+<h2>S3 Validator & Cross-Bucket Transfer Demo</h2>
+<p>Select a file to validate. If the file type is acceptable (e.g., .csv, .json), the demo simulates transferring it to a destination bucket. Real S3 replication automatically copies objects to another bucket based on defined rules and preserves metadata.</p>
+<input type="file" id="fileInput" />
+<button onclick="validateAndTransfer()">Validate & Transfer</button>
+<div id="fileOutput" class="result"></div>
+</section>
+
+<section class="section">
+<h2>How it works</h2>
+<p>Amazon Bedrock lets businesses build, fine-tune and deploy large language models using their own data stored in S3. Fine-tuning datasets are uploaded to S3 and accessed during training, ensuring that sensitive data remains private.</p>
+<p>Amazon S3 replication automatically copies objects from a source bucket to a destination bucket for disaster recovery, latency reduction and compliance. A validation step (shown here) can ensure only approved file types are replicated.</p>
+<p><strong>Key Benefits:</strong></p>
+<ul>
+<li>Secure data handling with AWS encryption and access controls</li>
+<li>Scalable AI/ML model training with your proprietary data</li>
+<li>Automated cross-region replication for compliance and disaster recovery</li>
+<li>Cost-effective storage with S3 lifecycle policies</li>
+</ul>
+</section>
+
+<div class="back-button">
+<button onclick="location.href='/'">Back to Home</button>
+</div>
+</div>
+
+<script>
+function generateResponse() {
+  const input = document.getElementById('genInput').value.trim();
+  if (!input) { 
+    document.getElementById('genOutput').innerText = ''; 
+    return; 
+  }
+  
+  // Predefined responses to simulate Bedrock output
+  const responses = [
+    'Here is a concise summary of your input. (This simulates a Bedrock model fine-tuned with your S3 data.)',
+    'This answer illustrates how a generative model can extract key information from your proprietary datasets.',
+    'Our system would securely access your data stored in S3 to generate a customized response tailored to your business needs.',
+    'Based on your input, here are the key insights: [Analysis would be generated using your fine-tuned Bedrock model with data from S3]'
+  ];
+  
+  document.getElementById('genOutput').innerText = responses[Math.floor(Math.random() * responses.length)];
+}
+
+function validateAndTransfer() {
+  const file = document.getElementById('fileInput').files[0];
+  if (!file) { 
+    document.getElementById('fileOutput').innerText = 'Please choose a file.'; 
+    return; 
+  }
+  
+  const allowedTypes = ['application/json', 'text/csv'];
+  const fileName = file.name.toLowerCase();
+  const isAllowed = allowedTypes.includes(file.type) || fileName.endsWith('.csv') || fileName.endsWith('.json');
+  
+  if (!isAllowed) {
+    document.getElementById('fileOutput').innerText = 'Unsupported file type. Please upload a CSV or JSON file.';
+  } else {
+    document.getElementById('fileOutput').innerText = 
+      'File validated: ' + file.name + '\n' +
+      'Size: ' + (file.size / 1024).toFixed(2) + ' KB\n' +
+      'Transferring to destination bucket...\n' +
+      'Transfer complete! File replicated with metadata preserved.';
+  }
+}
+</script>
+</body>
+</html>
