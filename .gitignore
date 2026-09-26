@@ -3,7 +3,7 @@
 ##############################
 # Local Terraform working directories 
 .terraform/
-.terraform.lock.hcl
+# NOTE: .terraform.lock.hcl is intentionally TRACKED for reproducible provider selection
 
 # Do not commit local terraform binaries
 terraform.exe
@@ -36,6 +36,7 @@ override.tf.json
 .terraform.tfstate.lock.info
 
 # Plan outputs
+/tfplan
 *.tfplan
 *.tfplan.*
 
@@ -160,3 +161,12 @@ desktop.ini
 # Always track the README
 !assets/README.md
 !assets/.gitkeep
+
+##############################
+# Large media (preserved externally, not in Git history)
+##############################
+# These are legitimate site assets kept out of ordinary Git history.
+# Preserved under C:\USMISSIONHERO\local-only\evidence\terraform-ai-validator\site-assets\
+# NOTE: do NOT use broad assets/*.pdf — tracked resume PDFs are intentional project assets.
+/assets/The_AI_Data_Validator.mp4
+/assets/Terraform_AI_Validator.pdf
