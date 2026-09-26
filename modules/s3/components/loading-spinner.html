@@ -1,0 +1,62 @@
+<!--
+  Loading Spinner Component
+  
+  Usage:
+  This component displays a rotating spinner to indicate loading state.
+  
+  Features:
+  - Rotating circle animation using CSS keyframes
+  - Screen reader accessible with "Loading..." text
+  - Respects prefers-reduced-motion for accessibility
+  - Uses existing .loading-spinner and .spinner-icon classes from theme.css
+  
+  Example Usage:
+  
+  1. Basic loading spinner:
+     <div class="loading-spinner" role="status" aria-live="polite">
+       <div class="spinner-icon"></div>
+       <span class="sr-only">Loading...</span>
+     </div>
+  
+  2. With custom loading text:
+     <div class="loading-spinner" role="status" aria-live="polite">
+       <div class="spinner-icon"></div>
+       <span class="sr-only">Loading data...</span>
+     </div>
+  
+  3. Inline with button (managed by loading.js):
+     <button class="btn btn-primary" data-loading>
+       Submit
+     </button>
+     
+     When loading state is triggered, the button content becomes:
+     <div class="loading-spinner" role="status" aria-live="polite">
+       <div class="spinner-icon"></div>
+       <span class="sr-only">Loading...</span>
+     </div>
+  
+  CSS Classes Used:
+  - .loading-spinner: Container with inline-flex display and spacing
+  - .spinner-icon: Animated rotating circle (20x20px)
+  - .sr-only: Screen reader only text (visually hidden)
+  
+  Animation:
+  - The spinner uses @keyframes spin animation from theme.css
+  - Duration: 1s, infinite loop
+  - Respects prefers-reduced-motion media query
+  
+  Accessibility:
+  - role="status": Indicates dynamic content update
+  - aria-live="polite": Announces loading state to screen readers
+  - .sr-only text: Provides context for screen reader users
+  
+  Requirements Validated:
+  - 9.1: Loading state indicator with spinner
+  - 9.2: Visual spinner/progress indicator
+  - 12.6: Respects prefers-reduced-motion
+-->
+
+<div class="loading-spinner" role="status" aria-live="polite">
+  <div class="spinner-icon"></div>
+  <span class="sr-only">Loading...</span>
+</div>

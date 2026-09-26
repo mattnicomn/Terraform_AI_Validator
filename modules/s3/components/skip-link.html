@@ -1,0 +1,81 @@
+<!--
+  Skip to Content Link Component
+  
+  Usage:
+  This component provides a keyboard-accessible skip link that allows users to bypass
+  navigation and jump directly to the main content. This is a critical accessibility
+  feature for keyboard and screen reader users.
+  
+  Features:
+  - Hidden off-screen until focused via keyboard navigation (Tab key)
+  - Appears at top-left when focused with high visibility
+  - High z-index (10000) ensures it appears above all other content
+  - Smooth transition animation when appearing/disappearing
+  - Uses existing .skip-link class from theme.css
+  
+  Example Usage:
+  
+  1. Basic implementation (place immediately after opening <body> tag):
+     <body>
+       <a href="#main-content" class="skip-link">Skip to main content</a>
+       <header class="site-header">...</header>
+       <main id="main-content">...</main>
+     </body>
+  
+  2. With custom target:
+     <a href="#custom-target" class="skip-link">Skip to main content</a>
+     ...
+     <main id="custom-target">...</main>
+  
+  3. Multiple skip links (for complex layouts):
+     <a href="#main-content" class="skip-link">Skip to main content</a>
+     <a href="#navigation" class="skip-link">Skip to navigation</a>
+  
+  Integration Instructions:
+  
+  1. Place this skip link as the FIRST focusable element on the page
+     (immediately after the opening <body> tag, before the header)
+  
+  2. Ensure your main content element has the matching id:
+     <main id="main-content" class="container">
+       <!-- Page content -->
+     </main>
+  
+  3. The skip link will be invisible until a user presses Tab to focus it
+  
+  4. When focused, the link appears at the top-left corner of the viewport
+  
+  5. Clicking or pressing Enter on the link will scroll to and focus the main content
+  
+  CSS Classes Used:
+  - .skip-link: Positioned absolutely, hidden off-screen until focused
+  
+  Styling Details (from theme.css):
+  - Default state: position absolute, top: -40px (hidden above viewport)
+  - Focused state: top: 0 (visible at top of viewport)
+  - Background: var(--brand-primary) (blue)
+  - Color: white
+  - Padding: 8px 16px
+  - Z-index: 10000 (appears above all content)
+  - Border radius: 0 0 8px 0 (rounded bottom-right corner)
+  - Transition: 0.2s ease-in-out
+  
+  Accessibility:
+  - First focusable element ensures keyboard users can access it immediately
+  - Visible focus indicator with outline
+  - Descriptive link text ("Skip to main content")
+  - Targets main content area with id="main-content"
+  - Meets WCAG 2.1 AA Success Criterion 2.4.1 (Bypass Blocks)
+  
+  Browser Compatibility:
+  - Works in all modern browsers (Chrome, Firefox, Safari, Edge)
+  - CSS positioning and transitions are widely supported
+  - Graceful degradation: link still functions even if CSS fails
+  
+  Requirements Validated:
+  - 5.7: Skip-to-content links for keyboard users
+  - 5.3: Visible focus indicators
+  - 2.4: Keyboard navigation support
+-->
+
+<a href="#main-content" class="skip-link">Skip to main content</a>

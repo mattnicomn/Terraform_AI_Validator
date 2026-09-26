@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lazy Loading Test - US Mission Hero</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #0a0e1a;
+      color: #e5e7eb;
+    }
+    
+    h1 {
+      color: #3b82f6;
+    }
+    
+    .spacer {
+      height: 1500px;
+      background: linear-gradient(to bottom, #1a1f2e, #0a0e1a);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #9ca3af;
+      font-size: 1.5rem;
+    }
+    
+    .test-section {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+    
+    .test-section h2 {
+      color: #10b981;
+      margin-top: 0;
+    }
+    
+    img {
+      max-width: 100%;
+      height: auto;
+      border: 2px solid #3b82f6;
+      border-radius: 8px;
+      display: block;
+      margin: 10px 0;
+    }
+    
+    .status {
+      background: #0f1419;
+      padding: 10px;
+      border-radius: 4px;
+      margin: 10px 0;
+      font-family: monospace;
+      font-size: 0.9rem;
+    }
+    
+    .success {
+      color: #10b981;
+    }
+    
+    .info {
+      color: #3b82f6;
+    }
+  </style>
+</head>
+<body>
+  <h1>Lazy Loading Implementation Test</h1>
+  
+  <div class="test-section">
+    <h2>Test 1: Above-the-Fold Image (No Lazy Loading)</h2>
+    <p>This image should load immediately:</p>
+    <img src="https://d11k4vck88gnf5.cloudfront.net/assets/US-Mission-Hero.png" alt="US Mission Hero Logo" width="200">
+    <div class="status info">
+      ✓ Image loads immediately (no loading="lazy" attribute)
+    </div>
+  </div>
+  
+  <div class="spacer">
+    ↓ Scroll down to test lazy loading ↓
+  </div>
+  
+  <div class="test-section">
+    <h2>Test 2: Below-the-Fold Image (With Lazy Loading)</h2>
+    <p>This image should lazy load when you scroll to it:</p>
+    <img src="https://d11k4vck88gnf5.cloudfront.net/assets/US-Mission-Hero.png" alt="US Mission Hero Logo Lazy" width="200" loading="lazy">
+    <div class="status success">
+      ✓ Image has loading="lazy" attribute
+      <br>
+      ✓ Modern browsers: Native lazy loading
+      <br>
+      ✓ Older browsers: IntersectionObserver fallback
+    </div>
+  </div>
+  
+  <div class="test-section">
+    <h2>Test 3: Multiple Lazy Images</h2>
+    <p>Multiple images with lazy loading:</p>
+    <img src="https://d11k4vck88gnf5.cloudfront.net/assets/US-Mission-Hero.png" alt="Test Image 1" width="150" loading="lazy">
+    <img src="https://d11k4vck88gnf5.cloudfront.net/assets/US-Mission-Hero.png" alt="Test Image 2" width="150" loading="lazy">
+    <img src="https://d11k4vck88gnf5.cloudfront.net/assets/US-Mission-Hero.png" alt="Test Image 3" width="150" loading="lazy">
+    <div class="status success">
+      ✓ All images have loading="lazy" attribute
+    </div>
+  </div>
+  
+  <div class="test-section">
+    <h2>Browser Support Status</h2>
+    <div id="browserSupport" class="status"></div>
+  </div>
+  
+  <script>
+    // Check browser support
+    function checkBrowserSupport() {
+      const supportDiv = document.getElementById('browserSupport');
+      const supportsNativeLazy = 'loading' in HTMLImageElement.prototype;
+      const supportsIntersectionObserver = 'IntersectionObserver' in window;
+      
+      let status = '';
+      
+      if (supportsNativeLazy) {
+        status += '<span class="success">✓ Native lazy loading: SUPPORTED</span><br>';
+        status += '<span class="info">→ Using browser\'s built-in lazy loading</span>';
+      } else if (supportsIntersectionObserver) {
+        status += '<span class="info">⚠ Native lazy loading: NOT SUPPORTED</span><br>';
+        status += '<span class="success">✓ IntersectionObserver: SUPPORTED</span><br>';
+        status += '<span class="info">→ Using IntersectionObserver fallback</span>';
+      } else {
+        status += '<span class="info">⚠ Native lazy loading: NOT SUPPORTED</span><br>';
+        status += '<span class="info">⚠ IntersectionObserver: NOT SUPPORTED</span><br>';
+        status += '<span class="info">→ All images load immediately (graceful degradation)</span>';
+      }
+      
+      supportDiv.innerHTML = status;
+    }
+    
+    // Run check when page loads
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', checkBrowserSupport);
+    } else {
+      checkBrowserSupport();
+    }
+  </script>
+  
+  <!-- Load the lazy-load.js module -->
+  <script src="/js/lazy-load.min.js" defer></script>
+</body>
+</html>

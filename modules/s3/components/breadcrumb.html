@@ -1,0 +1,38 @@
+<!-- US Mission Hero - Breadcrumb Navigation Component -->
+<!-- 
+  This breadcrumb component provides hierarchical navigation for documentation pages.
+  
+  Usage Instructions:
+  1. Copy this entire nav element into your documentation page
+  2. Update the breadcrumb items to match your page's location in the site hierarchy
+  3. Ensure the last item (current page) has aria-current="page" and is NOT a link
+  4. All other items should be clickable links
+  
+  Example hierarchy:
+  - Home > Government > Documentation > Current Page
+  - Home > Commercial > Demo > Current Page
+-->
+
+<nav class="breadcrumb" aria-label="Breadcrumb">
+  <ol class="breadcrumb-list">
+    <!-- Home - Always the first item -->
+    <li class="breadcrumb-item">
+      <a href="/">Home</a>
+    </li>
+    
+    <!-- Section Level - Government or Commercial -->
+    <li class="breadcrumb-item">
+      <a href="/#government">Government</a>
+    </li>
+    
+    <!-- Subsection Level - Documentation or Demo -->
+    <li class="breadcrumb-item">
+      <a href="/#government">Documentation</a>
+    </li>
+    
+    <!-- Current Page - No link, marked with aria-current -->
+    <li class="breadcrumb-item" aria-current="page">
+      Current Page Name
+    </li>
+  </ol>
+</nav>

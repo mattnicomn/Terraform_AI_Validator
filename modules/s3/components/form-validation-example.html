@@ -1,0 +1,205 @@
+<!--
+  Form Validation Component Example
+  
+  Usage:
+  This example demonstrates form validation states and error handling.
+  
+  Features:
+  - Real-time validation with visual feedback
+  - Error state with red border and error icon
+  - Success state with green border and checkmark
+  - Accessible error messages with ARIA attributes
+  - Uses existing form styles from theme.css
+  
+  Form Validation States:
+  
+  1. Default State (no validation):
+     <div class="form-group">
+       <label for="email" class="form-label">Email *</label>
+       <input type="email" id="email" class="form-input" aria-required="true" />
+     </div>
+  
+  2. Invalid State (with error):
+     <div class="form-group">
+       <label for="email" class="form-label">Email *</label>
+       <input 
+         type="email" 
+         id="email" 
+         class="form-input is-invalid" 
+         aria-required="true"
+         aria-invalid="true"
+         aria-describedby="email-error"
+       />
+       <div id="email-error" class="form-error" role="alert" aria-live="polite">
+         Please enter a valid email address.
+       </div>
+     </div>
+  
+  3. Valid State (with success):
+     <div class="form-group">
+       <label for="email" class="form-label">Email *</label>
+       <input 
+         type="email" 
+         id="email" 
+         class="form-input is-valid" 
+         aria-required="true"
+         aria-invalid="false"
+       />
+     </div>
+  
+  4. With Help Text:
+     <div class="form-group">
+       <label for="password" class="form-label">Password *</label>
+       <input 
+         type="password" 
+         id="password" 
+         class="form-input" 
+         aria-required="true"
+         aria-describedby="password-help"
+       />
+       <div id="password-help" class="form-help">
+         Must be at least 8 characters with uppercase, lowercase, and numbers.
+       </div>
+     </div>
+  
+  CSS Classes Used:
+  - .form-group: Container for label, input, and error/help text
+  - .form-label: Label styling with proper spacing
+  - .form-input: Input field base styling
+  - .form-input.is-invalid: Error state (red border, error icon)
+  - .form-input.is-valid: Success state (green border, checkmark)
+  - .form-error: Error message styling (red text, small font)
+  - .form-help: Help text styling (muted text, small font)
+  
+  Accessibility Features:
+  - aria-required: Indicates required fields
+  - aria-invalid: Indicates validation state
+  - aria-describedby: Associates error/help text with input
+  - role="alert": Announces errors to screen readers
+  - aria-live="polite": Updates screen readers on validation changes
+  - Proper label association via for/id attributes
+  
+  JavaScript Integration:
+  The validation.js module will:
+  - Add/remove .is-invalid and .is-valid classes
+  - Update aria-invalid attribute
+  - Create/update error message elements
+  - Validate on input, blur, and submit events
+  
+  Requirements Validated:
+  - 10.1: Field-specific error messages
+  - 10.3: Visual indicator for problematic fields
+  - 10.4: Error messages adjacent to fields
+  - 10.6: Consistent error message styling
+-->
+
+<!-- Complete Form Validation Example -->
+<form class="form" data-validate novalidate>
+  
+  <!-- Text Input - Default State -->
+  <div class="form-group">
+    <label for="name" class="form-label">Full Name *</label>
+    <input 
+      type="text" 
+      id="name" 
+      name="name"
+      class="form-input" 
+      required
+      aria-required="true"
+      aria-invalid="false"
+    />
+  </div>
+  
+  <!-- Email Input - Invalid State Example -->
+  <div class="form-group">
+    <label for="email" class="form-label">Email Address *</label>
+    <input 
+      type="email" 
+      id="email" 
+      name="email"
+      class="form-input is-invalid" 
+      required
+      aria-required="true"
+      aria-invalid="true"
+      aria-describedby="email-error"
+    />
+    <div id="email-error" class="form-error" role="alert" aria-live="polite">
+      Please enter a valid email address.
+    </div>
+  </div>
+  
+  <!-- Password Input - Valid State Example -->
+  <div class="form-group">
+    <label for="password" class="form-label">Password *</label>
+    <input 
+      type="password" 
+      id="password" 
+      name="password"
+      class="form-input is-valid" 
+      required
+      minlength="8"
+      aria-required="true"
+      aria-invalid="false"
+      aria-describedby="password-help"
+    />
+    <div id="password-help" class="form-help">
+      Must be at least 8 characters with uppercase, lowercase, and numbers.
+    </div>
+  </div>
+  
+  <!-- URL Input - With Help Text -->
+  <div class="form-group">
+    <label for="website" class="form-label">Website</label>
+    <input 
+      type="url" 
+      id="website" 
+      name="website"
+      class="form-input" 
+      aria-describedby="website-help"
+    />
+    <div id="website-help" class="form-help">
+      Optional. Include https:// or http://
+    </div>
+  </div>
+  
+  <!-- Textarea - Default State -->
+  <div class="form-group">
+    <label for="message" class="form-label">Message *</label>
+    <textarea 
+      id="message" 
+      name="message"
+      class="form-textarea" 
+      rows="4"
+      required
+      aria-required="true"
+      aria-invalid="false"
+    ></textarea>
+  </div>
+  
+  <!-- Select - Default State -->
+  <div class="form-group">
+    <label for="topic" class="form-label">Topic *</label>
+    <select 
+      id="topic" 
+      name="topic"
+      class="form-select" 
+      required
+      aria-required="true"
+      aria-invalid="false"
+    >
+      <option value="">Select a topic...</option>
+      <option value="government">Government Solutions</option>
+      <option value="commercial">Commercial Solutions</option>
+      <option value="support">Technical Support</option>
+      <option value="other">Other</option>
+    </select>
+  </div>
+  
+  <!-- Submit Button -->
+  <div class="form-group">
+    <button type="submit" class="btn btn-primary">
+      Submit Form
+    </button>
+  </div>
+  
+</form>

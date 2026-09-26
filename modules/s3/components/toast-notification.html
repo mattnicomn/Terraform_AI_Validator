@@ -1,0 +1,157 @@
+<!--
+  Toast Notification Component
+  
+  Usage:
+  This component displays temporary notification messages for user feedback.
+  
+  Features:
+  - Four variants: success, error, warning, info
+  - Slide-in animation from bottom
+  - Auto-dismiss after 3 seconds (configurable)
+  - Manual dismiss with close button
+  - Accessible with ARIA attributes
+  - Uses existing toast styles from theme.css
+  
+  Toast Variants:
+  
+  1. Success Toast:
+     <div class="toast toast-success" role="alert" aria-live="polite" aria-atomic="true">
+       <div class="toast-icon">✓</div>
+       <div class="toast-message">Operation completed successfully!</div>
+       <button class="toast-close" aria-label="Close notification">×</button>
+     </div>
+  
+  2. Error Toast:
+     <div class="toast toast-error" role="alert" aria-live="assertive" aria-atomic="true">
+       <div class="toast-icon">✕</div>
+       <div class="toast-message">An error occurred. Please try again.</div>
+       <button class="toast-close" aria-label="Close notification">×</button>
+     </div>
+  
+  3. Warning Toast:
+     <div class="toast toast-warning" role="alert" aria-live="polite" aria-atomic="true">
+       <div class="toast-icon">⚠</div>
+       <div class="toast-message">Warning: This action cannot be undone.</div>
+       <button class="toast-close" aria-label="Close notification">×</button>
+     </div>
+  
+  4. Info Toast:
+     <div class="toast toast-info" role="alert" aria-live="polite" aria-atomic="true">
+       <div class="toast-icon">ℹ</div>
+       <div class="toast-message">New features are now available.</div>
+       <button class="toast-close" aria-label="Close notification">×</button>
+     </div>
+  
+  CSS Classes Used:
+  - .toast: Base toast styling (fixed position, bottom center)
+  - .toast-success: Success variant (green border and icon)
+  - .toast-error: Error variant (red border and icon)
+  - .toast-warning: Warning variant (yellow border and icon)
+  - .toast-info: Info variant (blue border and icon)
+  - .toast-show: Animation class for showing toast
+  - .toast-hide: Animation class for hiding toast
+  - .toast-icon: Icon container
+  - .toast-message: Message text container
+  - .toast-close: Close button
+  
+  Animation:
+  - Slide-in from bottom using transform and opacity
+  - Smooth transition with ease-in-out easing
+  - Respects prefers-reduced-motion media query
+  
+  Accessibility Features:
+  - role="alert": Indicates important message
+  - aria-live="polite": Announces to screen readers (non-intrusive)
+  - aria-live="assertive": For errors (immediate announcement)
+  - aria-atomic="true": Reads entire message when updated
+  - aria-label on close button for screen readers
+  
+  JavaScript Integration (toast.js):
+  
+  // Show success toast
+  Toast.success('Operation completed successfully!');
+  
+  // Show error toast
+  Toast.error('An error occurred. Please try again.');
+  
+  // Show warning toast
+  Toast.warning('Warning: This action cannot be undone.');
+  
+  // Show info toast
+  Toast.info('New features are now available.');
+  
+  // Custom duration (default is 3000ms)
+  Toast.show('Custom message', 'success', 5000);
+  
+  Behavior:
+  - Appears at bottom center of viewport
+  - Auto-dismisses after 3 seconds (default)
+  - Can be manually dismissed by clicking close button
+  - Multiple toasts stack vertically
+  - Slide-in animation from bottom
+  - Fade-out animation when dismissed
+  
+  Requirements Validated:
+  - 9.4: Success message display
+  - 9.5: Error message display
+-->
+
+<!-- Success Toast Example -->
+<div class="toast toast-success" role="alert" aria-live="polite" aria-atomic="true">
+  <div class="toast-icon">✓</div>
+  <div class="toast-message">Operation completed successfully!</div>
+  <button class="toast-close" aria-label="Close notification">×</button>
+</div>
+
+<!-- Error Toast Example -->
+<div class="toast toast-error" role="alert" aria-live="assertive" aria-atomic="true">
+  <div class="toast-icon">✕</div>
+  <div class="toast-message">An error occurred. Please try again.</div>
+  <button class="toast-close" aria-label="Close notification">×</button>
+</div>
+
+<!-- Warning Toast Example -->
+<div class="toast toast-warning" role="alert" aria-live="polite" aria-atomic="true">
+  <div class="toast-icon">⚠</div>
+  <div class="toast-message">Warning: This action cannot be undone.</div>
+  <button class="toast-close" aria-label="Close notification">×</button>
+</div>
+
+<!-- Info Toast Example -->
+<div class="toast toast-info" role="alert" aria-live="polite" aria-atomic="true">
+  <div class="toast-icon">ℹ</div>
+  <div class="toast-message">New features are now available.</div>
+  <button class="toast-close" aria-label="Close notification">×</button>
+</div>
+
+<!--
+  Usage Notes:
+  
+  1. Toasts are created dynamically by JavaScript (toast.js module)
+  2. They are appended to the body element
+  3. Position is fixed at bottom center of viewport
+  4. Z-index ensures they appear above other content
+  5. Multiple toasts stack vertically with spacing
+  
+  Icon Recommendations:
+  - Success: ✓ (checkmark) or ✔
+  - Error: ✕ (x mark) or ✖ or ⨯
+  - Warning: ⚠ (warning sign) or ⚡
+  - Info: ℹ (info) or 🛈
+  
+  Alternative: Use icon fonts or SVG icons for better cross-browser support
+  
+  Color Coding:
+  - Success: Green (--success)
+  - Error: Red (--danger)
+  - Warning: Yellow/Orange (--warning)
+  - Info: Blue (--info)
+  
+  Best Practices:
+  - Keep messages concise (1-2 sentences)
+  - Use appropriate variant for message type
+  - Don't show too many toasts at once (max 3-4)
+  - Ensure auto-dismiss timeout is appropriate for message length
+  - Provide manual dismiss option for all toasts
+  - Use aria-live="assertive" only for critical errors
+-->

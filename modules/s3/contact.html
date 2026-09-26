@@ -4,14 +4,51 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Contact Us - US Mission Hero</title>
-  <link rel="stylesheet" href="/css/theme.css">
+  
+  <!-- Resource Hints for Performance Optimization -->
+  <!-- DNS prefetch for external domains -->
+  <link rel="dns-prefetch" href="https://d11k4vck88gnf5.cloudfront.net">
+  
+  <!-- Preconnect for critical external resources -->
+  <link rel="preconnect" href="https://d11k4vck88gnf5.cloudfront.net" crossorigin>
+  
+  <!-- Preload critical assets -->
+  <link rel="preload" href="/assets/US-Mission-Hero.png" as="image">
+  <link rel="preload" href="/assets/starry-bg.png" as="image">
+  <link rel="preload" href="/js/common.min.js" as="script">
+  
+  <!-- Critical CSS inlined for above-the-fold content -->
   <style>
+:root{--brand-primary:#3b82f6;--brand-secondary:#10b981;--brand-gold:#f59e0b;--bg:#0a0e1a;--bg-dark:#0a0e1a;--bg-dark-secondary:#1a1f2e;--bg-card:#111827;--text:#e5e7eb;--text-primary:#f1f5f9;--text-secondary:#94a3b8;--muted:#9ca3af;--text-muted:#64748b;--border:#1f2937;--border-light:#334155;--focus:#60a5fa;--space-xs:4px;--space-sm:8px;--space-md:16px;--space-lg:24px;--space-xl:32px;--space-2xl:48px;--space-3xl:64px;--font-size-xs:0.75rem;--font-size-sm:0.875rem;--font-size-base:1rem;--font-size-lg:1.125rem;--font-size-xl:1.25rem;--font-size-2xl:1.5rem;--font-size-3xl:1.875rem;--font-size-4xl:2.25rem;--font-size-5xl:3rem;--font-weight-normal:400;--font-weight-medium:500;--font-weight-semibold:600;--font-weight-bold:700;--line-height-tight:1.2;--line-height-normal:1.6;--radius-sm:6px;--radius-md:8px;--radius-lg:12px;--radius-full:9999px;--shadow-sm:0 1px 2px rgba(0,0,0,0.3);--shadow-md:0 4px 6px rgba(0,0,0,0.4);--transition-fast:0.15s ease-in-out;--transition-base:0.2s ease-in-out;--transition-slow:0.3s ease-in-out}*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}html{height:100%;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;line-height:var(--line-height-normal);font-size:var(--font-size-base)}body{background:linear-gradient(135deg,var(--bg-dark) 0%,var(--bg-dark-secondary) 100%);background-image:url('/assets/starry-bg.png');background-size:cover;background-position:center;background-repeat:no-repeat;background-attachment:fixed;color:var(--text);position:relative;min-height:100vh}body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);pointer-events:none;z-index:0}body>*{position:relative;z-index:1}a{color:var(--brand-primary);text-decoration:none;transition:color var(--transition-base)}h1,h2,h3,h4,h5,h6{font-weight:var(--font-weight-bold);line-height:var(--line-height-tight);margin-bottom:var(--space-md);color:var(--text-primary)}h1{font-size:var(--font-size-4xl);background:linear-gradient(135deg,var(--brand-primary),var(--brand-secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}h2{font-size:var(--font-size-3xl)}h3{font-size:var(--font-size-2xl)}p{margin-bottom:var(--space-md);color:var(--text-secondary);line-height:var(--line-height-normal)}.container{max-width:1200px;margin:0 auto;padding:0 var(--space-lg);width:100%}.site-header{background:rgba(10,14,26,0.95);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:var(--space-md) 0;position:sticky;top:0;z-index:100;box-shadow:var(--shadow-sm)}.header-content{display:flex;justify-content:space-between;align-items:center;gap:var(--space-lg);flex-wrap:wrap}.brand{display:flex;align-items:center;gap:var(--space-md)}.brand-logo{height:70px;width:auto;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3))}.brand-text .title{font-size:var(--font-size-2xl);font-weight:var(--font-weight-bold);color:var(--text-primary);background:linear-gradient(135deg,var(--brand-primary),var(--brand-secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:2px}.brand-text .tagline{font-size:var(--font-size-sm);color:var(--text-muted)}.nav-menu{display:flex;gap:var(--space-sm);flex-wrap:wrap;align-items:center}.nav-link{color:var(--text-secondary);padding:var(--space-sm) var(--space-md);border-radius:var(--radius-md);font-size:var(--font-size-sm);font-weight:var(--font-weight-medium);transition:all var(--transition-base);border:1px solid transparent}.nav-link[aria-current="page"]{background:var(--brand-primary);color:white;border-color:var(--brand-primary)}.mobile-menu-toggle{display:none;background:none;border:none;cursor:pointer;padding:var(--space-sm);color:var(--text-primary)}.hamburger-icon{display:block;width:24px;height:2px;background:var(--text-primary);position:relative;transition:background var(--transition-base)}.hamburger-icon::before,.hamburger-icon::after{content:'';display:block;width:24px;height:2px;background:var(--text-primary);position:absolute;transition:transform var(--transition-slow)}.hamburger-icon::before{top:-8px}.hamburger-icon::after{top:8px}.skip-link{position:absolute;top:-40px;left:0;background:var(--brand-primary);color:white;padding:var(--space-sm) var(--space-md);text-decoration:none;z-index:10000;transition:top var(--transition-base);border-radius:0 0 var(--radius-md) 0}.skip-link:focus{top:0;outline:2px solid var(--focus);outline-offset:2px}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border-width:0}*:focus{outline:2px solid var(--focus);outline-offset:2px}*:focus:not(:focus-visible){outline:none}*:focus-visible{outline:2px solid var(--focus);outline-offset:2px}@media (max-width:767px){h1{font-size:var(--font-size-3xl)}h2{font-size:var(--font-size-2xl)}h3{font-size:var(--font-size-xl)}.container{padding:0 var(--space-md)}.header-content{flex-direction:column;gap:var(--space-md)}.brand-text .title{font-size:var(--font-size-xl)}.mobile-menu-toggle{display:block}.nav-menu{display:none;position:fixed;top:0;left:0;width:100%;height:100vh;background:rgba(10,14,26,0.98);flex-direction:column;justify-content:center;align-items:center;gap:var(--space-lg);z-index:99}.nav-menu.is-open{display:flex}.nav-link{font-size:var(--font-size-lg);padding:var(--space-md) var(--space-lg);min-width:200px;text-align:center}}@media (min-width:768px){h1{font-size:var(--font-size-4xl)}h2{font-size:var(--font-size-3xl)}.container{max-width:768px}.header-content{flex-direction:row;justify-content:space-between}.nav-menu{display:flex;flex-direction:row}.mobile-menu-toggle{display:none}}@media (min-width:1024px){.container{max-width:1024px}h1{font-size:var(--font-size-5xl)}}@media (min-width:1200px){.container{max-width:1200px}.site-header{padding:var(--space-lg) 0}}
+  </style>
+  
+  <!-- Load full stylesheet asynchronously -->
+  <link rel="preload" href="/css/theme.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="/css/theme.min.css"></noscript>
+  <style>
+    .main-content {
+      padding-top: 40px;
+      padding-bottom: 60px;
+    }
+    
     .contact-hero {
       text-align: center;
       padding: 60px 24px 40px;
       background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(16, 185, 129, 0.1));
       border-radius: 16px;
       margin-bottom: 40px;
+    }
+    
+    .hero-description {
+      font-size: 1.125rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    .section-description {
+      color: var(--text-secondary);
+      margin-bottom: 24px;
     }
     
     .contact-methods {
@@ -79,6 +116,11 @@
       margin-bottom: 16px;
     }
     
+    .team-description {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+    
     .team-links {
       display: flex;
       gap: 12px;
@@ -106,26 +148,41 @@
   </style>
 </head>
 <body>
-  <!-- Header -->
-  <header class="site-header">
+  <!-- Skip to Content Link -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- US Mission Hero - Standardized Navigation Header Component -->
+  <header class="site-header" role="banner">
     <div class="container header-content">
+      <!-- Brand Section -->
       <div class="brand">
+        <img src="/assets/US-Mission-Hero.png" alt="US Mission Hero Logo" class="brand-logo" />
         <div class="brand-text">
           <div class="title">US Mission Hero</div>
           <div class="tagline">Secure Cloud Solutions for Government & Commercial</div>
         </div>
       </div>
-      <nav class="nav-tabs">
-        <a href="/" class="btn btn-secondary">← Back to Home</a>
+      
+      <!-- Mobile Menu Toggle -->
+      <button class="mobile-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+        <span class="hamburger-icon"></span>
+      </button>
+      
+      <!-- Navigation Links -->
+      <nav class="nav-menu" role="navigation" aria-label="Main navigation">
+        <a href="/" class="nav-link">Home</a>
+        <a href="/government/" class="nav-link">Government</a>
+        <a href="/commercial/" class="nav-link">Commercial</a>
+        <a href="/contact.html" class="nav-link" aria-current="page">Contact</a>
       </nav>
     </div>
   </header>
 
   <!-- Main Content -->
-  <main class="container" style="padding-top: 40px; padding-bottom: 60px;">
+  <main id="main-content" class="container main-content">
     <div class="contact-hero">
       <h1>Get in Touch</h1>
-      <p style="font-size: 1.125rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto;">
+      <p class="hero-description">
         Ready to modernize your infrastructure? Let's discuss how we can help secure and scale your mission-critical systems.
       </p>
     </div>
@@ -163,32 +220,65 @@
     <!-- Contact Form -->
     <div class="section">
       <h2>Send Us a Message</h2>
-      <p style="color: var(--text-secondary); margin-bottom: 24px;">
+      <p class="section-description">
         Fill out the form below and we'll get back to you within 24 hours.
       </p>
       
-      <form id="contactForm">
+      <form id="contactForm" data-validate>
         <div class="grid grid-2">
           <div class="form-group">
             <label class="form-label" for="name">Name *</label>
-            <input type="text" id="name" class="form-input" required placeholder="Your full name">
+            <input 
+              type="text" 
+              id="name" 
+              name="name"
+              class="form-input" 
+              required 
+              aria-required="true"
+              aria-invalid="false"
+              aria-describedby="name-error"
+              placeholder="Your full name">
+            <span id="name-error" class="form-error" role="alert"></span>
           </div>
           
           <div class="form-group">
             <label class="form-label" for="email">Email *</label>
-            <input type="email" id="email" class="form-input" required placeholder="your.email@example.com">
+            <input 
+              type="email" 
+              id="email" 
+              name="email"
+              class="form-input" 
+              required 
+              aria-required="true"
+              aria-invalid="false"
+              aria-describedby="email-error"
+              placeholder="your.email@example.com">
+            <span id="email-error" class="form-error" role="alert"></span>
           </div>
         </div>
         
         <div class="grid grid-2">
           <div class="form-group">
             <label class="form-label" for="company">Organization</label>
-            <input type="text" id="company" class="form-input" placeholder="Your organization">
+            <input 
+              type="text" 
+              id="company" 
+              name="company"
+              class="form-input" 
+              aria-invalid="false"
+              placeholder="Your organization">
           </div>
           
           <div class="form-group">
             <label class="form-label" for="inquiry-type">Inquiry Type *</label>
-            <select id="inquiry-type" class="form-select" required>
+            <select 
+              id="inquiry-type" 
+              name="inquiry-type"
+              class="form-select" 
+              required
+              aria-required="true"
+              aria-invalid="false"
+              aria-describedby="inquiry-type-error">
               <option value="">Select type...</option>
               <option value="government">Government Solutions</option>
               <option value="commercial">Commercial Solutions</option>
@@ -197,12 +287,22 @@
               <option value="support">Technical Support</option>
               <option value="other">Other</option>
             </select>
+            <span id="inquiry-type-error" class="form-error" role="alert"></span>
           </div>
         </div>
         
         <div class="form-group">
           <label class="form-label" for="message">Message *</label>
-          <textarea id="message" class="form-textarea" required placeholder="Tell us about your project or inquiry..."></textarea>
+          <textarea 
+            id="message" 
+            name="message"
+            class="form-textarea" 
+            required
+            aria-required="true"
+            aria-invalid="false"
+            aria-describedby="message-error"
+            placeholder="Tell us about your project or inquiry..."></textarea>
+          <span id="message-error" class="form-error" role="alert"></span>
         </div>
         
         <div class="text-center">
@@ -214,7 +314,7 @@
     <!-- Team Section -->
     <div class="team-section">
       <h2 class="text-center">Meet the Team</h2>
-      <p class="text-center" style="color: var(--text-secondary); margin-bottom: 32px;">
+      <p class="text-center section-description">
         Co-founders with 25+ years of combined experience in cloud architecture and AI/ML solutions
       </p>
       
@@ -222,7 +322,7 @@
         <div class="team-card">
           <h4>Matthew Nico</h4>
           <p class="team-role">Co-Founder & Cloud Architect</p>
-          <p style="color: var(--text-secondary); font-size: 0.9rem;">
+          <p class="team-description">
             12+ years in cloud strategy, SCCA/SACA architecture, and infrastructure modernization for DoD and federal agencies.
           </p>
           <div class="team-links">
@@ -238,7 +338,7 @@
         <div class="team-card">
           <h4>Ernest Candanedo Cruz</h4>
           <p class="team-role">Co-Founder & Lead AI/ML Engineer</p>
-          <p style="color: var(--text-secondary); font-size: 0.9rem;">
+          <p class="team-description">
             13+ years in AI/ML, AWS Bedrock/SageMaker, and multi-cloud architecture for mission-critical DoD systems.
           </p>
           <div class="team-links">
@@ -254,41 +354,54 @@
     </div>
   </main>
 
-  <!-- Footer -->
-  <footer class="site-footer">
-    <div class="container">
-      <div class="footer-content">
-        <div class="footer-section">
-          <h3>US Mission Hero</h3>
-          <p style="color: var(--text-secondary);">
-            Delivering secure, compliant cloud solutions for government agencies and commercial enterprises.
-          </p>
-        </div>
-        
-        <div class="footer-section">
-          <h3>Solutions</h3>
-          <ul class="footer-links">
-            <li><a href="/#government">Government Solutions</a></li>
-            <li><a href="/#commercial">Commercial Solutions</a></li>
-            <li><a href="/commercial/bedrock-s3-demo.html">Bedrock & S3 Demo</a></li>
-          </ul>
-        </div>
-        
-        <div class="footer-section">
-          <h3>Company</h3>
-          <ul class="footer-links">
-            <li><a href="/#about">About Us</a></li>
-            <li><a href="/contact.html">Contact</a></li>
-            <li><a href="https://github.com/mattnicomn/Terraform_AI_Validator" target="_blank">GitHub</a></li>
-          </ul>
-        </div>
+  <!-- US Mission Hero - Standardized Footer Component -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container footer-content">
+      <!-- Company Info Section -->
+      <div class="footer-section">
+        <h3>US Mission Hero</h3>
+        <p>Providing secure cloud solutions for government and commercial sectors with expertise in AWS, compliance, and cybersecurity.</p>
       </div>
       
-      <div class="footer-bottom">
-        <p>&copy; 2026 US Mission Hero. All rights reserved.</p>
+      <!-- Solutions Section -->
+      <div class="footer-section">
+        <h3>Solutions</h3>
+        <ul class="footer-links">
+          <li><a href="/government/docs/security-data-transfer.html">Government Solutions</a></li>
+          <li><a href="/commercial/bedrock-s3-demo.html">Commercial Solutions</a></li>
+          <li><a href="/government/docs/security-data-transfer.html">Security Data Transfer</a></li>
+          <li><a href="/government/docs/fedramp-fisma.html">FedRAMP & FISMA</a></li>
+          <li><a href="/government/docs/scca-saca.html">SCCA/SACA</a></li>
+          <li><a href="/government/docs/rmf-nist.html">RMF & NIST</a></li>
+        </ul>
+      </div>
+      
+      <!-- Company Section -->
+      <div class="footer-section">
+        <h3>Company</h3>
+        <ul class="footer-links">
+          <li><a href="/#about">About Us</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li><a href="#" aria-label="Careers (Coming Soon)" class="disabled">Careers (Coming Soon)</a></li>
+        </ul>
       </div>
     </div>
+    
+    <!-- Copyright Section -->
+    <div class="container footer-bottom">
+      <p>&copy; <span id="current-year">2026</span> US Mission Hero. All rights reserved.</p>
+    </div>
   </footer>
+
+  <script>
+    // Update copyright year dynamically
+    (function() {
+      const yearElement = document.getElementById('current-year');
+      if (yearElement) {
+        yearElement.textContent = new Date().getFullYear();
+      }
+    })();
+  </script>
 
   <script>
     document.getElementById('contactForm').addEventListener('submit', function(e) {
@@ -318,5 +431,12 @@
       alert('Opening your email client. Please send the pre-filled message.');
     });
   </script>
+
+  <!-- JavaScript Modules -->
+  <script src="/js/common.min.js" defer></script>
+  <script src="/js/navigation.min.js" defer></script>
+  <script src="/js/validation.min.js" defer></script>
+  <script src="/js/scroll.min.js" defer></script>
+  <script src="/js/lazy-load.min.js" defer></script>
 </body>
 </html>

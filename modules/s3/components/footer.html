@@ -1,0 +1,48 @@
+<!-- US Mission Hero - Standardized Footer Component -->
+<footer class="site-footer" role="contentinfo">
+  <div class="container footer-content">
+    <!-- Company Info Section -->
+    <div class="footer-section">
+      <h3>US Mission Hero</h3>
+      <p>Providing secure cloud solutions for government and commercial sectors with expertise in AWS, compliance, and cybersecurity.</p>
+    </div>
+    
+    <!-- Solutions Section -->
+    <div class="footer-section">
+      <h3>Solutions</h3>
+      <ul class="footer-links">
+        <li><a href="/government/docs/security-data-transfer.html">Government Solutions</a></li>
+        <li><a href="/commercial/bedrock-s3-demo.html">Commercial Solutions</a></li>
+        <li><a href="/government/docs/security-data-transfer.html">Security Data Transfer</a></li>
+        <li><a href="/government/docs/fedramp-fisma.html">FedRAMP & FISMA</a></li>
+        <li><a href="/government/docs/scca-saca.html">SCCA/SACA</a></li>
+        <li><a href="/government/docs/rmf-nist.html">RMF & NIST</a></li>
+      </ul>
+    </div>
+    
+    <!-- Company Section -->
+    <div class="footer-section">
+      <h3>Company</h3>
+      <ul class="footer-links">
+        <li><a href="/#about">About Us</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="#" aria-label="Careers (Coming Soon)" class="disabled">Careers (Coming Soon)</a></li>
+      </ul>
+    </div>
+  </div>
+  
+  <!-- Copyright Section -->
+  <div class="container footer-bottom">
+    <p>&copy; <span id="current-year">2026</span> US Mission Hero. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>
+  // Update copyright year dynamically
+  (function() {
+    const yearElement = document.getElementById('current-year');
+    if (yearElement) {
+      yearElement.textContent = new Date().getFullYear();
+    }
+  })();
+</script>
