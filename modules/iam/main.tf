@@ -1,138 +1,161 @@
-data "aws_iam_policy" "lambda_basic" {
-  arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+# =============================================================================
+# AI Validator IAM — least-privilege destination roles (account 102).
+# No AdministratorAccess / *FullAccess / wildcard-account ARNs.
+# All ARNs derive from destination-scoped inputs.
+# =============================================================================
+
+locals {
+  processor_log_arn = "arn:aws:logs:${var.region}:${var.account_id}:log-group:/aws/lambda/${var.processor_function_name}:*"
+  prompt_log_arn    = "arn:aws:logs:${var.region}:${var.account_id}:log-group:/aws/lambda/${var.prompt_function_name}:*"
 }
 
-# Processor role
+# ── Processor role ───────────────────────────────────────────────────────────
 resource "aws_iam_role" "processor" {
   count = var.create_processor_role ? 1 : 0
   name  = var.processor_role_name
   path  = "/service-role/"
   assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [{ Effect="Allow", Principal={ Service="lambda.amazonaws.com" }, Action="sts:AssumeRole" }]
+    Version   = "2012-10-17"
+    Statement = [{ Effect = "Allow", Principal = { Service = "lambda.amazonaws.com" }, Action = "sts:AssumeRole" }]
   })
   tags = var.tags
 }
 
-resource "aws_iam_role_policy_attachment" "processor_basic" {
-  count      = var.create_processor_role ? 1 : 0
-  role       = aws_iam_role.processor[0].name
-  policy_arn = data.aws_iam_policy.lambda_basic.arn
-}
-
-# Optional extra inline policies (SNS publish, S3 full access, logs, comprehend read-only) like CFN
-resource "aws_iam_policy" "processor_inline_combined" {
+resource "aws_iam_role_policy" "processor" {
   count = var.create_processor_role ? 1 : 0
-  name  = "SecurityDataTransferProcessor-Policy"
-  path  = "/service-role/"
+  name  = "processor-least-privilege"
+  role  = aws_iam_role.processor[0].id
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
-      { Effect="Allow", Action=["logs:CreateLogGroup","logs:CreateLogStream","logs:PutLogEvents"], Resource="*" },
-      { Effect="Allow", Action=["sns:Publish"], Resource="arn:aws:sns:*:*:SecurityDataTransferAlerts" },
-      { Effect="Allow", Action=["s3:*"], Resource="*" },
-      { Effect="Allow", Action=["comprehend:DetectPiiEntities","comprehend:ContainsPiiEntities"], Resource="*" }
-    ]
-  })
-}
-
-resource "aws_iam_role_policy_attachment" "processor_inline_attach" {
-  count      = var.create_processor_role ? 1 : 0
-  role       = aws_iam_role.processor[0].name
-  policy_arn = aws_iam_policy.processor_inline_combined[0].arn
-}
-
-# Prompt role
-resource "aws_iam_role" "prompt" {
-  count = var.create_prompt_role ? 1 : 0
-  name  = var.prompt_role_name
-  path  = "/service-role/"
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [{ Effect="Allow", Principal={ Service="lambda.amazonaws.com" }, Action="sts:AssumeRole" }]
-  })
-  tags = var.tags
-}
-
-resource "aws_iam_role_policy_attachment" "prompt_basic" {
-  count      = var.create_prompt_role ? 1 : 0
-  role       = aws_iam_role.prompt[0].name
-  policy_arn = data.aws_iam_policy.lambda_basic.arn
-}
-
-# Improved prompt role policy with least privilege (removed overly permissive kms:* and ssm:*)
-resource "aws_iam_policy" "prompt_inline" {
-  count = var.create_prompt_role && var.attach_extra_prompt_policies ? 1 : 0
-  name  = "BedrockPromptHandler-Extras"
-  path  = "/service-role/"
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      { 
-        Effect="Allow", 
-        Action=["bedrock:InvokeModel","bedrock:InvokeModelWithResponseStream"], 
-        Resource="*" 
+      {
+        Sid      = "OwnLogs"
+        Effect   = "Allow"
+        Action   = ["logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"]
+        Resource = local.processor_log_arn
       },
-      { 
-        Effect="Allow", 
-        Action=["s3:GetObject","s3:GetObjectTagging","s3:PutObject"], 
-        Resource="*" 
+      {
+        Sid      = "SourceRead"
+        Effect   = "Allow"
+        Action   = ["s3:GetObject", "s3:GetObjectTagging"]
+        Resource = "${var.source_bucket_arn}/*"
       },
-      { 
-        Effect="Allow", 
-        Action=["ssm:GetParameter"], 
-        Resource="arn:aws:ssm:*:*:parameter/private_key.pem" 
+      {
+        Sid      = "SourceList"
+        Effect   = "Allow"
+        Action   = ["s3:ListBucket"]
+        Resource = var.source_bucket_arn
       },
-      { 
-        Effect="Allow", 
-        Action=["kms:Decrypt","kms:DescribeKey"], 
-        Resource="*",
-        Condition = {
-          StringEquals = {
-            "kms:ViaService": ["ssm.*.amazonaws.com"]
-          }
-        }
+      {
+        Sid      = "DestResultsWrite"
+        Effect   = "Allow"
+        Action   = ["s3:PutObject", "s3:PutObjectTagging", "s3:GetObject"]
+        Resource = ["${var.destination_bucket_arn}/*", "${var.results_bucket_arn}/*"]
+      },
+      {
+        Sid      = "DestResultsList"
+        Effect   = "Allow"
+        Action   = ["s3:ListBucket"]
+        Resource = [var.destination_bucket_arn, var.results_bucket_arn]
+      },
+      {
+        Sid      = "AlertsPublish"
+        Effect   = "Allow"
+        Action   = ["sns:Publish"]
+        Resource = var.alerts_topic_arn
+      },
+      {
+        # Recovered source calls only detect_pii_entities (NOT ContainsPiiEntities).
+        Sid      = "ComprehendPII"
+        Effect   = "Allow"
+        Action   = ["comprehend:DetectPiiEntities"]
+        Resource = "*" # Comprehend detect actions do not support resource-level scoping
       }
     ]
   })
 }
 
-resource "aws_iam_role_policy_attachment" "prompt_inline_attach" {
-  count      = var.create_prompt_role && var.attach_extra_prompt_policies ? 1 : 0
-  role       = aws_iam_role.prompt[0].name
-  policy_arn = aws_iam_policy.prompt_inline[0].arn
-}
-
-# Role for Bedrock Agent (maps CFN IAMRoleBedRockSecurityDataTransferRole)
-resource "aws_iam_role" "bedrock_agent" {
-  name = "BedRockSecurityDataTransferRole"
-  path = "/"
+# ── PromptHandler role ───────────────────────────────────────────────────────
+# Bedrock call path NOT_VERIFIED — no Bedrock permission granted by default.
+resource "aws_iam_role" "prompt" {
+  count = var.create_prompt_role ? 1 : 0
+  name  = var.prompt_role_name
+  path  = "/service-role/"
   assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [{ Effect="Allow", Principal={ Service="bedrock.amazonaws.com" }, Action="sts:AssumeRole" }]
+    Version   = "2012-10-17"
+    Statement = [{ Effect = "Allow", Principal = { Service = "lambda.amazonaws.com" }, Action = "sts:AssumeRole" }]
   })
   tags = var.tags
 }
 
-resource "aws_iam_policy" "bedrock_agent_allow_invoke_lambda" {
-  name  = "BedrockAgent_LambdaInvoke"
-  path  = "/"
+# PromptHandler least-privilege: own log group + bedrock:InvokeAgent on the
+# destination agent alias (RESOLVED via recovered source — invoke_agent, NOT
+# invoke_model, NOT AmazonBedrockFullAccess). Legacy SSM/CloudFront-signing
+# permissions are intentionally ABSENT (LEGACY_CLOUDFRONT_SIGNED_URL_FEATURE = DROP).
+resource "aws_iam_role_policy" "prompt" {
+  count = var.create_prompt_role ? 1 : 0
+  name  = "prompt-least-privilege"
+  role  = aws_iam_role.prompt[0].id
   policy = jsonencode({
     Version = "2012-10-17"
-    Statement = [{
-      Effect="Allow",
-      Action=["lambda:InvokeFunction"],
-      Resource=["arn:aws:lambda:*:*:function:SecurityDataTransferProcessor"]
-    }]
+    Statement = [
+      {
+        Sid      = "OwnLogs"
+        Effect   = "Allow"
+        Action   = ["logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"]
+        Resource = local.prompt_log_arn
+      },
+      {
+        Sid      = "BedrockInvokeAgent"
+        Effect   = "Allow"
+        Action   = ["bedrock:InvokeAgent"]
+        Resource = var.agent_alias_arn_wildcard
+      }
+    ]
   })
 }
 
-resource "aws_iam_role_policy_attachment" "bedrock_agent_attach_admins" {
-  role       = aws_iam_role.bedrock_agent.name
-  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess" # mirrors CFN (consider least privilege!)
+# ── Bedrock agent resource role ──────────────────────────────────────────────
+# The agent role needs to invoke the chosen model. It does NOT need
+# lambda:InvokeFunction for the action group: the action-group invocation is
+# authorized on the LAMBDA side via an aws_lambda_permission for the
+# bedrock.amazonaws.com principal (created in the application root). Model
+# access enablement is a separate later gate.
+resource "aws_iam_role" "bedrock_agent" {
+  count = var.create_bedrock_agent_role ? 1 : 0
+  name  = var.bedrock_agent_role_name
+  path  = "/service-role/"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect    = "Allow"
+      Principal = { Service = "bedrock.amazonaws.com" }
+      Action    = "sts:AssumeRole"
+      Condition = {
+        StringEquals = { "aws:SourceAccount" = var.account_id }
+      }
+    }]
+  })
+  tags = var.tags
 }
 
-resource "aws_iam_role_policy_attachment" "bedrock_agent_attach_invoke" {
-  role       = aws_iam_role.bedrock_agent.name
-  policy_arn = aws_iam_policy.bedrock_agent_allow_invoke_lambda.arn
+resource "aws_iam_role_policy" "bedrock_agent" {
+  count = var.create_bedrock_agent_role ? 1 : 0
+  name  = "bedrock-agent-invoke-model"
+  role  = aws_iam_role.bedrock_agent[0].id
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        # Cross-region inference profile: the agent invokes via the inference-
+        # profile ARN, which routes to the underlying foundation model in one of
+        # several regions. IAM must allow the profile ARN AND each regional
+        # foundation-model ARN it can route to.
+        Sid      = "InvokeModel"
+        Effect   = "Allow"
+        Action   = ["bedrock:InvokeModel"]
+        Resource = var.bedrock_model_arns
+      }
+    ]
+  })
 }

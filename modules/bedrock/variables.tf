@@ -1,22 +1,28 @@
-variable "agent_name"              { type = string }
-variable "description"             { type = string }
-variable "foundation_model"        { type = string }
+variable "agent_name" { type = string }
+variable "description" { type = string }
+variable "foundation_model" { type = string }
 variable "agent_resource_role_arn" { type = string }
-variable "instruction"             { type = string }
+variable "instruction" { type = string }
 
-variable "action_group_name"   { type = string }
+variable "action_group_name" { type = string }
 variable "action_group_lambda" { type = string }
-variable "openapi_payload"     { type = string } # can be big
+variable "openapi_payload" { type = string } # can be big
 
 variable "aliases" {
+  description = "Agent aliases. Only created when prepare_agent = true (a prepared version must exist)."
   type = list(object({
-    name    = string
-    version = string
+    name = string
   }))
   default = []
 }
 
-variable "tags" { 
+variable "prepare_agent" {
+  type        = bool
+  default     = false
+  description = "Prepare the agent and create aliases. Requires model access enabled in the account (later AWS gate)."
+}
+
+variable "tags" {
   type    = map(string)
   default = {}
 }
