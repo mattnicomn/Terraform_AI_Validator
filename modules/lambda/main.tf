@@ -26,15 +26,27 @@ resource "aws_lambda_function" "this" {
   # Required for Zip packages
   handler = var.package_type == "Zip" ? var.handler : null
   runtime = var.package_type == "Zip" ? var.runtime : null
-  
-  # Lifecycle to prevent recreation when code changes
+
+  dynamic "environment" {
+    for_each = length(var.environment_variables) > 0 ? [1] : []
+    content {
+      variables = var.environment_variables
+    }
+  }
+
+  # Lifecycle: prevent recreation when code changes; guard against deploying a
+  # Zip function without an authoritative S3 package (unresolved input).
   lifecycle {
     ignore_changes = [
       source_code_hash,
       last_modified
     ]
+    precondition {
+      condition     = var.package_type != "Zip" || (var.code_s3_bucket != null && var.code_s3_key != null)
+      error_message = "Zip Lambda requires code_s3_bucket and code_s3_key (unresolved deployment input). Supply an authoritative package before apply."
+    }
   }
 }
 
-output "function_arn"  { value = aws_lambda_function.this.arn }
+output "function_arn" { value = aws_lambda_function.this.arn }
 output "function_name" { value = aws_lambda_function.this.function_name }

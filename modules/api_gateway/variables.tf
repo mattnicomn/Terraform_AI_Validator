@@ -6,7 +6,7 @@ variable "routes" {
 List of routes to create. Each object:
 {
   method            = "GET" | "POST" | ...
-  path              = "/scan-file"
+  path              = "/BedrockPromptHandler"
   target_lambda_arn = "arn:aws:lambda:..."
 }
 EOT
@@ -18,34 +18,34 @@ EOT
 }
 
 # CORS
-variable "cors_allow_origins" { 
+variable "cors_allow_origins" {
   type    = list(string)
   default = ["*"]
 }
 
-variable "cors_allow_headers" { 
+variable "cors_allow_headers" {
   type    = list(string)
-  default = ["authorization","content-type"]
+  default = ["authorization", "content-type"]
 }
 
-variable "cors_allow_methods" { 
+variable "cors_allow_methods" {
   type    = list(string)
-  default = ["OPTIONS","GET","POST","PUT","PATCH","DELETE"]
+  default = ["OPTIONS", "GET", "POST", "PUT", "PATCH", "DELETE"]
 }
 
 # Stage
-variable "auto_deploy" { 
+variable "auto_deploy" {
   type    = bool
   default = true
 }
 
 # API flags/tags
-variable "disable_execute_api_endpoint" { 
+variable "disable_execute_api_endpoint" {
   type    = bool
   default = false
 }
 
-variable "tags" { 
+variable "tags" {
   type    = map(string)
   default = {}
 }
@@ -60,7 +60,7 @@ variable "jwt_authorizer" {
   default = null
 }
 
-# Which routes require JWT (match on 'METHOD /path', e.g., 'POST /scan-bucket')
+# Which routes require JWT (match on 'METHOD /path', e.g., 'POST /BedrockPromptHandler')
 variable "protected_routes" {
   type        = list(string)
   default     = []

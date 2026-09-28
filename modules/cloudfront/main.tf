@@ -52,8 +52,8 @@ resource "aws_cloudfront_distribution" "this" {
   default_cache_behavior {
     target_origin_id       = var.default_origin_id
     viewer_protocol_policy = "redirect-to-https"
-    allowed_methods        = ["GET","HEAD","OPTIONS","PUT","POST","PATCH","DELETE"]
-    cached_methods         = ["GET","HEAD","OPTIONS"]
+    allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
+    cached_methods         = ["GET", "HEAD", "OPTIONS"]
     compress               = true
 
     # Using managed policies
@@ -83,11 +83,11 @@ resource "aws_s3_bucket_policy" "allow_cf" {
     Version = "2008-10-17"
     Id      = "PolicyForCloudFrontPrivateContent"
     Statement = [{
-      Sid      = "AllowCloudFrontServicePrincipal"
-      Effect   = "Allow"
+      Sid       = "AllowCloudFrontServicePrincipal"
+      Effect    = "Allow"
       Principal = { Service = "cloudfront.amazonaws.com" }
-      Action   = "s3:GetObject"
-      Resource = "${var.s3_bucket_arn}/*"
+      Action    = "s3:GetObject"
+      Resource  = "${var.s3_bucket_arn}/*"
       Condition = {
         StringEquals = {
           "AWS:SourceArn" = var.distribution_arn

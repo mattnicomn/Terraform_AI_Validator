@@ -40,7 +40,7 @@ locals {
 resource "aws_s3_bucket" "frontend" {
   bucket        = var.bucket_name
   force_destroy = var.allow_destroy
-  
+
   tags = merge(local.common_tags, {
     Name = "US Mission Hero Frontend"
   })
@@ -215,11 +215,11 @@ output "assets_deployed" {
 
 output "deployment_info" {
   value = {
-    region      = data.aws_region.current.name
-    account_id  = data.aws_caller_identity.current.account_id
-    bucket      = aws_s3_bucket.frontend.id
-    cloudfront  = data.aws_cloudfront_distribution.existing.domain_name
-    managed_by  = "Terraform"
+    region     = data.aws_region.current.name
+    account_id = data.aws_caller_identity.current.account_id
+    bucket     = aws_s3_bucket.frontend.id
+    cloudfront = data.aws_cloudfront_distribution.existing.domain_name
+    managed_by = "Terraform"
   }
   description = "Deployment information"
 }

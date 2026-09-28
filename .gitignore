@@ -170,3 +170,21 @@ desktop.ini
 # NOTE: do NOT use broad assets/*.pdf — tracked resume PDFs are intentional project assets.
 /assets/The_AI_Data_Validator.mp4
 /assets/Terraform_AI_Validator.pdf
+
+##############################
+# Frontend (products/ai/frontend) — Phase 5B scaffold
+##############################
+# Local env files with real (non-secret) deployment values must NOT be committed.
+frontend/.env
+frontend/.env.local
+frontend/.env.*.local
+# Build + dependency artifacts (also covered by global rules; explicit for clarity).
+frontend/node_modules/
+frontend/dist/
+
+# Keep the scaffold's tracked files (guard against broader ignore rules above).
+!frontend/package.json
+!frontend/package-lock.json
+!frontend/.env.example
+!frontend/src/
+!frontend/src/**

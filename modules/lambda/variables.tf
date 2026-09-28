@@ -1,65 +1,71 @@
-variable "function_name" { 
-    type = string 
+variable "function_name" {
+  type = string
 }
-variable "role_arn" { 
-    type = string 
+variable "role_arn" {
+  type = string
 }
-variable "runtime" { 
-    type = string 
+variable "runtime" {
+  type = string
 }
-variable "handler" { 
-    type = string 
+variable "handler" {
+  type = string
 }
-variable "timeout" { 
-    type = number 
-    default = 60 
+variable "timeout" {
+  type    = number
+  default = 60
 }
-variable "memory_size" { 
-    type = number 
-    default = 256 
+variable "memory_size" {
+  type    = number
+  default = 256
 }
 variable "architectures" {
-    type = list(string) 
-    default = ["x86_64"] 
+  type    = list(string)
+  default = ["x86_64"]
 }
-variable "log_group_name" { 
-    type = string 
+variable "log_group_name" {
+  type = string
 }
-variable "package_type" { 
-    type = string 
-    default = "Zip" 
-} 
+variable "package_type" {
+  type    = string
+  default = "Zip"
+}
 # or "Image"
 
-variable "image_uri" { 
-    type = string 
-    default = null 
+variable "image_uri" {
+  type    = string
+  default = null
 }
 
-variable "code_s3_bucket" { 
-    type = string 
-    default = null 
+variable "code_s3_bucket" {
+  type    = string
+  default = null
 }
-variable "code_s3_key" { 
-    type = string 
-    default = null 
+variable "code_s3_key" {
+  type    = string
+  default = null
 }
-variable "code_s3_version" { 
-    type = string 
-    default = null 
+variable "code_s3_version" {
+  type    = string
+  default = null
 }
-variable "code_kms_key_arn" { 
-    type = string 
-    default = null
+variable "code_kms_key_arn" {
+  type    = string
+  default = null
 }
 
-variable "tags" { 
-    type = map(string) 
-    default = {} 
+variable "tags" {
+  type    = map(string)
+  default = {}
 }
 
 variable "log_group_kms_key_id" {
   type        = string
   default     = null
   description = "KMS key ID for encrypting CloudWatch Logs"
+}
+
+variable "environment_variables" {
+  type        = map(string)
+  default     = {}
+  description = "Environment variables for the Lambda function (destination-specific runtime config)."
 }

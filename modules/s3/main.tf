@@ -56,9 +56,10 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
 
   bucket = each.value.id
   rule {
+    # Initial destination architecture uses SSE-S3 (AES256) + bucket keys.
+    # (KMS on data buckets is a documented future enhancement, not silently added.)
     apply_server_side_encryption_by_default {
-      sse_algorithm     = lookup(var.buckets[each.key], "kms_key_id", null) != null ? "aws:kms" : "AES256"
-      kms_master_key_id = lookup(var.buckets[each.key], "kms_key_id", null)
+      sse_algorithm = "AES256"
     }
     bucket_key_enabled = true
   }
@@ -93,9 +94,9 @@ data "aws_iam_policy_document" "source_read" {
   }
 
   statement {
-    sid     = "AllowSourceReadFromPrincipals"
-    effect  = "Allow"
-    actions = ["s3:GetObject"]
+    sid       = "AllowSourceReadFromPrincipals"
+    effect    = "Allow"
+    actions   = ["s3:GetObject"]
     resources = ["arn:aws:s3:::${var.buckets[var.source_key].name}/*"]
 
     principals {
@@ -121,9 +122,9 @@ data "aws_iam_policy_document" "dest_write" {
   }
 
   statement {
-    sid     = "AllowDestWriteFromPrincipals"
-    effect  = "Allow"
-    actions = ["s3:PutObject", "s3:PutObjectTagging"]
+    sid       = "AllowDestWriteFromPrincipals"
+    effect    = "Allow"
+    actions   = ["s3:PutObject", "s3:PutObjectTagging"]
     resources = ["arn:aws:s3:::${var.buckets[var.destination_key].name}/*"]
 
     principals {
@@ -149,9 +150,9 @@ data "aws_iam_policy_document" "results_write" {
   }
 
   statement {
-    sid     = "AllowResultsWriteFromPrincipals"
-    effect  = "Allow"
-    actions = ["s3:PutObject", "s3:PutObjectTagging"]
+    sid       = "AllowResultsWriteFromPrincipals"
+    effect    = "Allow"
+    actions   = ["s3:PutObject", "s3:PutObjectTagging"]
     resources = ["arn:aws:s3:::${var.buckets[var.results_key].name}/*"]
 
     principals {

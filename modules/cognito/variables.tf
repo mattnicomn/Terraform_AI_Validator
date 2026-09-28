@@ -19,23 +19,29 @@ variable "domain_prefix" {
 }
 
 variable "callback_urls" {
-  description = "Allowed callback URLs"
+  description = "Allowed callback URLs (dedicated application origin)"
   type        = list(string)
 }
 
 variable "logout_urls" {
-  description = "Allowed sign-out URLs"
+  description = "Allowed sign-out URLs (dedicated application origin)"
   type        = list(string)
   default     = []
 }
 
-variable "s3_access_iam_role_arn" {
-  description = "IAM Role ARN mapped to S3accessUser group"
-  type        = string
+variable "oauth_scopes" {
+  description = "Allowed OAuth scopes for the app client."
+  type        = list(string)
+  default     = ["openid", "email", "profile"]
 }
 
-variable "user_email" {
-  description = "Seed user email (optional if you manage users outside Terraform)"
+variable "mfa_configuration" {
+  description = "MFA mode: OFF | OPTIONAL | ON. Design supports MFA; default OPTIONAL."
   type        = string
-  default     = ""
+  default     = "OPTIONAL"
 }
+
+# NOTE: legacy inputs removed in the account-102 refactor:
+#   - s3_access_iam_role_arn  (source-account 253 coupling: role/S3AmazonAccess)
+#   - user_email              (seed user; users re-established separately)
+# These are intentionally NOT present.

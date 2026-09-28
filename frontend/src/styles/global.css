@@ -1,0 +1,334 @@
+/* =============================================================================
+   USMISSIONHERO AI Validator — lightweight styling foundation (V1 scaffold)
+   Desktop-first, responsive, accessible. No UI framework. No portfolio assets.
+   ============================================================================= */
+
+:root {
+  --bg: #0e1622;
+  --bg-elev: #16202e;
+  --panel: #1b2736;
+  --border: #2b3a4d;
+  --text: #e8eef5;
+  --text-muted: #9fb0c3;
+  --accent: #3d7dff;
+  --accent-contrast: #ffffff;
+  --danger: #ff6b6b;
+  --danger-bg: #3a1f24;
+  --radius: 10px;
+  --maxw: 960px;
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--accent);
+}
+
+/* Accessible focus states */
+a:focus-visible,
+button:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--accent);
+  color: var(--accent-contrast);
+  padding: 0.5rem 0.75rem;
+  border-radius: 0 0 var(--radius) 0;
+  z-index: 100;
+}
+.skip-link:focus {
+  left: 0;
+}
+
+.app-root {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---- AppBar --------------------------------------------------------------- */
+.appbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 1.25rem;
+  background: var(--bg-elev);
+  border-bottom: 1px solid var(--border);
+}
+.appbar__brandlink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+  color: var(--text);
+}
+.appbar__mark {
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  font-size: 0.8rem;
+  background: var(--accent);
+  color: var(--accent-contrast);
+  padding: 0.25rem 0.4rem;
+  border-radius: 6px;
+}
+.appbar__title {
+  font-weight: 650;
+}
+.appbar__nav {
+  display: flex;
+  gap: 1rem;
+}
+.appbar__navlink {
+  text-decoration: none;
+  color: var(--text-muted);
+  padding: 0.35rem 0.5rem;
+  border-radius: 6px;
+}
+.appbar__navlink:hover {
+  color: var(--text);
+}
+.appbar__identity {
+  color: var(--text);
+  font-weight: 600;
+  padding: 0.35rem 0.5rem;
+  max-width: 22ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.appbar__signout {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font: inherit;
+  cursor: pointer;
+}
+.appbar__signout:hover {
+  color: var(--text);
+}
+
+/* ---- Account list --------------------------------------------------------- */
+.account__list {
+  margin: 0 0 1.25rem;
+}
+.account__term {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+}
+.account__def {
+  margin: 0 0 0.5rem;
+  word-break: break-word;
+}
+
+/* ---- Layout containers ---------------------------------------------------- */
+.page,
+.landing,
+.workspace {
+  width: 100%;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 2rem 1.25rem;
+  flex: 1;
+}
+
+/* ---- Landing -------------------------------------------------------------- */
+.landing__eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin: 0 0 0.5rem;
+}
+.landing__title {
+  font-size: 2.5rem;
+  margin: 0 0 1rem;
+}
+.landing__lede {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  max-width: 60ch;
+}
+.landing__actions {
+  margin-top: 1.5rem;
+}
+.landing__note {
+  margin-top: 0.9rem;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+/* ---- Buttons -------------------------------------------------------------- */
+.btn {
+  font: inherit;
+  cursor: pointer;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  padding: 0.6rem 1.1rem;
+  font-weight: 600;
+}
+.btn--primary {
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+.btn--primary:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ---- Workspace ------------------------------------------------------------ */
+.workspace__title {
+  margin: 0 0 0.35rem;
+}
+.workspace__subtitle {
+  margin: 0 0 1.5rem;
+  color: var(--text-muted);
+}
+.workspace__grid {
+  display: grid;
+  gap: 1.25rem;
+}
+
+/* ---- Composer ------------------------------------------------------------- */
+.composer {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+}
+.composer__label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.composer__textarea {
+  width: 100%;
+  resize: vertical;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.75rem;
+  font: inherit;
+}
+.composer__actions {
+  margin-top: 0.85rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ---- Response panel ------------------------------------------------------- */
+.response-panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  min-height: 8rem;
+}
+.response-panel--empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.response-panel__empty,
+.response-panel__loading {
+  color: var(--text-muted);
+  margin: 0;
+}
+.response-panel__text {
+  margin: 0;
+  white-space: pre-wrap; /* preserve formatting without interpreting markup */
+  word-break: break-word;
+}
+.response-panel__turn + .response-panel__turn {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+.response-panel__role {
+  margin: 0 0 0.25rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+/* ---- State panels (auth pending / placeholders) --------------------------- */
+.state-panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  max-width: 60ch;
+}
+.state-panel__title {
+  margin: 0 0 0.5rem;
+}
+.state-panel__text {
+  margin: 0 0 0.75rem;
+  color: var(--text-muted);
+}
+.state-panel__hint {
+  margin: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* ---- Error banner --------------------------------------------------------- */
+.error-banner {
+  background: var(--danger-bg);
+  border: 1px solid var(--danger);
+  color: var(--text);
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
+  margin-bottom: 1.25rem;
+}
+
+/* ---- Responsive ----------------------------------------------------------- */
+@media (min-width: 800px) {
+  .workspace__grid {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+}
+
+@media (max-width: 520px) {
+  .appbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  .landing__title {
+    font-size: 2rem;
+  }
+}

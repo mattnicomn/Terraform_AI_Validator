@@ -34,7 +34,7 @@ data "aws_iam_policy_document" "inline" {
   statement {
     sid     = "Logs"
     effect  = "Allow"
-    actions = ["logs:CreateLogGroup","logs:CreateLogStream","logs:PutLogEvents"]
+    actions = ["logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"]
     resources = [
       "arn:aws:logs:*:*:*"
     ]
@@ -52,7 +52,7 @@ data "aws_iam_policy_document" "inline" {
   statement {
     sid     = "S3WriteResultsAndDest"
     effect  = "Allow"
-    actions = ["s3:PutObject","s3:PutObjectTagging","s3:GetObjectTagging"]
+    actions = ["s3:PutObject", "s3:PutObjectTagging", "s3:GetObjectTagging"]
     resources = [
       "arn:aws:s3:::${var.destination_bucket}/*",
       "arn:aws:s3:::${var.results_bucket}/*"
@@ -60,9 +60,9 @@ data "aws_iam_policy_document" "inline" {
   }
 
   statement {
-    sid     = "ComprehendDetectPII"
-    effect  = "Allow"
-    actions = ["comprehend:DetectPiiEntities"]
+    sid       = "ComprehendDetectPII"
+    effect    = "Allow"
+    actions   = ["comprehend:DetectPiiEntities"]
     resources = ["*"]
   }
 }
@@ -93,10 +93,10 @@ resource "aws_lambda_function" "this" {
 
   environment {
     variables = merge({
-      SNS_TOPIC_ARN      = var.sns_topic_arn
-      SOURCE_BUCKETS     = var.source_bucket
-      DESTINATION_BUCKETS= var.destination_bucket
-      RESULTS_BUCKET     = var.results_bucket
+      SNS_TOPIC_ARN       = var.sns_topic_arn
+      SOURCE_BUCKETS      = var.source_bucket
+      DESTINATION_BUCKETS = var.destination_bucket
+      RESULTS_BUCKET      = var.results_bucket
     }, var.extra_env)
   }
 
