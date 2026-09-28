@@ -28,10 +28,16 @@ provider "aws" {
 data "aws_caller_identity" "current" {}
 
 locals {
-  state_bucket = "ai-validator-tfstate-${data.aws_caller_identity.current.account_id}"
+  state_bucket    = "ai-validator-tfstate-${data.aws_caller_identity.current.account_id}"
+  artifact_bucket = "ai-validator-artifacts-${data.aws_caller_identity.current.account_id}"
   tags = {
     Project   = "ai-validator"
     Purpose   = "terraform-remote-state"
+    ManagedBy = "Terraform_AI_Validator/bootstrap"
+  }
+  artifact_tags = {
+    Project   = "ai-validator"
+    Purpose   = "lambda-deployment-artifacts"
     ManagedBy = "Terraform_AI_Validator/bootstrap"
   }
 }
@@ -70,6 +76,50 @@ resource "aws_s3_bucket_public_access_block" "tfstate" {
   restrict_public_buckets = true
 }
 
+# =============================================================================
+# Lambda deployment-artifact bucket. Durable bootstrap infrastructure that
+# holds the deterministic Lambda ZIPs consumed by ../infra/application via its
+# processor_s3_bucket/key and prompt_s3_bucket/key inputs. Created here (not in
+# the application root) so it exists BEFORE the application Lambda precondition
+# needs its values, and so the application root has no self-referential
+# "bucket that must exist before my own plan" dependency.
+# Object upload is a separate publication step (Terraform manages the bucket,
+# not the artifact objects). Account-agnostic: name derives from the caller.
+# =============================================================================
+resource "aws_s3_bucket" "artifacts" {
+  bucket = local.artifact_bucket
+  tags   = local.artifact_tags
+
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+
+resource "aws_s3_bucket_versioning" "artifacts" {
+  bucket = aws_s3_bucket.artifacts.id
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "artifacts" {
+  bucket = aws_s3_bucket.artifacts.id
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
+    }
+    bucket_key_enabled = true
+  }
+}
+
+resource "aws_s3_bucket_public_access_block" "artifacts" {
+  bucket                  = aws_s3_bucket.artifacts.id
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
 variable "region" {
   type    = string
   default = "us-east-1"
@@ -77,6 +127,11 @@ variable "region" {
 
 output "state_bucket" {
   value = aws_s3_bucket.tfstate.id
+}
+
+output "artifact_bucket_name" {
+  description = "Lambda deployment-artifact bucket. Supply to the application layer's processor_s3_bucket / prompt_s3_bucket at deploy time (with explicit object keys)."
+  value       = aws_s3_bucket.artifacts.id
 }
 
 output "backend_config_hint" {
