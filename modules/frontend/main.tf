@@ -75,6 +75,7 @@ resource "aws_route53_record" "cert_validation" {
 }
 
 resource "aws_acm_certificate_validation" "frontend" {
+  count                   = var.enable_frontend_delivery ? 1 : 0
   provider                = aws.us_east_1
   certificate_arn         = aws_acm_certificate.frontend.arn
   validation_record_fqdns = [for r in aws_route53_record.cert_validation : r.fqdn]
@@ -88,8 +89,9 @@ resource "aws_cloudfront_origin_access_control" "frontend" {
   signing_protocol                  = "sigv4"
 }
 
-# ── CloudFront distribution (NEW; no historical IDs) ─────────────────────────
+# ── CloudFront distribution (NEW; no historical IDs) — Stage 2 ───────────────
 resource "aws_cloudfront_distribution" "frontend" {
+  count               = var.enable_frontend_delivery ? 1 : 0
   enabled             = true
   is_ipv6_enabled     = true
   default_root_object = var.default_root_object
@@ -131,14 +133,18 @@ resource "aws_cloudfront_distribution" "frontend" {
   }
 
   viewer_certificate {
-    acm_certificate_arn      = aws_acm_certificate_validation.frontend.certificate_arn
+    acm_certificate_arn      = aws_acm_certificate_validation.frontend[0].certificate_arn
     ssl_support_method       = "sni-only"
     minimum_protocol_version = "TLSv1.2_2021"
   }
 }
 
-# ── Bucket policy: allow only this CloudFront distribution via OAC ───────────
+# ── Bucket policy: allow only this CloudFront distribution via OAC — Stage 2 ─
+# Gated with the same stage flag because it references the CloudFront
+# distribution ARN. During Stage 1 no bucket policy is attached; the bucket
+# stays private via Block Public Access + BucketOwnerEnforced (no public access).
 data "aws_iam_policy_document" "frontend" {
+  count = var.enable_frontend_delivery ? 1 : 0
   statement {
     sid       = "AllowCloudFrontOACRead"
     effect    = "Allow"
@@ -151,7 +157,7 @@ data "aws_iam_policy_document" "frontend" {
     condition {
       test     = "StringEquals"
       variable = "AWS:SourceArn"
-      values   = [aws_cloudfront_distribution.frontend.arn]
+      values   = [aws_cloudfront_distribution.frontend[0].arn]
     }
   }
   statement {
@@ -172,19 +178,21 @@ data "aws_iam_policy_document" "frontend" {
 }
 
 resource "aws_s3_bucket_policy" "frontend" {
+  count  = var.enable_frontend_delivery ? 1 : 0
   bucket = aws_s3_bucket.frontend.id
-  policy = data.aws_iam_policy_document.frontend.json
+  policy = data.aws_iam_policy_document.frontend[0].json
 }
 
-# ── Alias record for the application domain (in the DELEGATED zone) ──────────
+# ── Alias record for the application domain (in the DELEGATED zone) — Stage 2 ─
 resource "aws_route53_record" "app_alias" {
+  count   = var.enable_frontend_delivery ? 1 : 0
   zone_id = var.hosted_zone_id
   name    = var.application_domain
   type    = "A"
 
   alias {
-    name                   = aws_cloudfront_distribution.frontend.domain_name
-    zone_id                = aws_cloudfront_distribution.frontend.hosted_zone_id
+    name                   = aws_cloudfront_distribution.frontend[0].domain_name
+    zone_id                = aws_cloudfront_distribution.frontend[0].hosted_zone_id
     evaluate_target_health = false
   }
 }

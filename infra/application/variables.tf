@@ -158,3 +158,23 @@ variable "prompt_s3_key" {
   type        = string
   default     = null
 }
+
+# ── Frontend delivery staging gate ───────────────────────────────────────────
+# Progression gate (false -> true), NOT a casual operational toggle.
+#   false = Stage 1: create all core infra + child DNS zone + frontend origin
+#           bucket + OAC + ACM certificate + ACM DNS validation record, but NOT
+#           the ACM validation wait, CloudFront distribution, frontend bucket
+#           policy, or application alias. A default apply MUST NOT block waiting
+#           on external parent-zone NS delegation, so the default is false.
+#   true  = Stage 2: enable ACM validation + CloudFront + bucket policy + alias.
+#           Set true ONLY AFTER the parent usmissionhero.com zone (account 253,
+#           website_infrastructure) publishes the NS delegation for the child
+#           ai.usmissionhero.com zone and it resolves publicly.
+# WARNING: switching back to false AFTER Stage 2 will PLAN DESTRUCTION of the
+# delivery resources (CloudFront distribution, ACM validation, bucket policy,
+# alias). Treat as a one-way progression gate.
+variable "enable_frontend_delivery" {
+  description = "Stage gate for frontend delivery. false = Stage 1 (no CloudFront/ACM-validation/alias/bucket-policy); true = Stage 2 (enable them) only after parent NS delegation is live. Progression gate false->true; reverting after Stage 2 plans destruction."
+  type        = bool
+  default     = false
+}
