@@ -106,23 +106,29 @@ touching all 9 modules at once).
 # Phase 2B — module contract alignment + least-privilege IAM (completed, edits only)
 
 ## PromptHandler Bedrock call path
-- **PROMPT_HANDLER_BEDROCK_CALL_PATH = NOT_VERIFIED.** No authoritative Python
-  source for either Lambda exists anywhere in the AI repo (grep for
-  `def lambda_handler|invoke_agent|invoke_model|InvokeAgent|InvokeModel` = 0 hits).
-  Therefore the PromptHandler role is granted **NO Bedrock permission** by default.
-  Two mutually-exclusive toggles (`prompt_bedrock_invoke_model`,
-  `prompt_bedrock_invoke_agent`, both default false) are wired but OFF until the
-  code path is confirmed at a later gate. We did NOT translate "uses Bedrock"
-  into `bedrock:InvokeModel`.
+- Historical (early Phase 2B) status was `PROMPT_HANDLER_BEDROCK_CALL_PATH =
+  NOT_VERIFIED`: at that point no authoritative Lambda source had been recovered,
+  so the PromptHandler role was left with no Bedrock permission and gated toggles.
+- **RESOLVED (superseded).** The authoritative source was subsequently recovered
+  and reconstructed at `src/prompt_handler/lambda_function.py`. It calls
+  `bedrock-agent-runtime` `invoke_agent` (NOT `invoke_model`). The reconciled
+  implementation therefore grants the PromptHandler role **`bedrock:InvokeAgent`**
+  (see `modules/iam/main.tf`, `aws_iam_role_policy.prompt`), scoped to this
+  account/region's agent-alias resources
+  (`arn:aws:bedrock:<region>:<account>:agent-alias/*`). There are no
+  `prompt_bedrock_invoke_model` / `prompt_bedrock_invoke_agent` toggles in the
+  shipped module; the permission is granted directly. `bedrock:InvokeModel` is
+  NOT granted to the PromptHandler role.
 
 ## IAM module — rewritten to least-privilege
 - No AdministratorAccess / *FullAccess / wildcard-account ARNs remain.
 - Processor role: own-log-group logs; s3 Get/GetTagging + ListBucket on source;
   PutObject/PutObjectTagging/GetObject + ListBucket on destination/results
-  (bucket ARNs only); sns:Publish on the alerts topic; comprehend
-  Detect/ContainsPiiEntities (Resource `*` — these actions do not support
-  resource scoping).
-- Prompt role: own-log-group logs only; Bedrock permission gated OFF (see above).
+  (bucket ARNs only); sns:Publish on the alerts topic; `comprehend:DetectPiiEntities`
+  only (Resource `*` — this action does not support resource scoping).
+- Prompt role: own-log-group logs + `bedrock:InvokeAgent` scoped to the
+  account/region agent-alias resources (reconciled implementation; supersedes the
+  earlier "gated OFF" note above).
 - Bedrock agent role: `bedrock:InvokeModel` on the parameterized model ARN only,
   with an `aws:SourceAccount` trust condition. It does **NOT** get
   `lambda:InvokeFunction`: the action-group invocation is authorized on the
