@@ -183,10 +183,30 @@ class PromptHandlerTests(unittest.TestCase):
     def _event(self, body):
         return {"requestContext": {"http": {"method": "POST"}}, "body": json.dumps(body)}
 
+    # The handler loads instruction.txt from its own directory (packaged into
+    # the ZIP by the build system). In-tree that file does not exist, so tests
+    # write a valid one for normal cases and control it for fail-closed cases.
+    _INSTR_PATH = os.path.join(SRC, "prompt_handler", "instruction.txt")
+
+    def _write_instruction(self, text):
+        with open(self._INSTR_PATH, "w", encoding="utf-8") as fh:
+            fh.write(text)
+
+    def _remove_instruction(self):
+        try:
+            os.remove(self._INSTR_PATH)
+        except OSError:
+            pass
+
     def setUp(self):
         os.environ["BEDROCK_INFERENCE_PROFILE_ID"] = "us.anthropic.claude-haiku-4-5-20251001-v1:0"
         os.environ["PROCESSOR_FUNCTION_NAME"] = "SecurityDataTransferProcessor"
         os.environ["ALLOWED_ORIGIN"] = "https://ai.usmissionhero.com"
+        # Default: a valid reviewed instruction is present for normal-path tests.
+        self._write_instruction("You are the AI Validator test system instruction.")
+
+    def tearDown(self):
+        self._remove_instruction()
 
     def test_normal_response_without_tool_use(self):
         mod = self._load([_text_response("Hello, I can help validate transfers.")])
@@ -368,6 +388,111 @@ class PromptHandlerTests(unittest.TestCase):
         ev = {"requestContext": {"http": {"method": "POST"}}, "body": "{not json"}
         resp = mod.lambda_handler(ev, None)
         self.assertEqual(resp["statusCode"], 400)
+
+    # ---- Fail-closed system instruction --------------------------------------
+    def test_missing_instruction_fails_closed(self):
+        self._remove_instruction()
+        mod = self._load([_text_response("should not be produced")])
+        resp = mod.lambda_handler(self._event({"prompt": "hi"}), None)
+        self.assertEqual(resp["statusCode"], 500)
+        self.assertEqual(len(self.bedrock.calls), 0)  # Converse never called
+        self.assertEqual(len(self.lam.calls), 0)      # Processor never called
+        # No path/traceback/AWS internals leaked.
+        self.assertNotIn("instruction.txt", resp["body"])
+
+    def test_empty_instruction_fails_closed(self):
+        self._write_instruction("")
+        mod = self._load([_text_response("should not be produced")])
+        resp = mod.lambda_handler(self._event({"prompt": "hi"}), None)
+        self.assertEqual(resp["statusCode"], 500)
+        self.assertEqual(len(self.bedrock.calls), 0)
+        self.assertEqual(len(self.lam.calls), 0)
+
+    def test_whitespace_instruction_fails_closed(self):
+        self._write_instruction("   \n\t  \n")
+        mod = self._load([_text_response("should not be produced")])
+        resp = mod.lambda_handler(self._event({"prompt": "hi"}), None)
+        self.assertEqual(resp["statusCode"], 500)
+        self.assertEqual(len(self.bedrock.calls), 0)
+        self.assertEqual(len(self.lam.calls), 0)
+
+    def test_valid_instruction_continues_normally(self):
+        self._write_instruction("Valid reviewed instruction.")
+        mod = self._load([_text_response("ok")])
+        resp = mod.lambda_handler(self._event({"prompt": "hi"}), None)
+        self.assertEqual(resp["statusCode"], 200)
+        self.assertEqual(len(self.bedrock.calls), 1)
+
+    # ---- Total tool-invocation ceiling ---------------------------------------
+    def test_max_tool_invocations_value(self):
+        mod = self._load([_text_response("x")])
+        self.assertEqual(mod.MAX_TOOL_INVOCATIONS, 5)
+
+    def test_five_invocations_succeed(self):
+        # Five sequential single-tool rounds then a final text response.
+        lam = FakeLambda(payload={"scanId": "S"})
+        responses = [_tooluse_response("scanFile", {"bucketName": "b", "objectKey": f"k{i}"}, f"tu-{i}")
+                     for i in range(5)]
+        responses.append(_text_response("Five scans done."))
+        mod = self._load(responses, lambda_fake=lam)
+        resp = mod.lambda_handler(self._event({"prompt": "scan five"}), None)
+        self.assertEqual(resp["statusCode"], 200)
+        self.assertEqual(len(lam.calls), 5)
+
+    def test_sixth_invocation_blocked_multi_round(self):
+        # Six single-tool rounds requested; the sixth must never reach Processor.
+        lam = FakeLambda(payload={"scanId": "S"})
+        responses = [_tooluse_response("scanFile", {"bucketName": "b", "objectKey": f"k{i}"}, f"tu-{i}")
+                     for i in range(6)]
+        responses.append(_text_response("unused"))
+        mod = self._load(responses, lambda_fake=lam)
+        resp = mod.lambda_handler(self._event({"prompt": "scan six"}), None)
+        self.assertEqual(resp["statusCode"], 502)
+        self.assertLessEqual(len(lam.calls), 5)
+
+    def test_single_response_many_tooluse_cannot_exceed_bound(self):
+        # One Converse response with 8 toolUse blocks -> rejected before any
+        # Processor call (would exceed the 5 budget in a single cycle).
+        lam = FakeLambda(payload={"scanId": "S"})
+        content = [{"toolUse": {"toolUseId": f"tu-{i}", "name": "scanFile",
+                                "input": {"bucketName": "b", "objectKey": f"k{i}"}}} for i in range(8)]
+        many = {"stopReason": "tool_use", "output": {"message": {"role": "assistant", "content": content}}}
+        mod = self._load([many, _text_response("unused")], lambda_fake=lam)
+        resp = mod.lambda_handler(self._event({"prompt": "many"}), None)
+        self.assertEqual(resp["statusCode"], 502)
+        self.assertEqual(len(lam.calls), 0)  # rejected before executing any excess call
+
+    def test_tooluseid_association_preserved(self):
+        # Two tools in one response; both within budget; toolResults carry the
+        # matching toolUseIds back to the model.
+        lam = FakeLambda(payload={"scanId": "S"})
+        content = [
+            {"toolUse": {"toolUseId": "tu-A", "name": "scanFile", "input": {"bucketName": "b", "objectKey": "a"}}},
+            {"toolUse": {"toolUseId": "tu-B", "name": "scanFile", "input": {"bucketName": "b", "objectKey": "b"}}},
+        ]
+        two = {"stopReason": "tool_use", "output": {"message": {"role": "assistant", "content": content}}}
+        captured = {}
+
+        class _CapBedrock(FakeBedrockRuntime):
+            def converse(self, **kwargs):
+                # Capture the toolResult ids submitted on the 2nd call.
+                for m in kwargs.get("messages", []):
+                    for block in m.get("content", []):
+                        if isinstance(block, dict) and "toolResult" in block:
+                            captured[block["toolResult"]["toolUseId"]] = True
+                return super().converse(**kwargs)
+
+        self.bedrock = _CapBedrock([two, _text_response("done")])
+        self.lam = lam
+
+        def factory(service):
+            return self.bedrock if service == "bedrock-runtime" else self.lam
+
+        mod = _load_module("prompt_handler", "ph_mod", factory)
+        resp = mod.lambda_handler(self._event({"prompt": "two"}), None)
+        self.assertEqual(resp["statusCode"], 200)
+        self.assertIn("tu-A", captured)
+        self.assertIn("tu-B", captured)
 
 
 # ---- Processor tests (unchanged contract) -----------------------------------

@@ -61,8 +61,14 @@ _CORS_HEADERS = {
 }
 
 # Maximum number of model<->tool round trips per request. Conservative bound to
-# prevent unbounded model/tool recursion; each round may run one tool.
+# prevent unbounded model/tool recursion.
 MAX_TOOL_ROUNDS = 5
+
+# Hard ceiling on the TOTAL number of Processor Lambda invocations per incoming
+# API request. This is independent of MAX_TOOL_ROUNDS and of the number of
+# toolUse blocks the model returns in a single Converse response. The sixth
+# Processor invocation must never execute.
+MAX_TOOL_INVOCATIONS = 5
 
 # Explicit, immutable allowlist: model tool name -> Processor "operation".
 # The model can ONLY ever cause these four Processor operations to run. Any
@@ -91,26 +97,25 @@ def _require_env(name):
 
 
 def _load_system_instruction():
-    """Load the system instruction packaged alongside this handler.
+    """Load the reviewed system instruction packaged alongside this handler.
 
-    The build system places instruction.txt at the ZIP root. If it is absent
-    (e.g. a partial local run), fall back to a minimal safe instruction rather
-    than failing the request.
+    The build system places instruction.txt at the ZIP root. The reviewed
+    instruction is part of the AI Validator's security/behavior contract, so
+    this FAILS CLOSED: if instruction.txt is missing, unreadable, empty, or
+    whitespace-only, raise ConfigurationError (no generic fallback). The caller
+    surfaces this as a generic 500 without leaking the path/exception, and
+    Converse is never invoked without the reviewed instruction.
     """
     here = os.path.dirname(os.path.abspath(__file__))
     path = os.path.join(here, "instruction.txt")
     try:
         with open(path, "r", encoding="utf-8") as handle:
             text = handle.read().strip()
-            if text:
-                return text
-    except OSError:
-        pass
-    return (
-        "You are the USMISSIONHERO AI Validator assistant. Help users validate "
-        "and scan S3 data transfers for FedRAMP/PII/PHI concerns using the "
-        "available tools. Be concise and professional."
-    )
+    except OSError as exc:
+        raise ConfigurationError("system instruction is not available") from exc
+    if not text:
+        raise ConfigurationError("system instruction is empty")
+    return text
 
 
 def _tool_config():
@@ -296,11 +301,23 @@ def _extract_text(message):
 
 
 def run_converse(prompt, model_id):
-    """Drive a bounded Converse tool-use loop and return the final text."""
+    """Drive a bounded Converse tool-use loop and return the final text.
+
+    Two independent hard bounds protect against runaway tool use:
+      - MAX_TOOL_ROUNDS caps the number of Converse round trips.
+      - MAX_TOOL_INVOCATIONS caps the TOTAL number of Processor invocations for
+        this request, regardless of how many toolUse blocks a single response
+        contains. Fail-closed: if honoring a response would require exceeding
+        the remaining invocation budget, the tool-dispatch cycle is rejected
+        BEFORE any excess Processor call runs (the sixth call never executes).
+    """
     client = boto3.client("bedrock-runtime")
+    # Fail closed on the reviewed instruction before any model call.
     system = [{"text": _load_system_instruction()}]
     tool_config = _tool_config()
     messages = [{"role": "user", "content": [{"text": prompt}]}]
+
+    invocations_used = 0
 
     for _ in range(MAX_TOOL_ROUNDS + 1):
         response = client.converse(
@@ -317,9 +334,18 @@ def run_converse(prompt, model_id):
             text = _extract_text(output_message)
             return text or "No response generated."
 
-        # Model requested one or more tools; run each against the allowlist.
+        tool_uses = _extract_tool_uses(output_message)
+
+        # Count only tool uses that would actually invoke the Processor (i.e.
+        # allowlisted tools). Unknown tools never call the Processor.
+        would_invoke = sum(1 for tu in tool_uses if _TOOL_TO_OPERATION.get(tu.get("name")) is not None)
+        if invocations_used + would_invoke > MAX_TOOL_INVOCATIONS:
+            # Reject the whole cycle before executing any excess call. This
+            # guarantees Processor calls/request <= MAX_TOOL_INVOCATIONS.
+            raise ToolDispatchError("total tool-invocation budget exceeded")
+
         tool_results = []
-        for tool_use in _extract_tool_uses(output_message):
+        for tool_use in tool_uses:
             tool_name = tool_use.get("name")
             tool_use_id = tool_use.get("toolUseId")
             operation = _TOOL_TO_OPERATION.get(tool_name)
@@ -333,6 +359,10 @@ def run_converse(prompt, model_id):
                     }
                 })
                 continue
+            # Defensive: never exceed the ceiling even if counting logic drifts.
+            if invocations_used >= MAX_TOOL_INVOCATIONS:
+                raise ToolDispatchError("total tool-invocation budget exceeded")
+            invocations_used += 1
             try:
                 result = _invoke_processor(operation, tool_use.get("input") or {})
                 tool_results.append({
