@@ -35,17 +35,27 @@ DIST = REPO_ROOT / "dist"
 # Fixed timestamp for determinism: ZIP epoch floor (1980-01-01 00:00:00).
 FIXED_DATE_TIME = (1980, 1, 1, 0, 0, 0)
 
-# Package definitions: name -> (source file, handler, runtime target).
+# Package definitions: name -> (source file, handler, runtime target,
+# extra_files). extra_files maps an ARCHIVE member name -> tracked source path;
+# it lets a package embed additional deterministic content (e.g. the shared
+# system instruction) without duplicating divergent copies in-tree.
 PACKAGES = {
     "prompt_handler": {
         "source": SRC / "prompt_handler" / "lambda_function.py",
         "handler": "lambda_function.lambda_handler",
         "runtime": "python3.12",
+        "extra_files": {
+            # Single source of truth: the agent/system instruction is authored
+            # once at agent/instruction.txt and packaged at the ZIP root as
+            # instruction.txt for the PromptHandler Converse system prompt.
+            "instruction.txt": REPO_ROOT / "agent" / "instruction.txt",
+        },
     },
     "processor": {
         "source": SRC / "processor" / "lambda_function.py",
         "handler": "lambda_function.lambda_handler",
         "runtime": "python3.11",
+        "extra_files": {},
     },
 }
 
@@ -63,12 +73,19 @@ def build_package(name: str, spec: dict) -> dict:
     if not source.is_file():
         raise FileNotFoundError(f"Source not found for '{name}': {source}")
 
-    # ZIP root member is always lambda_function.py
-    data = source.read_bytes()
-    out = DIST / f"{name}.zip"
+    # Deterministic archive members: lambda_function.py first, then any extra
+    # files in sorted member-name order for reproducibility.
+    members = [("lambda_function.py", source.read_bytes())]
+    for arcname in sorted((spec.get("extra_files") or {}).keys()):
+        extra_path: Path = spec["extra_files"][arcname]
+        if not extra_path.is_file():
+            raise FileNotFoundError(f"Extra file not found for '{name}': {extra_path}")
+        members.append((arcname, extra_path.read_bytes()))
 
+    out = DIST / f"{name}.zip"
     with zipfile.ZipFile(out, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as zf:
-        _add_deterministic(zf, "lambda_function.py", data)
+        for arcname, data in members:
+            _add_deterministic(zf, arcname, data)
 
     zip_bytes = out.read_bytes()
     return {
@@ -78,7 +95,7 @@ def build_package(name: str, spec: dict) -> dict:
         "runtime": spec["runtime"],
         "sha256": hashlib.sha256(zip_bytes).hexdigest(),
         "size_bytes": len(zip_bytes),
-        "contained_files": ["lambda_function.py"],
+        "contained_files": [m[0] for m in members],
     }
 
 

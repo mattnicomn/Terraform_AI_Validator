@@ -62,8 +62,10 @@ module "iam" {
   create_prompt_role = true
   prompt_role_name   = "${local.name_prefix}-prompt-role"
 
-  create_bedrock_agent_role = true
-  bedrock_agent_role_name   = "${local.name_prefix}-bedrock-agent-role"
+  # Recovery architecture: Bedrock Agents Classic is unavailable in this
+  # account. PromptHandler calls bedrock-runtime Converse directly and invokes
+  # the Processor Lambda itself, so no Bedrock agent execution role is needed.
+  create_bedrock_agent_role = false
 
   processor_function_name = local.lambda_processor_name
   prompt_function_name    = local.lambda_prompt_name
@@ -73,21 +75,18 @@ module "iam" {
   results_bucket_arn     = "arn:aws:s3:::${local.results_bucket}"
   alerts_topic_arn       = module.sns_alerts.topic_arn
 
-  # Phase 4B: the agent's foundation_model is a CROSS-REGION inference profile
-  # (the underlying model is INFERENCE_PROFILE-only in account 102). The agent
-  # role must be allowed to InvokeModel on the account-scoped inference-profile
-  # ARN AND on the underlying foundation-model ARN in each region the profile
-  # routes to (foundation-model ARNs are account-less/region-scoped).
+  # PromptHandler execution role permissions for direct Converse:
+  #  - bedrock:InvokeModel on the cross-region inference profile ARN plus the
+  #    underlying foundation-model ARN in each region the profile routes to
+  #    (foundation-model ARNs are account-less/region-scoped).
+  #  - lambda:InvokeFunction scoped to the Processor Lambda ARN only (tool
+  #    dispatch). No aws_lambda_permission is used for this same-account,
+  #    identity-based invocation.
   bedrock_model_arns = concat(
     ["arn:aws:bedrock:${local.region}:${local.account_id}:inference-profile/${var.bedrock_inference_profile_id}"],
     [for r in var.bedrock_inference_profile_regions : "arn:aws:bedrock:${r}::foundation-model/${var.bedrock_model_id}"]
   )
-
-  # RESOLVED (Phase 3): PromptHandler invokes the Bedrock AGENT
-  # (bedrock-agent-runtime:invoke_agent -> bedrock:InvokeAgent), scoped to this
-  # account/region's agent aliases. New destination agent IDs are created by
-  # the bedrock module; scope to the account/region agent-alias pattern.
-  agent_alias_arn_wildcard = "arn:aws:bedrock:${local.region}:${local.account_id}:agent-alias/*"
+  processor_function_arn = "arn:aws:lambda:${local.region}:${local.account_id}:function:${local.lambda_processor_name}"
 
   tags = local.common_tags
 }
@@ -133,30 +132,22 @@ module "lambda_prompt" {
   code_s3_key    = var.prompt_s3_key
 
   # Destination runtime config consumed by src/prompt_handler/lambda_function.py.
-  # Agent id/alias come from the bedrock module. Until the agent is prepared
-  # (prepare_agent=true, gated on model access), the alias id is empty and the
-  # handler fails clearly at runtime — no fake defaults.
+  # Direct Converse architecture: the handler calls bedrock-runtime Converse on
+  # the cross-region inference profile and dispatches tools to the Processor
+  # Lambda by name. No Bedrock agent id/alias.
   environment_variables = {
-    BEDROCK_AGENT_ID       = try(module.bedrock[0].agent_id, "")
-    BEDROCK_AGENT_ALIAS_ID = try(module.bedrock[0].agent_alias_id == null ? "" : module.bedrock[0].agent_alias_id, "")
-    ALLOWED_ORIGIN         = "https://${var.application_domain}"
+    BEDROCK_INFERENCE_PROFILE_ID = var.bedrock_inference_profile_id
+    PROCESSOR_FUNCTION_NAME      = local.lambda_processor_name
+    ALLOWED_ORIGIN               = "https://${var.application_domain}"
   }
 
   tags = local.common_tags
 }
 
-# Allow the Bedrock agent to invoke the Processor (action-group executor path).
-# This is the CORRECT side for the action-group invocation relationship: the
-# permission lives on the Lambda (bedrock.amazonaws.com principal), NOT as
-# lambda:InvokeFunction on the agent role.
-resource "aws_lambda_permission" "bedrock_invoke_processor" {
-  statement_id   = "AllowBedrockAgentInvokeProcessor"
-  action         = "lambda:InvokeFunction"
-  function_name  = module.lambda_processor.function_name
-  principal      = "bedrock.amazonaws.com"
-  source_account = local.account_id
-  source_arn     = "arn:aws:bedrock:${local.region}:${local.account_id}:agent/*"
-}
+# Recovery architecture note: there is NO Bedrock-agent -> Processor Lambda
+# permission. The Processor is invoked directly by the PromptHandler execution
+# role (lambda:InvokeFunction in module.iam, scoped to the Processor ARN), so no
+# resource-based aws_lambda_permission is required for that same-account call.
 
 # NOTE: API Gateway -> PromptHandler invoke permission is created INSIDE
 # modules/api_gateway (aws_lambda_permission.invoke_by_apigw, per route). Do NOT
@@ -191,7 +182,8 @@ module "api_gateway" {
   disable_execute_api_endpoint = false
   tags                         = local.common_tags
 
-  # LIVE API surface only. Processor is NOT exposed via API (invoked by agent).
+  # LIVE API surface only. The Processor is not exposed via the API; it is
+  # invoked directly by the PromptHandler Lambda during Converse tool dispatch.
   routes = [
     { method = "POST", path = "/BedrockPromptHandler", target_lambda_arn = module.lambda_prompt.function_arn },
   ]
@@ -214,35 +206,14 @@ module "sns_alerts" {
   tags            = local.common_tags
 }
 
-# ── Bedrock agent + action group (parameterized model) ───────────────────────
-module "bedrock" {
-  count  = var.enable_bedrock_agent ? 1 : 0
-  source = "../../modules/bedrock" # EXISTING module (reused)
-
-  agent_name  = "${local.name_prefix}-agent"
-  description = "Validates/scans S3 data transfers for FedRAMP/PII/PHI (destination account ${local.account_id})."
-  # Phase 4A finding: the underlying model is INFERENCE_PROFILE-only in 102, so
-  # the agent's foundation_model must be the cross-region inference profile id,
-  # NOT the bare model id. (bedrock_model_id is still used to derive the IAM
-  # foundation-model ARNs the profile routes to — see module.iam above.)
-  foundation_model        = var.bedrock_inference_profile_id
-  agent_resource_role_arn = module.iam.bedrock_agent_role_arn
-
-  # RESOLVED (Phase 3): authoritative agent instruction recovered from the live
-  # agent and stored as non-secret repo config. Bucket names generalized (no
-  # account-specific/source values baked in).
-  instruction = file("${path.module}/../../agent/instruction.txt")
-
-  action_group_name   = "SecurityDataTransferActions"
-  action_group_lambda = module.lambda_processor.function_arn
-  openapi_payload     = file("${path.module}/../../openapi/security_data_transfer_api.yaml")
-
-  # prepare_agent + aliases gated on model access enablement (later AWS gate).
-  prepare_agent = false
-  aliases       = [{ name = "prod" }]
-
-  tags = local.common_tags
-}
+# ── Bedrock ──────────────────────────────────────────────────────────────────
+# Recovery architecture: Amazon Bedrock Agents Classic is closed to new
+# customers and cannot be created in this destination account. The application
+# no longer provisions a Bedrock agent / action group. Instead, PromptHandler
+# calls bedrock-runtime Converse directly on the inference profile
+# (var.bedrock_inference_profile_id) and dispatches tools to the Processor
+# Lambda (see modules/prompt handler + module.iam). modules/bedrock is now
+# obsolete and unwired.
 
 # ── Frontend (NEW): private S3 + CloudFront + OAC + ACM for ai.usmissionhero.com
 module "frontend" {

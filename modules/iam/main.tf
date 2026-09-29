@@ -88,17 +88,20 @@ resource "aws_iam_role" "prompt" {
   tags = var.tags
 }
 
-# PromptHandler least-privilege: own log group + bedrock:InvokeAgent on the
-# destination agent alias (RESOLVED via recovered source — invoke_agent, NOT
-# invoke_model, NOT AmazonBedrockFullAccess). Legacy SSM/CloudFront-signing
-# permissions are intentionally ABSENT (LEGACY_CLOUDFRONT_SIGNED_URL_FEATURE = DROP).
+# PromptHandler least-privilege (recovery architecture — direct Converse):
+#  - own log group
+#  - bedrock:InvokeModel on the cross-region inference profile ARN + the
+#    underlying regional foundation-model ARNs it routes to
+#  - lambda:InvokeFunction scoped ONLY to the Processor Lambda ARN (tool
+#    dispatch). No bedrock:InvokeAgent (Agents Classic dropped). Legacy
+#    SSM/CloudFront-signing permissions remain intentionally ABSENT.
 resource "aws_iam_role_policy" "prompt" {
   count = var.create_prompt_role ? 1 : 0
   name  = "prompt-least-privilege"
   role  = aws_iam_role.prompt[0].id
   policy = jsonencode({
     Version = "2012-10-17"
-    Statement = [
+    Statement = concat([
       {
         Sid      = "OwnLogs"
         Effect   = "Allow"
@@ -106,12 +109,19 @@ resource "aws_iam_role_policy" "prompt" {
         Resource = local.prompt_log_arn
       },
       {
-        Sid      = "BedrockInvokeAgent"
+        Sid      = "BedrockInvokeModel"
         Effect   = "Allow"
-        Action   = ["bedrock:InvokeAgent"]
-        Resource = var.agent_alias_arn_wildcard
+        Action   = ["bedrock:InvokeModel"]
+        Resource = var.bedrock_model_arns
       }
-    ]
+      ], var.processor_function_arn == null ? [] : [
+      {
+        Sid      = "InvokeProcessorForToolDispatch"
+        Effect   = "Allow"
+        Action   = ["lambda:InvokeFunction"]
+        Resource = var.processor_function_arn
+      }
+    ])
   })
 }
 

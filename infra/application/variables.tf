@@ -66,11 +66,11 @@ variable "bedrock_inference_profile_regions" {
   default     = ["us-east-1", "us-east-2", "us-west-2"]
 }
 
-variable "enable_bedrock_agent" {
-  description = "Whether to create the Bedrock agent + action group."
-  type        = bool
-  default     = true
-}
+# NOTE: enable_bedrock_agent was removed. The recovery architecture uses direct
+# bedrock-runtime Converse from the PromptHandler (no Bedrock Agents Classic
+# agent/action group). The bedrock_model_id / bedrock_inference_profile_id /
+# bedrock_inference_profile_regions variables are retained (they drive the
+# PromptHandler model id and its IAM InvokeModel resource scoping).
 
 # ── Cognito ────────────────────────────────────────────────────────────────
 # Callback/logout target the dedicated application origin. Authorization-code
