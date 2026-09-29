@@ -256,7 +256,11 @@ module "frontend" {
   application_domain = var.application_domain
   bucket_name        = local.frontend_bucket
   hosted_zone_id     = module.dns.zone_id # ACM validation + alias in the DELEGATED zone
-  tags               = local.common_tags
+  # Stage gate: false creates Stage-1 frontend resources (bucket, OAC, cert,
+  # validation record) but NOT the ACM validation wait / CloudFront / alias /
+  # bucket policy. Flip to true only after parent NS delegation is live.
+  enable_frontend_delivery = var.enable_frontend_delivery
+  tags                     = local.common_tags
 }
 
 # ── Route53 DELEGATED zone (102 owns ai.usmissionhero.com only) ──────────────

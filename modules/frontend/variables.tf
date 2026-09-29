@@ -23,3 +23,8 @@ variable "tags" {
   type    = map(string)
   default = {}
 }
+
+variable "enable_frontend_delivery" {
+  description = "Stage gate. false = Stage 1 (create bucket/security/OAC/ACM cert + validation record only); true = Stage 2 (also create ACM validation wait, CloudFront distribution, bucket policy, and application alias). Set true only after the delegated zone resolves publicly."
+  type        = bool
+}

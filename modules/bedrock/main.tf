@@ -36,6 +36,11 @@ resource "aws_bedrockagent_agent_action_group" "this" {
   agent_version      = "DRAFT"
   action_group_name  = var.action_group_name
   action_group_state = "ENABLED"
+  # Do NOT trigger PrepareAgent from the action group. The provider default for
+  # this argument is true, which would prepare the DRAFT agent on create/update;
+  # gate it on var.prepare_agent (default false) so no preparation occurs until
+  # model-access entitlement is separately proven (later gate).
+  prepare_agent = var.prepare_agent
 
   api_schema {
     payload = var.openapi_payload
