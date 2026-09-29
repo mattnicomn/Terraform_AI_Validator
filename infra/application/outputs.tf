@@ -65,6 +65,6 @@ output "bedrock_model_id" {
 }
 
 output "bedrock_inference_profile_id" {
-  description = "Cross-region inference profile id the agent actually invokes as its foundation_model."
+  description = "Cross-region inference profile id the PromptHandler invokes via bedrock-runtime Converse."
   value       = var.bedrock_inference_profile_id
 }

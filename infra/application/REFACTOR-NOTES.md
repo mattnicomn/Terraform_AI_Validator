@@ -181,3 +181,48 @@ touching all 9 modules at once).
 ## AI_VALIDATOR_SPA_SOURCE = NOT_PRESENT
 - No clean AI Validator application SPA exists in-repo; only the historical
   corporate portfolio HTML. `modules/frontend` provides hosting only.
+
+---
+
+# Recovery — direct Bedrock Converse (replaces Agents Classic)
+
+Amazon Bedrock **Agents Classic** is closed to new customers and cannot be
+created in destination account 102726256311 (`CreateAgent` returns
+`AccessDeniedException: Bedrock Agents is in Maintenance Mode`). The Stage-1
+apply therefore failed on the agent resource (40/46 resources created).
+
+**Architecture change (this branch):** the application no longer provisions a
+Bedrock agent or action group. Instead:
+
+- `src/prompt_handler/lambda_function.py` calls `bedrock-runtime` **Converse**
+  directly on the cross-region inference profile
+  (`us.anthropic.claude-haiku-4-5-20251001-v1:0`), with a `toolConfig`
+  describing the four Processor operations.
+- On a model `toolUse`, PromptHandler validates the tool name against an
+  explicit allowlist (`scanFile`/`transferFile`/`getClassificationReport`/
+  `scanBucket` → the identically-named Processor `operation`), invokes the
+  **Processor Lambda directly** (`lambda:InvokeFunction`, RequestResponse,
+  using the Processor's existing `{"operation": ...}` dispatch), returns the
+  result to Converse as a `toolResult`, and loops (bounded by
+  `MAX_TOOL_ROUNDS = 5`) until the model produces final text.
+- Response contract unchanged: `POST /BedrockPromptHandler`, `{"prompt": ...}`
+  → `{"response": ...}`. Cognito/JWT boundary unchanged at API Gateway.
+
+**IAM:** the PromptHandler execution role now has `bedrock:InvokeModel` (on the
+inference-profile ARN + regional foundation-model ARNs) and
+`lambda:InvokeFunction` scoped to the Processor ARN. There is **no**
+`aws_lambda_permission` for PromptHandler→Processor (same-account,
+identity-based invocation). `bedrock:InvokeAgent` and the Bedrock agent
+execution role are removed (`create_bedrock_agent_role = false`).
+
+**No managed agent memory** in V1: session/orchestration is a single
+request-scoped Converse loop owned by the application.
+
+**System instruction packaging:** `agent/instruction.txt` remains the single
+source of truth; `scripts/build_lambdas.py` embeds it in the PromptHandler ZIP
+as `instruction.txt` (used as the Converse system prompt).
+
+**Obsolete:** `modules/bedrock/` is no longer instantiated by the root and is
+retained only as obsolete/unused code. `openapi/security_data_transfer_api.yaml`
+is no longer wired into Terraform (the tool schema is defined in PromptHandler);
+it remains as reference.

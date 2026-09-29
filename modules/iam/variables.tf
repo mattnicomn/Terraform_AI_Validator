@@ -24,11 +24,13 @@ variable "prompt_role_name" {
 
 variable "create_bedrock_agent_role" {
   type    = bool
-  default = true
+  default = false # recovery architecture: no Bedrock Agents Classic role
 }
 
 variable "bedrock_agent_role_name" {
-  type = string
+  type        = string
+  default     = null # only required when create_bedrock_agent_role = true
+  description = "Name for the optional/legacy Bedrock agent execution role. Only used when create_bedrock_agent_role = true."
 }
 
 # ── Least-privilege scoping inputs (evidence-derived) ────────────────────────
@@ -52,7 +54,7 @@ variable "prompt_function_name" {
 
 variable "processor_function_arn" {
   type        = string
-  description = "Processor Lambda ARN (Bedrock-agent invoke target; used only if agent role needs it — see note)."
+  description = "Processor Lambda ARN. When set, the PromptHandler role is granted lambda:InvokeFunction scoped to this ARN for Converse tool dispatch."
   default     = null
 }
 
@@ -74,16 +76,14 @@ variable "alerts_topic_arn" {
 
 variable "bedrock_model_arns" {
   type        = list(string)
-  description = "ARNs the AGENT is permitted to bedrock:InvokeModel. For a cross-region inference profile this MUST include the inference-profile ARN plus the underlying foundation-model ARN in each region the profile routes to. Used by the agent role, not the prompt role."
+  description = "ARNs permitted for bedrock:InvokeModel by the PromptHandler role (direct Converse). For a cross-region inference profile this MUST include the inference-profile ARN plus the underlying foundation-model ARN in each region the profile routes to. (Also consumed by the optional/legacy bedrock_agent role when create_bedrock_agent_role = true.)"
 }
 
-# RESOLVED (Phase 3 recovered source): PromptHandler calls
-# bedrock-agent-runtime:invoke_agent -> IAM action bedrock:InvokeAgent, scoped to
-# the destination agent alias. It does NOT call bedrock:InvokeModel.
-variable "agent_alias_arn_wildcard" {
-  type        = string
-  description = "Resource ARN (pattern) for bedrock:InvokeAgent by PromptHandler, scoped to the destination agent's aliases. Provided by the root once the agent exists; use an agent-alias ARN pattern for this account/region."
-}
+# Recovery architecture: PromptHandler calls bedrock-runtime Converse directly
+# (bedrock:InvokeModel on var.bedrock_model_arns) and invokes the Processor
+# Lambda (lambda:InvokeFunction on var.processor_function_arn). There is no
+# bedrock:InvokeAgent and no agent-alias resource; the former
+# agent_alias_arn_wildcard input has been removed.
 
 variable "tags" {
   type    = map(string)
